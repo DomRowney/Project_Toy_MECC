@@ -3,7 +3,7 @@ title: "MECC Simulation"
 format: html
 ---
 
-![](resources\MECC.jpg){height=100}
+![](resources/MECC.jpg){height=100}
 
 
 ```{python}

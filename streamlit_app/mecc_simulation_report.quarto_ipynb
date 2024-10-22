@@ -1,0 +1,58 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "title: \"MECC Simulation\"\n",
+        "format: html\n",
+        "---\n",
+        "\n",
+        "\n",
+        "![](resources/MECC.jpg){height=100}\n"
+      ],
+      "id": "a8709df0"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "from model_two_types_mecc import MECC_Model\n",
+        "\n",
+        "\n",
+        "\n",
+        "# print(f'{self.num_people}')"
+      ],
+      "id": "b3015d50",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## Parameters\n",
+        "\n",
+        "### Population Parameters\n",
+        "\n",
+        "### Primary Care Parameters\n",
+        "\n",
+        "### Simulation Parameters\n",
+        "\n",
+        "## Outputs"
+      ],
+      "id": "721194ef"
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "name": "python3",
+      "language": "python",
+      "display_name": "Python 3 (ipykernel)",
+      "path": "/opt/homebrew/Caskroom/miniconda/base/envs/mecc/share/jupyter/kernels/python3"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}
