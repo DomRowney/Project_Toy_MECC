@@ -271,3 +271,220 @@ def create_logic_diagram_SmokeModel(number_labels = False, session_data = None):
     img_path = "smoke_logic_diagram.png"
     d.save(img_path)
     return img_path
+
+
+#################
+## Alcohol Model
+#################
+def create_logic_diagram_Alcohol(number_labels = False, session_data = None):
+
+    
+    ## general numberless labels
+    lb_N_people = 'Number of\nPeople'
+    lb_random_service = 'Randomise which\norder to interatct\nwith services'
+    lb_visit_prob = 'Chance visit\na Service'
+    lb_last_service = 'Is last service?'
+    lb_make_intervention =  'Chance Service\nDelivers\nIntervention'                             
+    lb_last_period = 'Is Last Period?'
+
+    lb_inital_state = 'Status:\nPre-Contemplation'
+    lb_intervention_effect = 'Chance status\nchanges set to higher'
+    lb_change_pre_to_con = 'Chance status\nchanges'
+    lb_change_con_to_prp = 'Chance status\nchanges'
+    lb_change_prp_to_act = 'Chance status\nchanges'
+    lb_lapse_act_to_prp = 'Chance lapse status\nchanges'
+    lb_lapse_prp_to_con = 'Chance lapse status\nchanges'
+    lb_lapse_con_to_pre = ' Chance lapse status\nchanges'
+
+
+    ## create a drawing class
+    with schemdraw.Drawing() as d:
+        
+        ## Population
+        person = flow.Circle(r=d.unit/2).label(lb_N_people).drop("S")
+        flow.Arrow().at(person.S).down(d.unit/2)
+
+        ## Inital State
+        inital_state = flow.Box().label(lb_inital_state).drop("S")
+        flow.Arrow().down(d.unit/2).at(inital_state.S)
+
+        period_start = flow.Start().label('Period Start').drop("S")       
+        flow.Arrow().down(d.unit/3).at(period_start.S)
+
+        ## service
+        random_service = flow.Decision(S='').label(lb_random_service).drop("S")
+        flow.Arrow().down(d.unit/3).at(random_service.S)
+
+        service_select = flow.Start(S='').label('Select Service').drop("S")
+        flow.Arrow().down(d.unit/3).at(service_select.S)
+
+        visit = flow.Decision(S='Visit'
+                            ,W='Not Visit').label(lb_visit_prob).drop("S")        
+        flow.Arrow().down(d.unit/2).at(visit.S)
+        
+        with d.container() as service_box:
+            service_box.linestyle(":")
+            service_box.label("Service",loc="NW",halign="left",valign="top")
+            visit_start = flow.Start().label('Visit Start').anchor('N')
+            flow.Arrow().down(d.unit/3).at(visit_start.S)
+            interv = flow.Decision(W='No\nIntervention'
+                                ,S='Intervention').label(lb_make_intervention)
+            flow.Arrow().down(d.unit/3).at(interv.S)
+
+            interv_result = flow.Box().anchor('N').label(lb_intervention_effect)
+            flow.Arrow().down(d.unit/3).at(interv_result.S)
+
+            visit_end = flow.Start().label('Visit End').anchor('N')
+            flow.Wire('c',k=-d.unit/3 ,arrow ='->').at(interv.W).to(visit_end.W)
+
+        flow.Arrow().down(d.unit/2).at(visit_end.S)
+        last_service = flow.Decision(E='No'
+                                ,S='Yes').label(lb_last_service)
+        flow.Wire('c',k=-d.unit*1.25,arrow ='->').at(visit.W).to(last_service.W)        
+        flow.Wire('c',k=d.unit,arrow ='->').at(last_service.E).to(service_select.E)
+        flow.Arrow().down(d.unit/2).at(last_service.S)
+
+        ## Status update
+        status_update_start = flow.Start().label('Alcohol Update Start').anchor('N')
+        flow.Arrow().down(d.unit/3).at(status_update_start.S)
+        
+        ## Pre to Con
+        status_pre = (flow.Decision(S='Yes'
+                                    ,E='No')
+                                    .label('Is status:\nPre-Contemplation?')) 
+        flow.Arrow().down(d.unit/3).at(status_pre.S)
+        change_pre_to_con = (flow.Decision(W='Yes'
+                                    ,E='No')
+                                    .label(lb_change_pre_to_con)) 
+
+        d.push() ## remembers current location
+        flow.Arrow().down(d.unit/2).at(change_pre_to_con.W)
+        pre_to_con = flow.Box().label('Status:\nComtemplation').drop("S")
+        flow.Arrow().down(d.unit/2).at(change_pre_to_con.E)
+        still_pre = flow.Box().label('Status:\nPre-Contemplation')
+        d.pop() ## returns previous remembered location
+        d.move(dx=0,dy=-d.unit)
+
+        ## Con to Prp
+        status_con = (flow.Decision(S='Yes'
+                                    ,W='No')
+                                    .label('Is status:\nContemplation?'))         
+        flow.Wire('n',k=-d.unit/6,arrow ='->').at(pre_to_con.S).to(status_con.N)
+        flow.Wire('n',k=-d.unit/6,arrow ='->').at(still_pre.S).to(status_con.N)
+        flow.Wire('c',k=d.unit,arrow ='->').at(status_pre.E).to(status_con.E)
+        flow.Arrow().down(d.unit/3).at(status_con.S)
+        change_con_to_prp = (flow.Decision(W='Yes'
+                                    ,E='No')
+                                    .label(lb_change_con_to_prp)) 
+
+        d.push() ## remembers current location
+        flow.Arrow().down(d.unit/2).at(change_con_to_prp.W)
+        con_to_prp = flow.Box().label('Status:\nPreparation').drop("S")
+        flow.Arrow().down(d.unit/2).at(change_con_to_prp.E)
+        still_con = flow.Box().label('Status:\nContemplation')
+        d.pop() ## returns previous remembered location
+        d.move(dx=0,dy=-d.unit)
+
+        ## Prp to Act
+        status_prp = (flow.Decision(S='Yes'
+                                    ,E='No')
+                                    .label('Is status:\nPreparation?'))         
+        flow.Wire('n',k=-d.unit/6,arrow ='->').at(con_to_prp.S).to(status_prp.N)
+        flow.Wire('n',k=-d.unit/6,arrow ='->').at(still_con.S).to(status_prp.N)
+        flow.Wire('c',k=-d.unit,arrow ='->').at(status_con.W).to(status_prp.W)
+        flow.Arrow().down(d.unit/3).at(status_prp.S)
+        change_prp_to_act = (flow.Decision(W='Yes'
+                                    ,E='No')
+                                    .label(lb_change_prp_to_act)) 
+
+        d.push() ## remembers current location
+        flow.Arrow().down(d.unit/2).at(change_prp_to_act.W)
+        prp_to_act = flow.Box().label('Status:\nAction').drop("S")
+        flow.Arrow().down(d.unit/2).at(change_prp_to_act.E)
+        still_prp = flow.Box().label('Status:\nPreparation')
+        d.pop() ## returns previous remembered location
+        d.move(dx=0,dy=-d.unit)
+
+        ## Lapse Act to Prp 
+        status_act = (flow.Decision(S='Yes'
+                                    ,W='No')
+                                    .label('Is status:\nAction?'))         
+        flow.Wire('n',k=-d.unit/6,arrow ='->').at(prp_to_act.S).to(status_act.N)
+        flow.Wire('n',k=-d.unit/6,arrow ='->').at(still_prp.S).to(status_act.N)
+        flow.Wire('c',k=d.unit,arrow ='->').at(status_prp.E).to(status_act.E)
+        flow.Arrow().down(d.unit/3).at(status_act.S)
+        lapse_act_to_prp = (flow.Decision(W='Yes'
+                                    ,E='No')
+                                    .label(lb_lapse_act_to_prp)) 
+
+        d.push() ## remembers current location
+        flow.Arrow().down(d.unit/2).at(lapse_act_to_prp.W)
+        act_to_prp = flow.Box().label('Status:\nPreparation').drop("S")
+        flow.Arrow().down(d.unit/2).at(lapse_act_to_prp.E)
+        still_act = flow.Box().label('Status:\nAction')
+        d.pop() ## returns previous remembered location
+        d.move(dx=0,dy=-d.unit)
+
+
+        ## Lapse Prp to Con
+        status_prp2 = (flow.Decision(S='Yes'
+                                    ,E='No')
+                                    .label('Is status:\nPreparation?'))         
+        flow.Wire('n',k=-d.unit/6,arrow ='->').at(act_to_prp.S).to(status_prp2.N)
+        flow.Wire('n',k=-d.unit/6,arrow ='->').at(still_act.S).to(status_prp2.N)
+        flow.Wire('c',k=-d.unit,arrow ='->').at(status_act.W).to(status_prp2.W)
+        flow.Arrow().down(d.unit/3).at(status_prp2.S)
+        lapse_prp_to_con = (flow.Decision(W='Yes'
+                                    ,E='No')
+                                    .label(lb_lapse_prp_to_con)) 
+
+        d.push() ## remembers current location
+        flow.Arrow().down(d.unit/2).at(lapse_prp_to_con.W)
+        act_to_prp = flow.Box().label('Status:\nContemplation').drop("S")
+        flow.Arrow().down(d.unit/2).at(lapse_prp_to_con.E)
+        still_prp2 = flow.Box().label('Status:\nPreparation')
+        d.pop() ## returns previous remembered location
+        d.move(dx=0,dy=-d.unit)
+
+        ## Lapse Con to Pre
+        status_con2 = (flow.Decision(S='Yes'
+                                    ,W='No')
+                                    .label('Is status:\nContemplation?'))         
+        flow.Wire('n',k=-d.unit/6,arrow ='->').at(act_to_prp.S).to(status_con2.N)
+        flow.Wire('n',k=-d.unit/6,arrow ='->').at(still_prp2.S).to(status_con2.N)
+        flow.Wire('c',k=d.unit,arrow ='->').at(status_prp2.E).to(status_con2.E)
+        flow.Arrow().down(d.unit/3).at(status_con2.S)
+        lapse_con_to_pre = (flow.Decision(W='Yes'
+                                    ,E='No')
+                                    .label(lb_lapse_con_to_pre)) 
+
+        d.push() ## remembers current location
+        flow.Arrow().down(d.unit/2).at(lapse_con_to_pre.W)
+        con_to_pre = flow.Box().label('Status:\nPre-Contemplation').drop("S")
+        flow.Arrow().down(d.unit/2).at(lapse_con_to_pre.E)
+        still_con2 = flow.Box().label('Status:\nContemplation')
+        d.pop() ## returns previous remembered location
+        d.move(dx=0,dy=-d.unit)
+
+        ## End update
+        status_update_end = flow.Start().label('Status Update End').anchor('N')
+        flow.Wire('n',k=-d.unit/6,arrow ='->').at(con_to_pre.S).to(status_update_end.N)
+        flow.Wire('n',k=-d.unit/6,arrow ='->').at(still_con2.S).to(status_update_end.N)        
+        flow.Wire('c',k=-d.unit,arrow ='->').at(status_con2.W).to(status_update_end.W)
+        flow.Arrow().down(d.unit/3).at(status_update_end.S)
+
+        period_end = flow.Start().label('Period End').drop("E")
+        flow.Arrow().right(d.unit/3).at(period_end.E)
+        last_period = flow.Decision(E='No'
+                            ,S='Yes').label(lb_last_period).drop("S")
+        flow.Arrow().down(d.unit/3).at(last_period.S)
+        model_end = flow.Circle(r=d.unit/2).label('Model End')
+        flow.Wire('c',k=d.unit/3,arrow ='->').at(last_period.E).to(period_start.E)
+
+    d
+
+    ## Save the drawing to a temporary file
+    img_path = "alcohol_logic_diagram.png"
+    #d.save(img_path)
+    #return img_path
+    return d
