@@ -10,6 +10,8 @@ import os
 import shutil
 import json
 from alcohol_agents import Alcohol_MECC_Model
+from logic_diagram import create_logic_diagram_Alcohol
+
 
 ######################################################
 
@@ -28,7 +30,7 @@ def disable_download():
     report_message.empty()
 
 
-tab1, tab2 = st.tabs(['Model','Parameters'])
+tab1, tab2, tab3 = st.tabs(['Model','Parameters','Logic Diagram'])
 
 ######################################################
 
@@ -77,6 +79,15 @@ with tab2:
             st.write(f" - Post Intervention Contemplation to Preparation chance: :blue-background[{st.session_state.alcohol_services_table.loc[service]['Post Intervention Contemplation to Preparation chance']}]")
             st.write(f" - Post Intervention Preparation to Action chance: :blue-background[{st.session_state.alcohol_services_table.loc[service]['Post Intervention Preparation to Action chance']}]")
 
+##################################
+### Logic Diagram 
+##################################
+
+with tab3:
+    st.image(create_logic_diagram_Alcohol(number_labels = True)
+        , caption="Diagram of Agent Model Logic"
+        , use_column_width=False)
+    
 ######################################################
 
 ##################################

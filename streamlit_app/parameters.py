@@ -5,7 +5,7 @@ import streamlit as st
 #import plotly.graph_objects as go
 #from plotly.subplots import make_subplots
 import time
-from logic_diagram import create_logic_diagram, create_logic_diagram_SmokeModel
+from logic_diagram import create_logic_diagram, create_logic_diagram_SmokeModel, create_logic_diagram_Alcohol
 #from model_two_types_mecc import MECC_Model
 #from streamlit_model_functions import run_simulation_step, create_comparison_figure, create_MECC_model #, create_figure
 #import random
@@ -204,24 +204,13 @@ with tab2:
     ## adds to session state if does not exist
     if 'alcohol_services_table' not in st.session_state:
         st.session_state.alcohol_services_table = alcohol_services.copy()
-    #else:
-    #   alcohol_services = st.session_state.alcohol_services_table.copy()
-
-    #def update_alcohol_services_table():
-    #    st.session_state.alcohol_services_table = alcohol_services_edit.copy()
 
     @st.fragment
     def alcohol_service_input(alcohol_services):
         st.markdown("#### Service")
 
-
-    #def update_alcohol_services_table():
-    #    st.session_state.alcohol_services_table = alcohol_services_edit
-
-        #with st.form('alcohol_services_form'):
     ## creates a data editor of the variables
         alcohol_services_edit = st.data_editor(
-            #st.session_state.alcohol_services_table,
             alcohol_services,
             disabled=["Service"],
             key='alcohol_services_editor',
@@ -284,28 +273,15 @@ with tab2:
 
         st.session_state['alcohol_services_table'] = alcohol_services_edit.copy()
 
-        print(st.session_state.alcohol_services_table)
-
-        for service in st.session_state.alcohol_services_table.index:
-            st.write(f"{service}  visit prob = ",st.session_state.alcohol_services_table.loc[service]['Person Visit Probability'])
-
-
-            #st.session_state.alcohol_services_table = alcohol_services_edit.copy()
-            #print(alcohol_services_edit.__dataframe__)
-            #alcohol_services_edit
-            #submitted = st.form_submit_button("Submit")
-            #if submitted:
-            #    st.session_state.alcohol_services_table = alcohol_services_edit.copy()
-
-    #    submitted = False
-    #    st.session_state.submit_count += 1
-    #if 'submit_count' not in st.session_state:
-    #    st.session_state.submit_count = 0
-
-    #st.write("submit count:",st.session_state.submit_count)
-
-    #st.session_state.alcohol_services_table =
     alcohol_service_input(st.session_state.alcohol_services_table)
+    
+    ## Logic Diagram
+    with st.expander("Click here to view the logic diagram"):
+        #col1a, col2a, col3a = st.columns(3)
+        #with col2a:
+        st.image(create_logic_diagram_Alcohol(number_labels = True)
+            , caption="Diagram of Agent Model Logic"
+            , use_column_width=False)
 
 
 with tab3:
