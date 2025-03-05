@@ -183,36 +183,53 @@ with tab1:
 ######################################################
 
         st.markdown("### Final Statistics")
-        col1, col2, col3 = st.columns(3)
-
+        col1, col2, col3, col4  = st.columns(4)
         with col1:
-            st.empty()
-    #       st.metric(
-    #           "Smoking Reduction\n\n(No MECC Training)",
-    #           f"{(data_no_mecc['Total Not Smoking'].iloc[-1] / st.session_state.N_people * 100):.1f}%",
-    #           f"{(data_no_mecc['Total Not Smoking'].iloc[-1] - data_no_mecc['Total Not Smoking'].iloc[0]):.0f}"
-    #       )
+            st.metric(
+               "Total Interventions\n\n(No MECC Training)",
+               f"{(data_no_mecc['Total Interventions'].iloc[-1]):.0f}"
+            )
 
         with col2:
-            st.empty()
-    #        st.metric(
-    #            "Smoking Reduction\n\n(MECC Trained)",
-    #            f"{(data_mecc['Total Not Smoking'].iloc[-1] / st.session_state.N_people * 100):.1f}%",
-    #            f"{(data_mecc['Total Not Smoking'].iloc[-1] - data_mecc['Total Not Smoking'].iloc[0]):.0f}"
-    #        )
+            st.metric(
+               "Total Interventions\n\n(MECC Trained)",
+               f"{(data_mecc['Total Interventions'].iloc[-1]):.0f}"
+            )
 
         with col3:
             st.empty()
-    #        mecc_improvement = (
-    #            data_mecc['Total Not Smoking'].iloc[-1] -
-    #            data_no_mecc['Total Not Smoking'].iloc[-1]
-    #        )
-    #        st.metric(
-    #            "MECC Training\n\nImpact",
-    #            f"{mecc_improvement:.0f} additional quits",
-    #            f"{(mecc_improvement / st.session_state.N_people * 100):.1f}%"
-    #        )
 
+        with col4:
+            st.empty()
+        
+        ##################
+        col5, col6, col7, col8  = st.columns(4)
+        with col5:
+            st.metric(
+               "Pre-contemplation Status\n\n(No MECC Training)",
+               f"{(data_no_mecc['Total Pre-contemplation'].iloc[-1] / st.session_state.N_people * 100):.1f}%"
+            )
+
+        with col6:
+            st.metric(
+               "Pre-contemplation Status\n\n(MECC Trained)",
+               f"{(data_mecc['Total Pre-contemplation'].iloc[-1] / st.session_state.N_people * 100):.1f}%"
+            )
+
+        with col7:
+            st.metric(
+               "Action Status\n\n(No MECC Training)",
+               f"{(data_no_mecc['Total Action'].iloc[-1] / st.session_state.N_people * 100):.1f}%"
+            )
+
+        with col8:
+            st.metric(
+               "Action Status\n\n(MECC Trained)",
+               f"{(data_mecc['Total Action'].iloc[-1] / st.session_state.N_people * 100):.1f}%"
+            )
+
+######################################################
+#           
         with st.expander("View Raw Data"):
             tab1, tab2 = st.tabs(["No MECC Training", "MECC Trained"])
             with tab1:
