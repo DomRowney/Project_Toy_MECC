@@ -182,54 +182,28 @@ with tab1:
 
 ######################################################
 
-        st.markdown("### Final Statistics")
-        col1, col2, col3, col4  = st.columns(4)
-        with col1:
-            st.metric(
-               "Total Interventions\n\n(No MECC Training)",
-               f"{(data_no_mecc['Total Interventions'].iloc[-1]):.0f}"
-            )
-
-        with col2:
-            st.metric(
-               "Total Interventions\n\n(MECC Trained)",
-               f"{(data_mecc['Total Interventions'].iloc[-1]):.0f}"
-            )
-
-        with col3:
-            st.empty()
-
-        with col4:
-            st.empty()
+        st.markdown("### Final Statistics")      
         
-        ##################
-        col5, col6, col7, col8  = st.columns(4)
-        with col5:
-            st.metric(
-               "Pre-contemplation Status\n\n(No MECC Training)",
-               f"{(data_no_mecc['Total Pre-contemplation'].iloc[-1] / st.session_state.N_people * 100):.1f}%"
-            )
+        # Function to style the DataFrame with a bold dividing line
+        #def highlight_divider(s):
+        #    """Style the DataFrame with a bold line after divdiers"""
+        #    divdiers = ['Total Interventions'
+        #                ,'Total Action'
+        #                ,'Community Hub Interventions'
+        #                ,'Community Hub Contacts']
+        #    return ['border-bottom: 3px solid black' if s.name in divdiers else '' for _ in s]
+#
 
-        with col6:
-            st.metric(
-               "Pre-contemplation Status\n\n(MECC Trained)",
-               f"{(data_mecc['Total Pre-contemplation'].iloc[-1] / st.session_state.N_people * 100):.1f}%"
-            )
+        result = pd.DataFrame({'No MECC Training': data_no_mecc.iloc[-1]
+                               , 'MECC Trained': data_mecc.iloc[-1]})
 
-        with col7:
-            st.metric(
-               "Action Status\n\n(No MECC Training)",
-               f"{(data_no_mecc['Total Action'].iloc[-1] / st.session_state.N_people * 100):.1f}%"
-            )
+        #st.dataframe(result.style.apply(highlight_divider, axis=1))
+        st.dataframe(result)#,height=600)
 
-        with col8:
-            st.metric(
-               "Action Status\n\n(MECC Trained)",
-               f"{(data_mecc['Total Action'].iloc[-1] / st.session_state.N_people * 100):.1f}%"
-            )
+        print(result)
 
 ######################################################
-#           
+            
         with st.expander("View Raw Data"):
             tab1, tab2 = st.tabs(["No MECC Training", "MECC Trained"])
             with tab1:
