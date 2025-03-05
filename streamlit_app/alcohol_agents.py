@@ -69,15 +69,28 @@ class AlcoholModel_PersonAgent(PersonAgent):
         self.visit_prob = visit_prob 
 
     ## function to update status
-    def update_status(self,start,end,probability):
+    def update_status(self,start,end,probability,type):
+        change_state_rand = self.random.uniform(0, 1)
+        ## for checking
+        #st.write('-----\n\n'
+        #        f'Person {self.unique_id}\n\n'
+        #        f'{type} start: {start} to {end}\n\n'
+        #        f'Current status: {self.alcohol_status["status"]}\n\n'
+        #        f'change chance: {probability}\n\n'
+        #        f'random: {change_state_rand}')
         if (
             (self.alcohol_status["status"] == start) &
-                (self.random.uniform(0, 1) <= probability)
+                (change_state_rand <= probability)
             ):
             self.alcohol_status = {"status": end
                                     ,"time": 0}
-            print(f" > Person {self.unique_id} alcohol status changed "
+            print(f" > Person {self.unique_id} alcohol status {type} "
                   + f"from {start} to {end}")
+            ## for checking
+            #st.write(f"start: {start}"
+            #        f" > Person {self.unique_id} alcohol status {type} "
+            #      + f"from {start} to {end}"
+            #      )
             
     def update_alcohol_status(self):
         '''
@@ -85,18 +98,35 @@ class AlcoholModel_PersonAgent(PersonAgent):
         then reverse order for lapses
         '''
         ## Positive Change
-        self.update_status("Pre-contemplation","Contemplation",self.change_prob_contemplation)
-        self.update_status("Contemplation","Preparation",self.change_prob_preparation)
-        self.update_status("Preparation","Action",self.change_prob_action)
+        self.update_status("Pre-contemplation"
+                           ,"Contemplation"
+                           ,self.change_prob_contemplation
+                           ,'improve')
+        self.update_status("Contemplation"
+                           ,"Preparation"
+                           ,self.change_prob_preparation
+                           ,'improve')
+        self.update_status("Preparation"
+                           ,"Action"
+                           ,self.change_prob_action
+                           ,'improve')
 
         ## Lapse
-        self.update_status("Action","Preparation",self.lapse_prob_preparation)
-        self.update_status("Preparation","Contemplation",self.lapse_prob_contemplation)
-        self.update_status("Contemplation","Pre-contemplation",self.lapse_prob_precontemplation)
+        self.update_status("Action"
+                           ,"Preparation"
+                           ,self.lapse_prob_preparation
+                           ,'lapse')
+        self.update_status("Preparation"
+                           ,"Contemplation"
+                           ,self.lapse_prob_contemplation
+                           ,'lapse')
+        self.update_status("Contemplation"
+                           ,"Pre-contemplation"
+                           ,self.lapse_prob_precontemplation
+                           ,'lapse')
 
         ## Adds one to time
         self.alcohol_status["time"] += 1
-
 
     def visit(self,service,probability):
         if self.random.uniform(0,1) <= probability:

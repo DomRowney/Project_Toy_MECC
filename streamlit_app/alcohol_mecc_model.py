@@ -131,15 +131,16 @@ with tab1:
         st.session_state.simulation_completed = False
         st.session_state.download_clicked = False
 
-        model_no_mecc = create_MECC_model(
-            model_parameters=model_parameters,
-            model_type='Alcohol',
-            mecc_trained=False
-        )
         model_mecc = create_MECC_model(
             model_parameters=model_parameters,
             model_type='Alcohol',
             mecc_trained=True
+        )
+        
+        model_no_mecc = create_MECC_model(
+            model_parameters=model_parameters,
+            model_type='Alcohol',
+            mecc_trained=False
         )
 
         model_message = st.info("Simulation Running")

@@ -190,13 +190,13 @@ with tab2:
     ## sets a dataframe up one row for each service type
     alcohol_services = pd.DataFrame(
             {'Service': ['Job Centre','Benefits Office','Housing Officer','Community Hub']
-            ,'Person Visit Probability': [0.0,0.0,0.0,0.0]
-            ,'Chance a Brief Intervention Made Without MECC Training': [0.0,0.0,0.0,0.0]
+            ,'Person Visit Probability': [0.50,0.50,0.50,0.50]
+            ,'Chance a Brief Intervention Made Without MECC Training': [0.01,0.01,0.01,0.01]
             ,'MECC Trained': [True,True,True,True]
-            ,'Chance Making a Brief Intervention After MECC Training': [0.0,0.0,0.0,0.0]
-            ,'Post Intervention Pre-Contemplation to Contemplation chance': [0.0,0.0,0.0,0.0]
-            ,'Post Intervention Contemplation to Preparation chance': [0.0,0.0,0.0,0.0]
-            ,'Post Intervention Preparation to Action chance': [0.0,0.0,0.0,0.0]}
+            ,'Chance Making a Brief Intervention After MECC Training': [0.90,0.90,0.90,0.90]
+            ,'Post Intervention Pre-Contemplation to Contemplation chance': [0.50,0.50,0.50,0.50]
+            ,'Post Intervention Contemplation to Preparation chance': [0.50,0.50,0.50,0.50]
+            ,'Post Intervention Preparation to Action chance': [0.50,0.50,0.50,0.50]}
     )
     ## Sets service as index
     alcohol_services = alcohol_services.set_index('Service')

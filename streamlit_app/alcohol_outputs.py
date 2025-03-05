@@ -61,8 +61,8 @@ def create_population_figure(results_no_mecc, results_mecc, step):
         # Population changes over time - With MECC
         fig.add_trace(
             go.Scatter(
-                x=results_no_mecc.index[:step+1], 
-                y=results_no_mecc[f'Total {stage}'][:step+1], 
+                x=results_mecc.index[:step+1], 
+                y=results_mecc[f'Total {stage}'][:step+1], 
                 name=f"{stage}",# (MECC Trained)", 
                 line=dict(color=stage_colour_dict[stage]
                           , dash='solid'),
@@ -157,8 +157,8 @@ def create_intervention_figure(results_no_mecc, results_mecc, step):
         # Interventions and Quit Attempts - With MECC
         fig.add_trace(
             go.Scatter(
-                x=results_no_mecc.index[:step+1],
-                y=results_no_mecc[f'{service} Contacts'][:step+1],
+                x=results_mecc.index[:step+1],
+                y=results_mecc[f'{service} Contacts'][:step+1],
                 name=f"{service} Contacts",
                 line=dict(color=service_colour_dict[service]
                           , dash='dot'),
@@ -168,8 +168,8 @@ def create_intervention_figure(results_no_mecc, results_mecc, step):
         )
         fig.add_trace(
             go.Scatter(
-                x=results_no_mecc.index[:step+1],
-                y=results_no_mecc[f'{service} Interventions'][:step+1],
+                x=results_mecc.index[:step+1],
+                y=results_mecc[f'{service} Interventions'][:step+1],
                 name=f"{service} Interventions",
                 line=dict(color=service_colour_dict[service]
                           , dash='solid'),

@@ -130,10 +130,12 @@ class ServiceAgent(Agent):
         self.contacts_made += 1
         intervention_rand = self.random.uniform(0, 1)
         ## for checking outputs
-        #st.write(f'chance intervention {intervention_rand}\n\n' +
-        #         f' mecc_effect {self.mecc_effect}\n\n'
-        #         f' base_make_intervention_prob {self.base_make_intervention_prob}\n\n'
-        #         f' make_intervention_prob {self.make_intervention_prob}\n\n-----')
+        #st.write(f'chance intervention: {intervention_rand}\n\n' 
+        #         f' mecc_trained: {self.mecc_trained}\n\n'
+        #         f' mecc_effect: {self.mecc_effect}\n\n'
+        #         f' base_make_intervention_prob: {self.base_make_intervention_prob}\n\n'
+        #         f' make_intervention_prob: {self.make_intervention_prob}\n\n'
+        #         '-----')
         if intervention_rand < self.make_intervention_prob:
             PersonAgent.interventions_received += 1
             self.perform_intervention(PersonAgent)

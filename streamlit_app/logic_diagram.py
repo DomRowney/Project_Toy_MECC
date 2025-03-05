@@ -294,8 +294,8 @@ def create_logic_diagram_Alcohol(number_labels = False, session_data = None):
 
     #lb_inital_state = 'Status:\nPre-Contemplation'
     lb_intervention_effect = ('Chance status improves\n' +
-                              'set to service value\n' + 
-                              'if higher')
+                              'set to service value if\n' + 
+                              'higher than current chance')
     lb_status_box = ('Status Update\n\n' +
                       '*$can\/be\/changed$\n'+
                       '$by\/intervention$')
@@ -306,7 +306,7 @@ def create_logic_diagram_Alcohol(number_labels = False, session_data = None):
     lb_lapse_prp_to_con = 'Chance status\nlapses'
     lb_lapse_con_to_pre = 'Chance status\nlapses'
 
-    lb_status_pre = 'Status:\n$\mathit{Pre-Contemplation}$'
+    lb_status_pre = 'Status:\nPre-Contemplation'
     lb_status_con = 'Status:\nContemplation'
     lb_status_prp = 'Status:\nPreparation'
     lb_status_act = 'Status:\nAction'

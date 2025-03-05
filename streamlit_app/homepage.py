@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas as pd
 from logic_diagram import create_logic_diagram
 import json
 import os
@@ -85,8 +86,44 @@ if 'num_steps' not in st.session_state:
 if 'animation_speed' not in st.session_state:
     st.session_state.animation_speed = 0.1
 
+## monte carlo parameters
 if 'iterations' not in st.session_state:
     st.session_state.iterations = 100
+
+## alcohol specific parameters
+if 'alcohol_change_prob_contemplation' not in st.session_state:
+    st.session_state.alcohol_change_prob_contemplation = 0.01
+
+if 'alcohol_change_prob_preparation' not in st.session_state:
+    st.session_state.alcohol_change_prob_preparation = 0.01
+
+if 'alcohol_change_prob_action' not in st.session_state:
+    st.session_state.alcohol_change_prob_action = 0.01
+
+if 'alcohol_lapse_prob_precontemplation' not in st.session_state:
+    st.session_state.alcohol_lapse_prob_precontemplation = 0.01
+
+if 'alcohol_lapse_prob_contemplation' not in st.session_state:
+    st.session_state.alcohol_lapse_prob_contemplation = 0.01
+
+if 'alcohol_lapse_prob_preparation' not in st.session_state:
+    st.session_state.alcohol_lapse_prob_preparation = 0.01
+
+if 'alcohol_services_table' not in st.session_state:
+    ## sets a dataframe up one row for each service type
+    alcohol_services = pd.DataFrame(
+            {'Service': ['Job Centre','Benefits Office','Housing Officer','Community Hub']
+            ,'Person Visit Probability': [0.50,0.50,0.50,0.50]
+            ,'Chance a Brief Intervention Made Without MECC Training': [0.01,0.01,0.01,0.01]
+            ,'MECC Trained': [True,True,True,True]
+            ,'Chance Making a Brief Intervention After MECC Training': [0.90,0.90,0.90,0.90]
+            ,'Post Intervention Pre-Contemplation to Contemplation chance': [0.50,0.50,0.50,0.50]
+            ,'Post Intervention Contemplation to Preparation chance': [0.50,0.50,0.50,0.50]
+            ,'Post Intervention Preparation to Action chance': [0.50,0.50,0.50,0.50]}
+    )
+    ## Sets service as index
+    alcohol_services = alcohol_services.set_index('Service')    
+    st.session_state.alcohol_services_table = alcohol_services.copy()
 
 model_parameters = {
     "model_seed": st.session_state.model_seed,
@@ -101,7 +138,17 @@ model_parameters = {
     "intervention_effect": st.session_state.intervention_effect,
     "num_steps" : st.session_state.num_steps,
     "animation_speed" : st.session_state.animation_speed,
-    "iterations":st.session_state.iterations
+    "iterations":st.session_state.iterations,
+    ## alcohol specific parameters
+    "change_prob_contemplation": st.session_state.alcohol_change_prob_contemplation,
+    "change_prob_preparation":st.session_state.alcohol_change_prob_preparation,
+    "change_prob_action": st.session_state.alcohol_change_prob_action,
+    "lapse_prob_precontemplation": st.session_state.alcohol_lapse_prob_precontemplation,
+    "lapse_prob_contemplation": st.session_state.alcohol_lapse_prob_contemplation,
+    "lapse_prob_preparation": st.session_state.alcohol_lapse_prob_preparation,
+    "contemplation_intervention": st.session_state.alcohol_services_table['Post Intervention Pre-Contemplation to Contemplation chance'].to_dict(),
+    "preparation_intervention": st.session_state.alcohol_services_table['Post Intervention Contemplation to Preparation chance'].to_dict(),
+    "action_intervention": st.session_state.alcohol_services_table['Post Intervention Preparation to Action chance'].to_dict(),
 }
 
 # save to json file to be used later for the quarto report
