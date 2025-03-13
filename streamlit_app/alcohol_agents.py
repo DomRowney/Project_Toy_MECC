@@ -144,7 +144,9 @@ class AlcoholModel_PersonAgent(PersonAgent):
     def move(self,services = [ 'Job Centre'
                               ,'Benefits Office'
                               ,'Housing Officer'
-                              ,'Community Hub']):
+                              ,'Community Hub'
+                              ,'Pharmacy'
+                              ,'GP Practice']):
         
         ## randomises which service is first
         self.random.shuffle(services)
@@ -223,7 +225,9 @@ class AlcoholModel_ServiceAgent(ServiceAgent):
 services_list = [ 'Job Centre'
             ,'Benefits Office'
             ,'Housing Officer'
-            ,'Community Hub']
+            ,'Community Hub'
+            ,'Pharmacy'
+            ,'GP Practice']
 
 # Dictionary to store the dynamically created classes
 Alcohol_Services = {}
@@ -283,7 +287,9 @@ class Alcohol_MECC_Model(MECC_Model):
         self.services_list = [ 'Job Centre'
                     ,'Benefits Office'
                     ,'Housing Officer'
-                    ,'Community Hub']
+                    ,'Community Hub'
+                    ,'Pharmacy'
+                    ,'GP Practice']
     
         ## alcohol features for person agents
         self.change_prob_contemplation   = change_prob_contemplation
@@ -315,14 +321,20 @@ class Alcohol_MECC_Model(MECC_Model):
                 "Total Contemplation":  calculate_number_status_contemplation,
                 "Total Preparation":  calculate_number_status_preparation,
                 "Total Action":  calculate_number_status_action,
+
                 "Job Centre Interventions": calculate_service_interventions_JobCentre,
                 "Benefits Office Interventions": calculate_service_interventions_BenefitsOffice,
                 "Housing Officer Interventions": calculate_service_interventions_HousingOfficer,
                 "Community Hub Interventions": calculate_service_interventions_CommunityHub,
+                "Pharmacy Interventions": calculate_service_interventions_Pharmacy,
+                "GP Practice Interventions": calculate_service_interventions_GPPractice,
+
                 "Job Centre Contacts": calculate_service_contacts_JobCentre,
                 "Benefits Office Contacts": calculate_service_contacts_BenefitsOffice,
                 "Housing Officer Contacts": calculate_service_contacts_HousingOfficer,
                 "Community Hub Contacts": calculate_service_contacts_CommunityHub,
+                "Pharmacy Contacts": calculate_service_contacts_Pharmacy,
+                "GP Practice Contacts": calculate_service_contacts_GPPractice,
             },
             agent_reporters={}
         )
@@ -410,6 +422,12 @@ def calculate_service_interventions_HousingOfficer(model):
 def calculate_service_interventions_CommunityHub(model):
     return calculate_service_interventions(model,"Community Hub")
 
+def calculate_service_interventions_Pharmacy(model):
+    return calculate_service_interventions(model,"Pharmacy")
+
+def calculate_service_interventions_GPPractice(model):
+    return calculate_service_interventions(model,"GP Practice")
+
 ## number of contacts by a service type
 def calculate_service_contacts(model,service):
     return sum(agent.contacts_made for agent in model.schedule.agents 
@@ -427,3 +445,9 @@ def calculate_service_contacts_HousingOfficer(model):
  
 def calculate_service_contacts_CommunityHub(model):
     return calculate_service_contacts(model,"Community Hub")
+
+def calculate_service_contacts_Pharmacy(model):
+    return calculate_service_contacts(model,"Pharmacy")
+
+def calculate_service_contacts_GPPractice(model):
+    return calculate_service_contacts(model,"GP Practice")

@@ -58,11 +58,13 @@ with tab2:
         st.write(f" - Animation Speed (seconds): :blue-background[{st.session_state.animation_speed}]")
 
     st.markdown("#### Service Parameters")
-    col1, col2, col3, col4 = st.columns(4)
+    col1, col2, col3, col4, col5, col6 = st.columns(6)
     column_dict = { 'Job Centre': col1
                     ,'Benefits Office': col2
                     ,'Housing Officer': col3
-                    ,'Community Hub': col4}
+                    ,'Community Hub': col4
+                    ,'Pharmacy': col5
+                    ,'GP Practice': col6}
     
     for service in column_dict:
         with column_dict[service]:
@@ -164,10 +166,14 @@ with tab1:
             with chart_placeholder1:
                 st.plotly_chart(fig1, use_container_width=True)
             
-            fig2 = create_intervention_figure(data_no_mecc, data_mecc, step)
+            fig2 = create_intervention_figure(data_no_mecc, data_mecc, step,'Contacts')
             with chart_placeholder2:
                 st.plotly_chart(fig2, use_container_width=True)
-            
+
+            fig3 = create_intervention_figure(data_no_mecc, data_mecc, step,'Interventions')
+            with chart_placeholder3:
+                st.plotly_chart(fig3, use_container_width=True)
+                        
             time.sleep(st.session_state.animation_speed)
                 
 
@@ -184,21 +190,25 @@ with tab1:
 
         st.markdown("### Final Statistics")      
         
-        # Function to style the DataFrame with a bold dividing line
-        #def highlight_divider(s):
-        #    """Style the DataFrame with a bold line after divdiers"""
-        #    divdiers = ['Total Interventions'
-        #                ,'Total Action'
-        #                ,'Community Hub Interventions'
-        #                ,'Community Hub Contacts']
-        #    return ['border-bottom: 3px solid black' if s.name in divdiers else '' for _ in s]
-#
-
+        colC, colD, colE = st.columns(3)
         result = pd.DataFrame({'No MECC Training': data_no_mecc.iloc[-1]
                                , 'MECC Trained': data_mecc.iloc[-1]})
+        
+        result_total = result.iloc[result.index.str.contains('Total')].copy()
+        result_other = result.iloc[~result.index.str.contains('Total')].copy()
+        result_intervention = result_other.iloc[result_other.index.str.contains('Interventions')].copy()
+        result_contact = result_other.iloc[result_other.index.str.contains('Contacts')].copy()
 
-        #st.dataframe(result.style.apply(highlight_divider, axis=1))
-        st.dataframe(result)#,height=600)
+
+        with colC: # Totals
+            st.dataframe(result_total)#,height=600)
+        
+        with colD: # Site Interventions
+            st.dataframe(result_intervention)#,height=600)
+
+        with colE: # Site Contacts
+            st.dataframe(result_contact)#,height=600)
+           
 
         print(result)
 

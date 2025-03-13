@@ -285,7 +285,9 @@ def create_logic_diagram_Alcohol(number_labels = False, session_data = None):
                         'Job Centre\n' +
                         'Benefits Office\n' +
                         'Housing Officer\n' +
-                        'Community Hub')
+                        'Community Hub\n' +
+                        'Pharmacy\n' +
+                        'GP Practice')
     lb_random_service = 'Randomise which\norder to interatct\nwith services'
     lb_visit_prob = 'Chance visit\na Service'
     lb_last_service = 'Is last service?'

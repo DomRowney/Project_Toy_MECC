@@ -6,22 +6,6 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 #import time
 
-'''
-                "Total Contacts": calculate_total_contacts,
-                "Total Interventions": calculate_total_interventions,
-                "Total Pre-contemplation":  calculate_number_status_precontemplation,
-                "Total Contemplation":  calculate_number_status_contemplation,
-                "Total Preparation":  calculate_number_status_preparation,
-                "Total Action":  calculate_number_status_action,
-                "Job Centre Interventions": calculate_service_interventions_JobCentre,
-                "Benefits Office Interventions": calculate_service_interventions_BenefitsOffice,
-                "Housing Officer Interventions": calculate_service_interventions_HousingOfficer,
-                "Community Hub Interventions": calculate_service_interventions_CommunityHub,
-                "Job Centre Contacts": calculate_service_contacts_JobCentre,
-                "Benefits Office Contacts": calculate_service_contacts_BenefitsOffice,
-                "Housing Officer Contacts": calculate_service_contacts_HousingOfficer,
-                "Community Hub Contacts": calculate_service_contacts_CommunityHub,
-'''                
 ##########################################
 ## Population Figure
 ##########################################
@@ -103,21 +87,23 @@ def create_population_figure(results_no_mecc, results_mecc, step):
 
 
 ##########################################
-## Intervention Figure
+## Site Figure
 ##########################################
 
-def create_intervention_figure(results_no_mecc, results_mecc, step):
+def create_intervention_figure(results_no_mecc, results_mecc, step, figure_type = 'X'):
     """Create side-by-side comparison figures"""
 
-    no_mecc_subtitle = ('Interventions' +
+    no_mecc_subtitle = (f'{figure_type}' +
                            ' (No MECC Training)')
-    mecc_subtitle = ('Interventions' +
+    mecc_subtitle = (f'{figure_type}' +
                         ' (MECC Trained)')
 
     service_colour_dict = { 'Job Centre': "red"
                     ,'Benefits Office': "blue"
                     ,'Housing Officer': "orange"
-                    ,'Community Hub': "purple"}
+                    ,'Community Hub': "purple"
+                    ,'Pharmacy': "yellow"
+                    ,'GP Practice': "green"}
     
 
     fig = make_subplots(
@@ -137,43 +123,23 @@ def create_intervention_figure(results_no_mecc, results_mecc, step):
         fig.add_trace(
             go.Scatter(
                 x=results_no_mecc.index[:step+1],
-                y=results_no_mecc[f'{service} Contacts'][:step+1],
-                name=f"{service} Contacts",
-                line=dict(color=service_colour_dict[service]
-                          , dash='dot')
-            ),
-            row=1, col=1
-        )
-        fig.add_trace(
-            go.Scatter(
-                x=results_no_mecc.index[:step+1],
-                y=results_no_mecc[f'{service} Interventions'][:step+1],
-                name=f"{service} Interventions",
+                y=results_no_mecc[f'{service} {figure_type}'][:step+1],
+                name=f"{service}",
                 line=dict(color=service_colour_dict[service]
                           , dash='solid')
             ),
             row=1, col=1
         )
+
         # Interventions and Quit Attempts - With MECC
         fig.add_trace(
             go.Scatter(
                 x=results_mecc.index[:step+1],
-                y=results_mecc[f'{service} Contacts'][:step+1],
-                name=f"{service} Contacts",
-                line=dict(color=service_colour_dict[service]
-                          , dash='dot'),
-                showlegend=False          
-            ),
-            row=1, col=2
-        )
-        fig.add_trace(
-            go.Scatter(
-                x=results_mecc.index[:step+1],
-                y=results_mecc[f'{service} Interventions'][:step+1],
-                name=f"{service} Interventions",
+                y=results_mecc[f'{service} {figure_type}'][:step+1],
+                name=f"{service}",
                 line=dict(color=service_colour_dict[service]
                           , dash='solid'),
-                showlegend=False
+                showlegend=False          
             ),
             row=1, col=2
         )
