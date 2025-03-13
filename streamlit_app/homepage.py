@@ -109,6 +109,9 @@ if 'alcohol_lapse_prob_contemplation' not in st.session_state:
 if 'alcohol_lapse_prob_preparation' not in st.session_state:
     st.session_state.alcohol_lapse_prob_preparation = 0.01
 
+if 'alcohol_golden_window' not in st.session_state:
+    st.session_state.alcohol_golden_window = 3
+
 if 'alcohol_services_table' not in st.session_state:
     ## sets a dataframe up one row for each service type
     alcohol_services = pd.DataFrame(

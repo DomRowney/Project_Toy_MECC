@@ -176,6 +176,23 @@ with tab2:
                             st.session_state['alcohol lapse Preparation'])
                 ,key='alcohol lapse Preparation')
 
+            ##################
+            # alcohol_golden_window
+            #################
+           
+            if 'alcohol_golden_window' not in st.session_state:
+                st.session_state.alcohol_golden_window = 3
+
+            alcohol_golden_window =  st.slider(
+                "Periods before chances reset to base (the golden window)"
+                , 0, 24
+                , st.session_state.alcohol_golden_window
+                , on_change=lambda: setattr(st.session_state,
+                            'alcohol_golden_window',
+                            st.session_state['alcohol golden window'])
+                ,key='alcohol golden window')
+
+
         population_parameters_alcohol()
 
     with colB:

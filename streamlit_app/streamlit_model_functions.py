@@ -63,6 +63,8 @@ def create_MECC_model(model_parameters
             , lapse_prob_contemplation = model_parameters["lapse_prob_contemplation"]
             , lapse_prob_preparation = model_parameters["lapse_prob_preparation"]
 
+            , golden_window = model_parameters["golden_window"]
+
             ## visit probability
             , visit_prob = model_parameters["visit_prob"]
 

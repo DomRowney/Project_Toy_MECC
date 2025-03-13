@@ -50,7 +50,8 @@ with tab2:
         st.write(f" - Base Contemplation to Pre-Contemplation lapse chance: :blue-background[{st.session_state.alcohol_lapse_prob_precontemplation}]")
         st.write(f" - Base Preparation to Contemplation lapse chance: :blue-background[{st.session_state.alcohol_lapse_prob_contemplation}]")
         st.write(f" - Base Action to Preparation lapse chance: :blue-background[{st.session_state.alcohol_lapse_prob_preparation}]")
-
+        st.write(f" - Periods before chances reset to base (the golden window): :blue-background[{st.session_state.alcohol_golden_window}]")
+        
     with colB:
         st.markdown("#### Simulation Parameters")
         st.write(f" - Random Seed: :blue-background[{st.session_state.model_seed}]")
@@ -109,6 +110,7 @@ with tab1:
         "lapse_prob_precontemplation": st.session_state.alcohol_lapse_prob_precontemplation,
         "lapse_prob_contemplation": st.session_state.alcohol_lapse_prob_contemplation,
         "lapse_prob_preparation": st.session_state.alcohol_lapse_prob_preparation,
+        "golden_window": st.session_state.alcohol_golden_window,
         "visit_prob": st.session_state.alcohol_services_table['Person Visit Probability'].to_dict(),
         "base_make_intervention_prob": st.session_state.alcohol_services_table['Chance a Brief Intervention Made Without MECC Training'].to_dict(),
         "mecc_trained": st.session_state.alcohol_services_table['MECC Trained'].to_dict(),

@@ -26,6 +26,7 @@ class AlcoholModel_PersonAgent(PersonAgent):
     def __init__(self
                  , unique_id
                  , model
+
                 ## demographics
                  , gender
                  , age
@@ -40,11 +41,13 @@ class AlcoholModel_PersonAgent(PersonAgent):
                  , lapse_prob_contemplation
                  , lapse_prob_preparation
 
+                 , golden_window               
+
                 ## visit probability
                  , visit_prob = {}            
                  
                 ## alcohol
-                 , inital_alcohol_status = "Pre-contemplation"                 
+                 , inital_alcohol_status = "Pre-contemplation"
                  ):
         super().__init__(unique_id, model,  visit_prob)
 
@@ -55,15 +58,23 @@ class AlcoholModel_PersonAgent(PersonAgent):
 
         ## Alcohol properties
         self.alcohol_status = {"status": inital_alcohol_status
-                                ,"time": 0}
+                               ,"in window": False
+                                ,"window time": 0}
 
-        self.change_prob_contemplation = change_prob_contemplation
-        self.change_prob_preparation = change_prob_preparation
-        self.change_prob_action = change_prob_action
+
+        self.change_prob_contemplation_base = change_prob_contemplation
+        self.change_prob_preparation_base = change_prob_preparation
+        self.change_prob_action_base = change_prob_action
+
+        self.change_prob_contemplation = self.change_prob_contemplation_base
+        self.change_prob_preparation = self.change_prob_preparation_base
+        self.change_prob_action = self.change_prob_action_base
 
         self.lapse_prob_precontemplation = lapse_prob_precontemplation
         self.lapse_prob_contemplation = lapse_prob_contemplation
         self.lapse_prob_preparation = lapse_prob_preparation
+
+        self.golden_window = golden_window
 
         ## Visit properties
         self.visit_prob = visit_prob 
@@ -82,8 +93,8 @@ class AlcoholModel_PersonAgent(PersonAgent):
             (self.alcohol_status["status"] == start) &
                 (change_state_rand <= probability)
             ):
-            self.alcohol_status = {"status": end
-                                    ,"time": 0}
+            self.alcohol_status["status"] = end
+
             print(f" > Person {self.unique_id} alcohol status {type} "
                   + f"from {start} to {end}")
             ## for checking
@@ -126,7 +137,21 @@ class AlcoholModel_PersonAgent(PersonAgent):
                            ,'lapse')
 
         ## Adds one to time
-        self.alcohol_status["time"] += 1
+        #self.alcohol_status["time"] += 1
+    
+    def update_golden_window(self):
+        if (self.alcohol_status["in window"] & 
+            (self.alcohol_status["window time"] > self.golden_window) ):
+            print(f" > Person {self.unique_id}'s golden window ended. Reset probabilities.")
+            ## resets probabilities to base
+            self.change_prob_contemplation = self.change_prob_contemplation_base
+            self.change_prob_preparation = self.change_prob_preparation_base
+            self.change_prob_action = self.change_prob_action_base
+        elif self.alcohol_status["in window"]:
+            ## increases timer
+            self.alcohol_status["window time"] += 1
+        else:
+            pass
 
     def visit(self,service,probability):
         if self.random.uniform(0,1) <= probability:
@@ -161,6 +186,7 @@ class AlcoholModel_PersonAgent(PersonAgent):
         print(f"Person {self.unique_id}")
         super().step()
         self.update_alcohol_status()
+        self.update_golden_window()
 
 
 ##################################
@@ -202,18 +228,31 @@ class AlcoholModel_ServiceAgent(ServiceAgent):
     def perform_intervention(self, PersonAgent):
         ## if the change probability is lower than the intervention,
         print(f"  > {self.category} did an intervention on Person {PersonAgent.unique_id}")
-        if PersonAgent.change_prob_contemplation < self.contemplation_intervention:
-            PersonAgent.change_prob_contemplation = self.contemplation_intervention
+        
+        if PersonAgent.alcohol_status["in window"]:
+            pass
+        else:
+            print(f"  > Person {PersonAgent.unique_id} golden window started at {self.category}.")
+            PersonAgent.alcohol_status["in window"] = True
+
+        ## Adds intervention effect
+        PersonAgent.change_prob_contemplation =+ self.contemplation_intervention
+        PersonAgent.change_prob_preparation =+ self.preparation_intervention
+        PersonAgent.change_prob_action =+ self.action_intervention
+
+        ## Caps probabilities at 1
+        if PersonAgent.change_prob_contemplation >= 1:
+            PersonAgent.change_prob_contemplation = 1
         else: 
             pass
         
-        if PersonAgent.change_prob_preparation < self.preparation_intervention:
-            PersonAgent.change_prob_preparation = self.preparation_intervention
+        if PersonAgent.change_prob_preparation > 1:
+            PersonAgent.change_prob_preparation = 1
         else: 
             pass
 
-        if PersonAgent.change_prob_action < self.action_intervention:
-            PersonAgent.change_prob_action = self.action_intervention
+        if PersonAgent.change_prob_action > 1:
+            PersonAgent.change_prob_action = 1
         else: 
             pass          
 
@@ -265,6 +304,8 @@ class Alcohol_MECC_Model(MECC_Model):
                  , lapse_prob_precontemplation
                  , lapse_prob_contemplation
                  , lapse_prob_preparation
+    
+                , golden_window
 
                 ## visit probability
                  , visit_prob = {}
@@ -301,6 +342,7 @@ class Alcohol_MECC_Model(MECC_Model):
         self.lapse_prob_preparation      = lapse_prob_preparation
 
         self.visit_prob      = visit_prob
+        self.golden_window   = golden_window
 
         ## Overwrite base properties with dict versions
         self.mecc_effect = mecc_effect
@@ -359,6 +401,8 @@ class Alcohol_MECC_Model(MECC_Model):
                             , lapse_prob_precontemplation = self.lapse_prob_precontemplation
                             , lapse_prob_contemplation = self.lapse_prob_contemplation
                             , lapse_prob_preparation = self.lapse_prob_preparation
+
+                            , golden_window = self.golden_window
 
                             ## visit probability
                             , visit_prob = self.visit_prob
