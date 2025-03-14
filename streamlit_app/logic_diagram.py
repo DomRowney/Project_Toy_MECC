@@ -288,16 +288,24 @@ def create_logic_diagram_Alcohol(number_labels = False, session_data = None):
                         'Community Hub\n' +
                         'Pharmacy\n' +
                         'GP Practice')
-    lb_random_service = 'Randomise which\norder to interatct\nwith services'
+    lb_random_service = 'Randomise which\norder to interact\nwith services'
     lb_visit_prob = 'Chance visit\na Service'
     lb_last_service = 'Is last service?'
-    lb_make_intervention =  'Chance Service\nDelivers\nIntervention'                             
+    lb_make_intervention =  'Chance Service\nDelivers\nIntervention'
+    
+    lb_in_window = 'Is person in\n"Golden Window"\nof intervention?'
+    lb_start_window = '"Golden Window": True\n and Timer = 0'
+    lb_end_window = ('"Golden Window": False\n'+
+                    'and reset to base\n' +
+                    'chance status improves')
+
+    lb_window_time_up = 'Is "Golden Window"\nTimer > Length?'
     lb_last_period = 'Is Last Period?'
 
     #lb_inital_state = 'Status:\nPre-Contemplation'
-    lb_intervention_effect = ('Chance status improves\n' +
-                              'set to service value if\n' + 
-                              'higher than current chance')
+    lb_intervention_effect = ('Add intervention effect\n' +
+                              'of service to person\n'+
+                              'chance status improves')
     lb_status_box = ('Status Update\n\n' +
                       '*$can\/be\/changed$\n'+
                       '$by\/intervention$')
@@ -319,17 +327,20 @@ def create_logic_diagram_Alcohol(number_labels = False, session_data = None):
             ## general
             N_people = st.session_state.N_people
             num_steps = st.session_state.num_steps
+            golden_window = st.session_state.alcohol_golden_window
 
         ## for use with saved variables in quarto output                                    
         else:
             ## general
             N_people = session_data['N_people']
             num_steps = session_data['num_steps']
+            golden_window = session_data['alcohol_golden_window']
 
         ## general labels with numbers
         lb_N_people = f'{lb_N_people}\n({N_people})'
         lb_last_period = f'{lb_last_period}\n({num_steps})'
-      
+        #lb_start_window = f'{lb_start_window}\n(length: {golden_window})'
+        lb_window_time_up = f'{lb_window_time_up}\n({golden_window})'
 
     ## create a drawing class
     with schemdraw.Drawing() as d:
@@ -377,8 +388,17 @@ def create_logic_diagram_Alcohol(number_labels = False, session_data = None):
             interv_result = flow.Box().anchor('N').label(lb_intervention_effect)
             flow.Arrow().down(d.unit/3).at(interv_result.S)
 
+            in_window = flow.Decision(E='Yes'
+                                ,S='No').label(lb_in_window)
+            flow.Arrow().down(d.unit/3).at(in_window.S)
+
+            start_window = flow.Box().anchor('N').label(lb_start_window)
+            flow.Arrow().down(d.unit/3).at(start_window.S)
+
+
             visit_end = flow.Start().label('Visit End').anchor('N')
             flow.Wire('c',k=-d.unit/3 ,arrow ='->').at(interv.W).to(visit_end.W)
+            flow.Wire('c',k=d.unit/3 ,arrow ='->').at(in_window.E).to(visit_end.E)
 
         flow.Arrow().down(d.unit/2).at(visit_end.S)
         last_service = flow.Decision(E='No'
@@ -521,13 +541,42 @@ def create_logic_diagram_Alcohol(number_labels = False, session_data = None):
         flow.Wire('c',k=-d.unit,arrow ='->').at(status_con2.W).to(status_update_end.W)
         flow.Arrow().down(d.unit).at(status_update_end.S)
 
+        ## Golden Window update
+        with d.container() as window_box:
+            window_box.linestyle(":")
+            window_box.label('"Golden Window"\nUpdate'
+                             ,loc="NW",halign="left",valign="top")
+
+            window_update_start = flow.Start().label('"Golden Window"\nUpdate Start').anchor('N')
+            flow.Arrow().down(d.unit/3).at(window_update_start.S)
+            in_window2 = flow.Decision(S='Yes'
+                                ,W='No').label(lb_in_window)
+            flow.Arrow().down(d.unit/3).at(in_window2.S)
+            window_time_add = flow.Box().label('"Golden Window"\nTimer +1')
+            flow.Arrow().down(d.unit/3).at(window_time_add.S)
+            window_time_up = flow.Decision(S='Yes'
+                                    ,E='No').label(lb_window_time_up)
+            flow.Arrow().down(d.unit/3).at(window_time_up.S)
+            end_window = flow.Box().label(lb_end_window)
+            flow.Arrow().down(d.unit/3).at(end_window.S)
+
+            window_update_end = flow.Start().label('"Golden Window"\nUpdate End').anchor('N')
+
+            flow.Wire('c',k=-d.unit/3 ,arrow ='->').at(in_window2.W).to(window_update_end.W)
+            flow.Wire('c',k=d.unit/3 ,arrow ='->').at(window_time_up.E).to(window_update_end.E)
+        flow.Arrow().down(d.unit).at(window_update_end.S)
+
+
+        ## End period
         period_end = flow.Start().label('Period End').drop("E")
         flow.Arrow().right(d.unit/3).at(period_end.E)
+
         last_period = flow.Decision(E='No'
                             ,S='Yes').label(lb_last_period).drop("S")
         flow.Arrow().down(d.unit/3).at(last_period.S)
         model_end = flow.Circle(r=d.unit/2).label('Model End')
         flow.Wire('c',k=d.unit/3,arrow ='->').at(last_period.E).to(period_start.E)
+
 
     ## Save the drawing to a temporary file
     img_path = "alcohol_logic_diagram.png"
