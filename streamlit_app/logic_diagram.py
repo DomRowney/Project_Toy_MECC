@@ -288,11 +288,13 @@ def create_logic_diagram_Alcohol(number_labels = False, session_data = None):
                         'Community Hub\n' +
                         'Pharmacy\n' +
                         'GP Practice')
-    lb_random_service = 'Randomise which\norder to interact\nwith services'
+    lb_random_service = 'Randomise which\norder to interact\nwith Services'
     lb_visit_prob = 'Chance visit\na Service'
     lb_last_service = 'Is last service?'
     lb_make_intervention =  'Chance Service\nDelivers\nIntervention'
-    
+    lb_is_receptive = ('Chance person\n' +
+                        'is receptive\n' +
+                        'to intervention')
     lb_in_window = 'Is person in\n"Golden Window"\nof intervention?'
     lb_start_window = '"Golden Window": True\n and Timer = 0'
     lb_end_window = ('"Golden Window": False\n'+
@@ -328,17 +330,19 @@ def create_logic_diagram_Alcohol(number_labels = False, session_data = None):
             N_people = st.session_state.N_people
             num_steps = st.session_state.num_steps
             golden_window = st.session_state.alcohol_golden_window
-
+            prob_receptive = st.session_state.alcohol_prob_receptive
         ## for use with saved variables in quarto output                                    
         else:
             ## general
             N_people = session_data['N_people']
             num_steps = session_data['num_steps']
             golden_window = session_data['alcohol_golden_window']
+            prob_receptive = session_data['alcohol_prob_receptive']
 
         ## general labels with numbers
         lb_N_people = f'{lb_N_people}\n({N_people})'
         lb_last_period = f'{lb_last_period}\n({num_steps})'
+        lb_is_receptive = f'{lb_is_receptive}\n({prob_receptive})'
         #lb_start_window = f'{lb_start_window}\n(length: {golden_window})'
         lb_window_time_up = f'{lb_window_time_up}\n({golden_window})'
 
@@ -385,26 +389,47 @@ def create_logic_diagram_Alcohol(number_labels = False, session_data = None):
                                 ,S='Intervention').label(lb_make_intervention)
             flow.Arrow().down(d.unit/3).at(interv.S)
 
-            interv_result = flow.Box().anchor('N').label(lb_intervention_effect)
-            flow.Arrow().down(d.unit/3).at(interv_result.S)
-
-            in_window = flow.Decision(E='Yes'
+            in_window = flow.Decision(W='Yes'
                                 ,S='No').label(lb_in_window)
             flow.Arrow().down(d.unit/3).at(in_window.S)
 
+            check_status = flow.Decision(W='No'
+                                ,S='Yes').label("Is status:\nPre-Contemplation?")
+            #d.push() ## remembers location
+            
+            #d.pop() ## returns to push location        
+            flow.Arrow().down(d.unit/3).at(check_status.S)
+
+            is_receptive = flow.Decision(E='Not\nReceptive'
+                                ,S='Receptive').label(lb_is_receptive)
+            flow.Arrow().down(d.unit/3).at(is_receptive.S)
+                 
+            #flow.Wire('-|',arrow ='->').at(check_status.E).to(check_status.E)
+
+            #flow.Arrow().right().at(check_status.E).to(is_receptive.N)
+
             start_window = flow.Box().anchor('N').label(lb_start_window)
+            flow.Wire('c',k=-d.unit/3 ,arrow ='->').at(check_status.W).to(start_window.W)
             flow.Arrow().down(d.unit/3).at(start_window.S)
+
+            #flow.Wire('-|',arrow ='->').at(is_receptive.W).to(start_window.N)
+            #flow.Wire('-|',arrow ='->').at(is_receptive.E).to(start_window.N)
+                    
+
+            interv_result = flow.Box().anchor('N').label(lb_intervention_effect)
+            flow.Wire('c',k=-d.unit/2 ,arrow ='->').at(in_window.W).to(interv_result.W)
+            flow.Arrow().down(d.unit/3).at(interv_result.S)
 
 
             visit_end = flow.Start().label('Visit End').anchor('N')
-            flow.Wire('c',k=-d.unit/3 ,arrow ='->').at(interv.W).to(visit_end.W)
-            flow.Wire('c',k=d.unit/3 ,arrow ='->').at(in_window.E).to(visit_end.E)
+            flow.Wire('c',k=-d.unit ,arrow ='->').at(interv.W).to(visit_end.W)
+            flow.Wire('c',k=d.unit/2 ,arrow ='->').at(is_receptive.E).to(visit_end.E)
 
         flow.Arrow().down(d.unit/2).at(visit_end.S)
         last_service = flow.Decision(E='No'
                                 ,S='Yes').label(lb_last_service)
-        flow.Wire('c',k=-d.unit*1.25,arrow ='->').at(visit.W).to(last_service.W)        
-        flow.Wire('c',k=d.unit,arrow ='->').at(last_service.E).to(service_select.E)
+        flow.Wire('c',k=-d.unit*2,arrow ='->').at(visit.W).to(last_service.W)        
+        flow.Wire('c',k=d.unit*1.5,arrow ='->').at(last_service.E).to(service_select.E)
         flow.Arrow().down(d.unit/2).at(last_service.S)
 
         ## Status update
