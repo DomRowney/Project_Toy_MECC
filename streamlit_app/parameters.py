@@ -78,6 +78,22 @@ with tab2:
         def population_parameters_alcohol():
             st.write(f"Number of People: :blue-background[{st.session_state.N_people}]")
             st.markdown("**Base Positive Change Chance**")
+            
+            ##################
+            # alcohol_prob_receptive
+            #################
+           
+            if 'alcohol_prob_receptive' not in st.session_state:
+                st.session_state.alcohol_prob_receptive = 0.75
+
+            alcohol_prob_receptive =  st.slider(
+                "Chance that a pre-Contemplation person not in a golden window is receptive to an intervention"
+                , 0.0, 1.0
+                , st.session_state.alcohol_prob_receptive
+                , on_change=lambda: setattr(st.session_state,
+                            'alcohol_prob_receptive',
+                            st.session_state['alcohol probability receptive'])
+                ,key='alcohol probability receptive')
 
             ##################
             # alcohol_change_prob_contemplation
@@ -191,6 +207,7 @@ with tab2:
                             'alcohol_golden_window',
                             st.session_state['alcohol golden window'])
                 ,key='alcohol golden window')
+
 
 
         population_parameters_alcohol()

@@ -1,0 +1,224 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "title: \"Toy MECC Simulation Report\"\n",
+        "# execute:\n",
+        "#   echo: false\n",
+        "format:\n",
+        "    html:\n",
+        "        toc: false\n",
+        "        code-fold: false\n",
+        "        embed-resources: true\n",
+        "        # URL options\n",
+        "        link-external-icon: true\n",
+        "        link-external-newwindow: true\n",
+        "        # Reference options\n",
+        "        citations-hover: true\n",
+        "        footnotes-hover: true\n",
+        "        #####################\n",
+        "        # NHS Theme options #\n",
+        "        #####################\n",
+        "        css: \"NHS_report_theme.css\"\n",
+        "        callout-appearance: simple\n",
+        "        callout-collapse: true\n",
+        "        # Caption options\n",
+        "        cap-location: bottom\n",
+        "        # Title options\n",
+        "        title-block-banner: '#005EB8'\n",
+        "        backgroundcolor: '#f0f4f5'\n",
+        "        # Set font\n",
+        "        mainfont: 'Open Sans'\n",
+        "execute: \n",
+        "    echo: true\n",
+        "    warning: false\n",
+        "    message: false\n",
+        "---\n",
+        "\n",
+        "\n",
+        "<!-- ![](resources\\MECC.jpg){height=100} -->\n"
+      ],
+      "id": "628962a7"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| echo: false\n",
+        "#| label: get_data\n",
+        "import pandas as pd\n",
+        "import json\n",
+        "import plotly.graph_objects as go\n",
+        "from logic_diagram import create_logic_diagram_SmokeModel\n",
+        "\n",
+        "# Load session data from JSON\n",
+        "with open(\"./outputs/session_data.json\", \"r\") as f:\n",
+        "    session_data = json.load(f)\n",
+        "\n",
+        "data_no_mecc = pd.read_csv(\"./outputs/data_no_mecc.csv\")\n",
+        "data_mecc = pd.read_csv(\"./outputs/data_mecc.csv\")"
+      ],
+      "id": "get_data",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "# Smoking Cessation with MECC\n",
+        "\n",
+        "## Simulation Results\n"
+      ],
+      "id": "e6652638"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| echo: false\n",
+        "#| label: plots\n",
+        "from streamlit_model_functions import create_population_figure\n",
+        "from streamlit_model_functions import create_intervention_figure\n",
+        "from streamlit_model_functions import create_metrics_figure\n",
+        "\n",
+        "step = len(data_no_mecc) - 1\n",
+        "fig1 = create_population_figure(data_no_mecc, data_mecc, step)\n",
+        "fig1.show()\n",
+        "\n",
+        "fig2 = create_intervention_figure(data_no_mecc, data_mecc, step)\n",
+        "fig2.show()\n",
+        "\n",
+        "fig3 = create_metrics_figure(data_no_mecc, data_mecc, step)\n",
+        "fig3.show()"
+      ],
+      "id": "plots",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## Final Statistics\n",
+        "\n",
+        "### Smoking Reduction (No MECC) "
+      ],
+      "id": "64b0c44f"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| echo: false\n",
+        "#| label: Calculate smoking reduction for model without MECC\n",
+        "initial_non_smokers_no_mecc = data_no_mecc['Total Not Smoking'].iloc[0]\n",
+        "final_non_smokers_no_mecc = data_no_mecc['Total Not Smoking'].iloc[-1]\n",
+        "reduction_no_mecc = (final_non_smokers_no_mecc / session_data[\"N_people\"]) * 100\n",
+        "total_quits_no_mecc = final_non_smokers_no_mecc - initial_non_smokers_no_mecc\n",
+        "\n",
+        "print(f\"Smoking Reduction (No MECC): {reduction_no_mecc:.1f}%\")\n",
+        "print(f\"Total Quits (No MECC): {total_quits_no_mecc:.0f}\")"
+      ],
+      "id": "Calculate-smoking-reduction-for-model-without-MECC",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### Smoking Reduction (With MECC) "
+      ],
+      "id": "22aed13a"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| echo: false\n",
+        "#| label: Calculate smoking reduction for model with MECC\n",
+        "initial_non_smokers_mecc = data_mecc['Total Not Smoking'].iloc[0]\n",
+        "final_non_smokers_mecc = data_mecc['Total Not Smoking'].iloc[-1]\n",
+        "reduction_mecc = (final_non_smokers_mecc / session_data[\"N_people\"]) * 100\n",
+        "total_quits_mecc = final_non_smokers_mecc - initial_non_smokers_mecc\n",
+        "\n",
+        "print(f\"Smoking Reduction (With MECC): {reduction_mecc:.1f}%\")\n",
+        "print(f\"Total Quits (With MECC): {total_quits_mecc:.0f}\")"
+      ],
+      "id": "Calculate-smoking-reduction-for-model-with-MECC",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### MECC Impact\n"
+      ],
+      "id": "b625670b"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| echo: false\n",
+        "#| label: Calculate additional quits due to MECC\n",
+        "mecc_improvement = final_non_smokers_mecc - final_non_smokers_no_mecc\n",
+        "mecc_impact_percentage = (mecc_improvement / session_data[\"N_people\"]) * 100\n",
+        "\n",
+        "print(f\"MECC Impact: {mecc_improvement:.0f} additional quits\")\n",
+        "print(f\"MECC Impact Percentage: {mecc_impact_percentage:.1f}%\")"
+      ],
+      "id": "Calculate-additional-quits-due-to-MECC",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## Toy MECC Parameters\n",
+        "\n",
+        "### Population Parameters\n",
+        " - Number of People: **`{python} session_data[\"N_people\"]`** \n",
+        " - Initial Smoking Probability: **`{python} session_data[\"initial_smoking_prob\"]`**\n",
+        " - Chance of Visiting a Service per Month: **`{python} session_data[\"visit_prob\"]`**\n",
+        " - Base Quit Attempt Probability per Month: **`{python} session_data[\"quit_attempt_prob\"]`**\n",
+        " - Base Smoking Relapse per Month: **`{python} session_data[\"base_smoke_relapse_prob\"]`**\n",
+        "    - *Relapse chance decreases over time of not smoking*\n",
+        "\n",
+        "### Service Parameters\n",
+        "- Chance a Brief Intervention Made Without MECC: **`{python} session_data[\"mecc_effect\"]`**\n",
+        "\n",
+        "### MECC Parameters\n",
+        " - Chance Making a Brief Intervention After MECC Training: **`{python} session_data[\"base_make_intervention_prob\"]`**\n",
+        " - Effect of a Brief Intervention on Chance Making a Quit Attempt: **`{python} session_data[\"intervention_effect\"]`**\n",
+        "    - *Numbers less than 1 will decrease the probability*\n",
+        "\n",
+        "### Simulation Parameters\n",
+        " - Random Seed: **`{python} session_data[\"model_seed\"]`**\n",
+        " - Number of Months to Simulate: **`{python} session_data[\"num_steps\"]`**\n",
+        " - Animation Speed (seconds): **`{python} session_data[\"animation_speed\"]`**\n",
+        "\n",
+        "### Logic Diagram\n",
+        "\n",
+        "![Diagram of Agent Model Logic](`{python} create_logic_diagram_SmokeModel(number_labels = True, session_data = session_data)`)\n"
+      ],
+      "id": "7ad934dd"
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "name": "python3",
+      "language": "python",
+      "display_name": "Python 3 (ipykernel)",
+      "path": "/home/dominic_rowney/anaconda3/envs/mecc/share/jupyter/kernels/python3"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}

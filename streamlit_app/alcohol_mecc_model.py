@@ -51,6 +51,8 @@ with tab2:
         st.write(f" - Base Preparation to Contemplation lapse chance: :blue-background[{st.session_state.alcohol_lapse_prob_contemplation}]")
         st.write(f" - Base Action to Preparation lapse chance: :blue-background[{st.session_state.alcohol_lapse_prob_preparation}]")
         st.write(f" - Periods before chances reset to base (the golden window): :blue-background[{st.session_state.alcohol_golden_window}]")
+        st.write(f" - Chance that a pre-Contemplation person not in a golden window is receptive to an intervention: :blue-background[{st.session_state.alcohol_prob_receptive}]")
+
         
     with colB:
         st.markdown("#### Simulation Parameters")
@@ -104,6 +106,7 @@ with tab1:
         "num_steps" : st.session_state.num_steps,
         "animation_speed" : st.session_state.animation_speed,    
         "N_people": st.session_state.N_people,
+        "prob_receptive": st.session_state.alcohol_prob_receptive,
         "change_prob_contemplation": st.session_state.alcohol_change_prob_contemplation,
         "change_prob_preparation":st.session_state.alcohol_change_prob_preparation,
         "change_prob_action": st.session_state.alcohol_change_prob_action,
@@ -192,23 +195,29 @@ with tab1:
 
         st.markdown("### Final Statistics")      
         
-        colC, colD, colE = st.columns(3)
+
         result = pd.DataFrame({'No MECC Training': data_no_mecc.iloc[-1]
                                , 'MECC Trained': data_mecc.iloc[-1]})
         
         result_total = result.iloc[result.index.str.contains('Total')].copy()
         result_other = result.iloc[~result.index.str.contains('Total')].copy()
-        result_intervention = result_other.iloc[result_other.index.str.contains('Interventions')].copy()
+        result_intervention = result_other.iloc[result_other.index.str.contains('Interventions')
+                                                & ~result_other.index.str.contains('Successful')].copy()
+        result_successful = result_other.iloc[result_other.index.str.contains('Successful')].copy()        
         result_contact = result_other.iloc[result_other.index.str.contains('Contacts')].copy()
-
-
-        with colC: # Totals
-            st.dataframe(result_total)#,height=600)
         
-        with colD: # Site Interventions
-            st.dataframe(result_intervention)#,height=600)
+        ## Totals
+        st.dataframe(result_total)#,height=600)
+        
+        colC, colD, colE = st.columns(3)
+        
+        with colC: ## Site Interventions
+            st.dataframe(result_intervention)#,height=600)  
+        
+        with colD: ## Site Successfull Interventions
+            st.dataframe(result_successful)#,height=600)
 
-        with colE: # Site Contacts
+        with colE: ## Site Contacts
             st.dataframe(result_contact)#,height=600)
            
 

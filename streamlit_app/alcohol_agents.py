@@ -33,6 +33,8 @@ class AlcoholModel_PersonAgent(PersonAgent):
                  , deprivation
 
                  ## change state probability
+                 , prob_receptive
+
                  , change_prob_contemplation
                  , change_prob_preparation
                  , change_prob_action
@@ -61,6 +63,7 @@ class AlcoholModel_PersonAgent(PersonAgent):
                                ,"in window": False
                                 ,"window time": 0}
 
+        self.prob_receptive = prob_receptive
 
         self.change_prob_contemplation_base = change_prob_contemplation
         self.change_prob_preparation_base = change_prob_preparation
@@ -78,7 +81,7 @@ class AlcoholModel_PersonAgent(PersonAgent):
 
         ## Visit properties
         self.visit_prob = visit_prob 
-
+    
     ## function to update status
     def update_status(self,start,end,probability,type):
         change_state_rand = self.random.uniform(0, 1)
@@ -219,21 +222,19 @@ class AlcoholModel_ServiceAgent(ServiceAgent):
         self.preparation_intervention = preparation_intervention
         self.action_intervention = action_intervention
 
+        ## Addintional Reporting variables
+        self.successful_interventions_made = 0
+            
+
     @classmethod
     def describe(cls):
         """Class method to print class information."""
         print(f"This is a service agent of the category {cls.category}")
 
-    ## Override to perform alcohol-specific interventions
-    def perform_intervention(self, PersonAgent):
-        ## if the change probability is lower than the intervention,
-        print(f"  > {self.category} did an intervention on Person {PersonAgent.unique_id}")
-        
-        if PersonAgent.alcohol_status["in window"]:
-            pass
-        else:
-            print(f"  > Person {PersonAgent.unique_id} golden window started at {self.category}.")
-            PersonAgent.alcohol_status["in window"] = True
+
+    def intervention_effect(self,PersonAgent):
+        ## adds 1 to the successful intervention count
+        self.successful_interventions_made += 1
 
         ## Adds intervention effect
         PersonAgent.change_prob_contemplation =+ self.contemplation_intervention
@@ -255,6 +256,35 @@ class AlcoholModel_ServiceAgent(ServiceAgent):
             PersonAgent.change_prob_action = 1
         else: 
             pass          
+
+    ## Override to perform alcohol-specific interventions
+    def perform_intervention(self, PersonAgent):
+        ## adds 1 to the intervention count
+        self.interventions_made += 1
+
+        ## if the change probability is lower than the intervention,
+        print(f"  > {self.category} did an intervention on Person {PersonAgent.unique_id}")
+        
+        if PersonAgent.alcohol_status["in window"]:
+            print(f"    > Person {PersonAgent.unique_id} is in a golden window and is receptive to change ")
+            self.intervention_effect(PersonAgent)
+        
+        elif PersonAgent.alcohol_status["status"] != 'Pre-contemplation':
+            print(f"    > Person {PersonAgent.unique_id} is in {PersonAgent.alcohol_status['status']} " +
+                  f"phase and golden window started at {self.category}.")
+            PersonAgent.alcohol_status["in window"] = True            
+            self.intervention_effect(PersonAgent)
+
+        elif PersonAgent.random.uniform(0, 1) <= PersonAgent.prob_receptive:
+            print(f"    > Person {PersonAgent.unique_id} is in {PersonAgent.alcohol_status['status']} " +
+                   f" phase, receptive to change, and golden window started at {self.category}.")
+            PersonAgent.alcohol_status["in window"] = True
+            self.intervention_effect(PersonAgent)
+        
+        else:
+            print(f"    > Person {PersonAgent.unique_id} is in {PersonAgent.alcohol_status['status']} " + 
+                  f"phase and not receptive to change")
+
 
     ## doesn't do anything at each step
     def step(self):
@@ -279,8 +309,6 @@ for service in services_list:
     Alcohol_Services[service_agent] = new_class
 
 
-
-
 ##################################
 ### Model Class
 ##################################
@@ -297,6 +325,8 @@ class Alcohol_MECC_Model(MECC_Model):
                  , action_intervention
 
                  ## change state probability
+                 , prob_receptive
+
                  , change_prob_contemplation
                  , change_prob_preparation
                  , change_prob_action
@@ -333,6 +363,8 @@ class Alcohol_MECC_Model(MECC_Model):
                     ,'GP Practice']
     
         ## alcohol features for person agents
+        self.prob_receptive              = prob_receptive        
+
         self.change_prob_contemplation   = change_prob_contemplation
         self.change_prob_preparation     = change_prob_preparation
         self.change_prob_action          = change_prob_action
@@ -357,13 +389,18 @@ class Alcohol_MECC_Model(MECC_Model):
         ## Overwrite Data collector for metrics
         self.datacollector = DataCollector(
             model_reporters={
+                ## Overall metrics                
                 "Total Contacts": calculate_total_contacts,
                 "Total Interventions": calculate_total_interventions,
+                "Total Successful Interventions": calculate_total_successful_interventions,
+
+                ## Population metrics
                 "Total Pre-contemplation":  calculate_number_status_precontemplation,
                 "Total Contemplation":  calculate_number_status_contemplation,
                 "Total Preparation":  calculate_number_status_preparation,
                 "Total Action":  calculate_number_status_action,
 
+                ## Service intervention metrics
                 "Job Centre Interventions": calculate_service_interventions_JobCentre,
                 "Benefits Office Interventions": calculate_service_interventions_BenefitsOffice,
                 "Housing Officer Interventions": calculate_service_interventions_HousingOfficer,
@@ -371,6 +408,15 @@ class Alcohol_MECC_Model(MECC_Model):
                 "Pharmacy Interventions": calculate_service_interventions_Pharmacy,
                 "GP Practice Interventions": calculate_service_interventions_GPPractice,
 
+                ## Service successful intervention metrics
+                "Job Centre Successful Interventions": calculate_service_successful_interventions_JobCentre,
+                "Benefits Office Successful Interventions": calculate_service_successful_interventions_BenefitsOffice,
+                "Housing Officer Successful Interventions": calculate_service_successful_interventions_HousingOfficer,
+                "Community Hub Successful Interventions": calculate_service_successful_interventions_CommunityHub,
+                "Pharmacy Successful Interventions": calculate_service_successful_interventions_Pharmacy,
+                "GP Practice Successful Interventions": calculate_service_successful_interventions_GPPractice,
+
+                ## Service contact metrics
                 "Job Centre Contacts": calculate_service_contacts_JobCentre,
                 "Benefits Office Contacts": calculate_service_contacts_BenefitsOffice,
                 "Housing Officer Contacts": calculate_service_contacts_HousingOfficer,
@@ -394,6 +440,8 @@ class Alcohol_MECC_Model(MECC_Model):
                             , deprivation = None
 
                             ## change state probability
+                            , prob_receptive = self.prob_receptive
+
                             , change_prob_contemplation = self.change_prob_contemplation
                             , change_prob_preparation = self.change_prob_preparation
                             , change_prob_action = self.change_prob_action
@@ -471,6 +519,35 @@ def calculate_service_interventions_Pharmacy(model):
 
 def calculate_service_interventions_GPPractice(model):
     return calculate_service_interventions(model,"GP Practice")
+
+## number of successful interventions
+def calculate_total_successful_interventions(model):
+    return sum(agent.successful_interventions_made for agent in model.schedule.agents 
+              if isinstance(agent, ServiceAgent))
+
+## number of successful interventions by a service type
+def calculate_service_successful_interventions(model,service):
+    return sum(agent.successful_interventions_made for agent in model.schedule.agents 
+              if isinstance(agent, AlcoholModel_ServiceAgent)
+                and agent.category == service)
+
+def calculate_service_successful_interventions_JobCentre(model): 
+    return calculate_service_successful_interventions(model,"Job Centre")
+
+def calculate_service_successful_interventions_BenefitsOffice(model):
+    return calculate_service_successful_interventions(model,"Benefits Office")
+
+def calculate_service_successful_interventions_HousingOfficer(model): 
+    return calculate_service_successful_interventions(model,"Housing Officer")
+ 
+def calculate_service_successful_interventions_CommunityHub(model):
+    return calculate_service_successful_interventions(model,"Community Hub")
+
+def calculate_service_successful_interventions_Pharmacy(model):
+    return calculate_service_successful_interventions(model,"Pharmacy")
+
+def calculate_service_successful_interventions_GPPractice(model):
+    return calculate_service_successful_interventions(model,"GP Practice")
 
 ## number of contacts by a service type
 def calculate_service_contacts(model,service):

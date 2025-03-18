@@ -55,6 +55,8 @@ def create_MECC_model(model_parameters
             , action_intervention = model_parameters["action_intervention"]
 
             ## change state probability
+            , prob_receptive = model_parameters["prob_receptive"]
+
             , change_prob_contemplation = model_parameters[ "change_prob_contemplation"]
             , change_prob_preparation = model_parameters["change_prob_preparation"]
             , change_prob_action = model_parameters["change_prob_action"]
@@ -64,7 +66,7 @@ def create_MECC_model(model_parameters
             , lapse_prob_preparation = model_parameters["lapse_prob_preparation"]
 
             , golden_window = model_parameters["golden_window"]
-
+            
             ## visit probability
             , visit_prob = model_parameters["visit_prob"]
 

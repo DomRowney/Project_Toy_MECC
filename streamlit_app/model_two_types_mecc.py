@@ -139,12 +139,12 @@ class ServiceAgent(Agent):
         if intervention_rand < self.make_intervention_prob:
             PersonAgent.interventions_received += 1
             self.perform_intervention(PersonAgent)
-            ## adds 1 to the intervention count
-            self.interventions_made += 1
+            
     
     # Placeholder for performing an intervention; can be overridden by subclasses
     def perform_intervention(self, PersonAgent):
-        pass
+        ## adds 1 to the intervention count
+        self.interventions_made += 1
     
     ## doesn't do anything at each step
     def step(self):
@@ -169,6 +169,8 @@ class SmokeModel_ServiceAgent(ServiceAgent):
 
     # Override to perform smoking-specific interventions
     def perform_intervention(self, PersonAgent):
+        ## adds 1 to the intervention count
+        self.interventions_made += 1
         PersonAgent.quit_attempt_prob *= self.intervention_effect
     
     ## doesn't do anything at each step
