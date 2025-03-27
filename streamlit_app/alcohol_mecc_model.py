@@ -11,7 +11,7 @@ import shutil
 import json
 from alcohol_agents import Alcohol_MECC_Model
 from logic_diagram import create_logic_diagram_Alcohol
-
+from scipy.stats import chi
 
 ######################################################
 
