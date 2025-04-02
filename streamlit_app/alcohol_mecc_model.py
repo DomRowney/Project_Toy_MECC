@@ -5,13 +5,12 @@ import numpy as np
 import streamlit as st
 import time
 from streamlit_model_functions import run_simulation_step, create_MECC_model,create_metrics_figure
-from alcohol_outputs import create_population_figure,create_intervention_figure
+from alcohol_outputs import create_population_figure,create_intervention_figure, results_chi, results_stage_chi
 import os
 import shutil
 import json
 from alcohol_agents import Alcohol_MECC_Model
 from logic_diagram import create_logic_diagram_Alcohol
-from scipy.stats import chi
 
 ######################################################
 
@@ -198,7 +197,10 @@ with tab1:
 
         result = pd.DataFrame({'No MECC Training': data_no_mecc.iloc[-1]
                                , 'MECC Trained': data_mecc.iloc[-1]})
-        
+        result = results_chi(result,model_parameters=model_parameters)
+        result = results_stage_chi(result,model_parameters=model_parameters)
+        result.drop('p-value',axis=1,inplace=True)
+
         result_total = result.iloc[result.index.str.contains('Total')].copy()
         result_other = result.iloc[~result.index.str.contains('Total')].copy()
         result_intervention = result_other.iloc[result_other.index.str.contains('Interventions')
@@ -206,19 +208,16 @@ with tab1:
         result_successful = result_other.iloc[result_other.index.str.contains('Successful')].copy()        
         result_contact = result_other.iloc[result_other.index.str.contains('Contacts')].copy()
         
-        ## Totals
-        st.dataframe(result_total)#,height=600)
+        colC, colD = st.columns(2)
         
-        colC, colD, colE = st.columns(3)
-        
-        with colC: ## Site Interventions
-            st.dataframe(result_intervention)#,height=600)  
-        
-        with colD: ## Site Successfull Interventions
-            st.dataframe(result_successful)#,height=600)
+        with colC: ## Totals
+           st.dataframe(result_total)#,height=600)
 
-        with colE: ## Site Contacts
+        
+        with colD: ## Sites
             st.dataframe(result_contact)#,height=600)
+            st.dataframe(result_successful)#,height=600)
+            st.dataframe(result_intervention)#,height=600)  
            
 
         print(result)

@@ -1,9 +1,10 @@
 ## alcohol_outputs.py
 import pandas as pd
-#import numpy as np
+import numpy as np
 #import streamlit as st
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+from scipy.stats import chi2_contingency #, mannwhitneyu
 #import time
 
 ##########################################
@@ -173,3 +174,84 @@ def create_intervention_figure(results_no_mecc, results_mecc, step, figure_type 
     fig.update_xaxes(matches='x', row=1)
 
     return fig
+
+##########################################
+## Significance Tests
+##########################################
+
+def chi_square_text(chi2, p, dof,N):
+    if p < 0.00001:
+        p_txt = 'p<.00001*'
+    if p < 0.0001:
+        p_txt = 'p<.0001*'        
+    elif p < 0.001:
+        p_txt = 'p<.001*'
+    elif p <= 0.025:
+        p_txt = f'p={p:.3f}*'.lstrip('0')                
+    else:
+        p_txt = f'p={p:.3f}'.lstrip('0') 
+
+    return f'χ² ({dof:,.0f}, N={N:,.0f}) = {chi2:,.2f} {p_txt}'
+
+
+# Perform chi square test
+def results_chi(result
+                ,model_parameters):
+    
+    N = (model_parameters["N_people"] *
+                model_parameters["num_steps"] *
+                len(model_parameters["visit_prob"]) )
+
+    p_values = []
+    p_values_text = []
+
+    ## converts pandas to array
+    for i, row in result.iterrows():
+        contingency_array = np.array([
+                                    [row['No MECC Training']
+                                    ,(N-row['No MECC Training'])]
+                                    ,[row['MECC Trained']
+                                    ,(N-row['MECC Trained'])]
+                                        ])        
+        chi2, p, dof, expected = chi2_contingency(contingency_array)
+        p_values_text.append(chi_square_text(chi2, p, dof,N))
+        p_values.append(p)
+
+    result['p-value'] = p_values
+    result['*Significant (p<=.025)'] = p_values_text
+
+    return  result
+
+
+# Perform Chi-Square Test for Independence
+def results_stage_chi(result
+                      ,model_parameters
+                      ,stages=['Pre-contemplation'
+                                        ,'Contemplation'
+                                        ,'Preparation'
+                                        ,'Action']):
+    stages = '|'.join(stages)
+
+        
+    N = model_parameters["N_people"]
+
+    result_stages = result.iloc[result.index.str.contains(stages, regex=True)].copy()
+    result_other = result.iloc[~result.index.str.contains(stages, regex=True)].copy()
+    contingency_array = np.array([result_stages['No MECC Training']
+                                    ,result_stages['MECC Trained'] ])
+    
+    ## df.to_numpy() converts pandas to array
+    chi2, p, dof, expected = chi2_contingency(contingency_array)
+
+    result_stages['p-value'] = p
+    result_stages['*Significant (p<=.025)'] = result_stages['p-value'].apply(
+            lambda p: chi_square_text(chi2, p, dof,N))
+
+    if 'p-value' in result_other.columns:
+        pass
+    else:
+        result_other['*Significant (p<=.025)'] = ''
+        result_other['p-value'] = ''
+
+    output_results = pd.concat([result_other, result_stages])
+    return  output_results
