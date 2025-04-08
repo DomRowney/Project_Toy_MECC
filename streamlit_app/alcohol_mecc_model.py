@@ -191,39 +191,67 @@ with tab1:
         data_mecc.to_csv(data_mecc_file, index=False)
 
 ######################################################
-
-        st.markdown("### Final Statistics")      
-        
-
+        st.markdown("## Final Statistics")      
+      
+        ## results data
         result = pd.DataFrame({'No MECC Training': data_no_mecc.iloc[-1]
                                , 'MECC Trained': data_mecc.iloc[-1]})
+
+        ## calculates the difference        
+        result['diff'] = result['MECC Trained'] - result['No MECC Training']
+        result['diff_pc'] = (result['diff']/result['No MECC Training'])
+
+        ## formats the difference
+        result['Diff'] = result['diff'].apply(lambda x: f"{x:+,g}")
+        result['% Diff'] = result['diff_pc'].apply(lambda x: '0.0%' if pd.isna(x)
+                                                   else f"{x:+,.1%}")
+
+        ## drops the unformatted difference columns
+        result.drop(['diff','diff_pc'],axis=1,inplace=True)
+
+        ## prints results to console for testing     
+        print(result)   
+        
+        ## applies stat tests to the results
         result = results_chi(result,model_parameters=model_parameters)
         result = results_stage_chi(result,model_parameters=model_parameters)
+
+        ## drops the unformatted p-value column
         result.drop('p-value',axis=1,inplace=True)
 
+        ## prints results to console for testing     
+        print(result)   
+
+        ## seperates results into sub tables
         result_total = result.iloc[result.index.str.contains('Total')].copy()
         result_other = result.iloc[~result.index.str.contains('Total')].copy()
         result_intervention = result_other.iloc[result_other.index.str.contains('Interventions')
                                                 & ~result_other.index.str.contains('Successful')].copy()
         result_successful = result_other.iloc[result_other.index.str.contains('Successful')].copy()        
         result_contact = result_other.iloc[result_other.index.str.contains('Contacts')].copy()
-        
-        colC, colD = st.columns(2)
-        
-        with colC: ## Totals
-           st.dataframe(result_total)#,height=600)
 
         
-        with colD: ## Sites
-            st.dataframe(result_contact)#,height=600)
-            st.dataframe(result_successful)#,height=600)
-            st.dataframe(result_intervention)#,height=600)  
+        #colC, colD = st.columns(2)
+        
+        #with colC: ## Totals
+        st.markdown("### Total")
+        st.dataframe(result_total)#,height=600)
+
+        #with colD: ## Sites
+        st.markdown("### Contacts by Services")
+        st.dataframe(result_contact)#,height=600)
+        
+        st.markdown("### Sucessful Interventions by Services")
+        st.dataframe(result_successful)#,height=600)
+
+        st.markdown("### All Interventions by Services")
+        st.dataframe(result_intervention)#,height=600)  
            
 
-        print(result)
+
 
 ######################################################
-            
+        st.markdown("### Raw Data")      
         with st.expander("View Raw Data"):
             tab1, tab2 = st.tabs(["No MECC Training", "MECC Trained"])
             with tab1:

@@ -179,14 +179,14 @@ def create_intervention_figure(results_no_mecc, results_mecc, step, figure_type 
 ## Significance Tests
 ##########################################
 
-def chi_square_text(chi2, p, dof,N):
+def chi_square_text(chi2, p, dof,N,sig_threshold):
     if p < 0.00001:
         p_txt = 'p<.00001*'
     if p < 0.0001:
         p_txt = 'p<.0001*'        
     elif p < 0.001:
         p_txt = 'p<.001*'
-    elif p <= 0.025:
+    elif p <= sig_threshold:
         p_txt = f'p={p:.3f}*'.lstrip('0')                
     else:
         p_txt = f'p={p:.3f}'.lstrip('0') 
@@ -196,36 +196,59 @@ def chi_square_text(chi2, p, dof,N):
 
 # Perform chi square test
 def results_chi(result
-                ,model_parameters):
-    
-    N = (model_parameters["N_people"] *
-                model_parameters["num_steps"] *
-                len(model_parameters["visit_prob"]) )
+                ,model_parameters
+                ,sig_threhold = 0.025):
+
 
     p_values = []
     p_values_text = []
 
     ## converts pandas to array
     for i, row in result.iterrows():
-        contingency_array = np.array([
-                                    [row['No MECC Training']
-                                    ,(N-row['No MECC Training'])]
-                                    ,[row['MECC Trained']
-                                    ,(N-row['MECC Trained'])]
-                                        ])        
-        chi2, p, dof, expected = chi2_contingency(contingency_array)
-        p_values_text.append(chi_square_text(chi2, p, dof,N))
-        p_values.append(p)
+        ## check if chi square valid
+        if any([(row['No MECC Training'] >= 5), (row['MECC Trained'] >= 5)]) :
+            
+            ## sample size
+            if 'Total' in str(i):
+                N = (model_parameters["N_people"] *
+                            model_parameters["num_steps"] *
+                            len(model_parameters["visit_prob"]) )
+            else:    
+                N = (model_parameters["N_people"] *
+                            model_parameters["num_steps"])
+            ## test
+            contingency_array = np.array([
+                                        [row['No MECC Training']
+                                        ,(N-row['No MECC Training'])]
+                                        ,[row['MECC Trained']
+                                        ,(N-row['MECC Trained'])]
+                                            ])
+            chi2, p, dof, expected = chi2_contingency(contingency_array)
 
+            ## output
+            p_values_text.append(chi_square_text(chi2, p, dof,N,sig_threhold))
+            p_values.append(p)
+        else:
+            p_values_text.append('n/a')
+            p_values.append(pd.NA)
+
+    sig_column =('*Significant (p<=' +
+                f'{sig_threhold:.3f}'.lstrip('0') +
+                ')')
     result['p-value'] = p_values
-    result['*Significant (p<=.025)'] = p_values_text
+    result[sig_column] = p_values_text
 
     return  result
 
+#### REMOVE EXTRA SITES FROM N
+### Add error handing for zero /zero ValueError: The internally computed table of expected frequencies has a zero element at (0, 0).
+
+### Look at regression to the mean of heavy alcohol uses
 
 # Perform Chi-Square Test for Independence
 def results_stage_chi(result
                       ,model_parameters
+                      ,sig_threhold = 0.025
                       ,stages=['Pre-contemplation'
                                         ,'Contemplation'
                                         ,'Preparation'
@@ -240,17 +263,26 @@ def results_stage_chi(result
     contingency_array = np.array([result_stages['No MECC Training']
                                     ,result_stages['MECC Trained'] ])
     
-    ## df.to_numpy() converts pandas to array
-    chi2, p, dof, expected = chi2_contingency(contingency_array)
 
-    result_stages['p-value'] = p
-    result_stages['*Significant (p<=.025)'] = result_stages['p-value'].apply(
-            lambda p: chi_square_text(chi2, p, dof,N))
+    sig_column =('*Significant (p<=' +
+        f'{sig_threhold:.3f}'.lstrip('0') +
+        ')')
+
+    try:
+        chi2, p, dof, expected = chi2_contingency(contingency_array)
+        result_stages['p-value'] = p
+        result_stages[sig_column] = result_stages['p-value'].apply(
+                lambda p: chi_square_text(chi2, p, dof,N,sig_threhold))
+    except:
+        result_stages['p-value'] = pd.NA
+        result_stages[sig_column] = 'n/a'
+
+
 
     if 'p-value' in result_other.columns:
         pass
     else:
-        result_other['*Significant (p<=.025)'] = ''
+        result_other[sig_column] = ''
         result_other['p-value'] = ''
 
     output_results = pd.concat([result_other, result_stages])
