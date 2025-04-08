@@ -99,7 +99,8 @@ class AlcoholModel_PersonAgent(PersonAgent):
             self.alcohol_status["status"] = end
 
             print(f" > Person {self.unique_id} alcohol status {type} "
-                  + f"from {start} to {end}")
+                  + f"from {start} to {end}!")
+            #print('XXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXX\n')
             ## for checking
             #st.write(f"start: {start}"
             #        f" > Person {self.unique_id} alcohol status {type} "
@@ -115,29 +116,29 @@ class AlcoholModel_PersonAgent(PersonAgent):
         self.update_status("Pre-contemplation"
                            ,"Contemplation"
                            ,self.change_prob_contemplation
-                           ,'improve')
+                           ,'improved')
         self.update_status("Contemplation"
                            ,"Preparation"
                            ,self.change_prob_preparation
-                           ,'improve')
+                           ,'improved')
         self.update_status("Preparation"
                            ,"Action"
                            ,self.change_prob_action
-                           ,'improve')
+                           ,'improved')
 
         ## Lapse
         self.update_status("Action"
                            ,"Preparation"
                            ,self.lapse_prob_preparation
-                           ,'lapse')
+                           ,'lapsed')
         self.update_status("Preparation"
                            ,"Contemplation"
                            ,self.lapse_prob_contemplation
-                           ,'lapse')
+                           ,'lapsed')
         self.update_status("Contemplation"
                            ,"Pre-contemplation"
                            ,self.lapse_prob_precontemplation
-                           ,'lapse')
+                           ,'lapsed')
 
         ## Adds one to time
         #self.alcohol_status["time"] += 1
@@ -266,23 +267,23 @@ class AlcoholModel_ServiceAgent(ServiceAgent):
         print(f"  > {self.category} did an intervention on Person {PersonAgent.unique_id}")
         
         if PersonAgent.alcohol_status["in window"]:
-            print(f"    > Person {PersonAgent.unique_id} is in a golden window and is receptive to change ")
+            print(f"    > Person {PersonAgent.unique_id} is in a golden window and is receptive to change.")
             self.intervention_effect(PersonAgent)
         
         elif PersonAgent.alcohol_status["status"] != 'Pre-contemplation':
-            print(f"    > Person {PersonAgent.unique_id} is in {PersonAgent.alcohol_status['status']} " +
+            print(f"    > Person {PersonAgent.unique_id} is in {PersonAgent.alcohol_status['status']}" +
                   f"phase and golden window started at {self.category}.")
             PersonAgent.alcohol_status["in window"] = True            
             self.intervention_effect(PersonAgent)
 
         elif PersonAgent.random.uniform(0, 1) <= PersonAgent.prob_receptive:
-            print(f"    > Person {PersonAgent.unique_id} is in {PersonAgent.alcohol_status['status']} " +
+            print(f"    > Person {PersonAgent.unique_id} is in {PersonAgent.alcohol_status['status']}" +
                    f" phase, receptive to change, and golden window started at {self.category}.")
             PersonAgent.alcohol_status["in window"] = True
             self.intervention_effect(PersonAgent)
         
         else:
-            print(f"    > Person {PersonAgent.unique_id} is in {PersonAgent.alcohol_status['status']} " + 
+            print(f"    > Person {PersonAgent.unique_id} is in {PersonAgent.alcohol_status['status']}" + 
                   f"phase and not receptive to change")
 
 

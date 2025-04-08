@@ -10,7 +10,12 @@ import os
 import shutil
 import json
 from alcohol_agents import Alcohol_MECC_Model
-from logic_diagram import create_logic_diagram_Alcohol
+from alcohol_parameters import init_parameters
+
+######################################################
+
+# initailise parameter variables for simulation - defaults
+init_parameters()
 
 ######################################################
 
@@ -29,7 +34,7 @@ def disable_download():
     report_message.empty()
 
 
-tab1, tab2, tab3 = st.tabs(['Model','Parameters','Logic Diagram'])
+tab1, tab2 = st.tabs(['Model','Parameters'])
 
 ######################################################
 
@@ -41,25 +46,34 @@ with tab2:
     colA, colB = st.columns(2)
 
     with colA:
-        st.markdown("#### Population Parameters")
+        st.markdown("#### Population")
         st.write(f" - Number of People: :blue-background[{st.session_state.N_people}]")
-        st.write(f" - Base Pre-Contemplation to Contemplation chance: :blue-background[{st.session_state.alcohol_change_prob_contemplation}]")
-        st.write(f" - Base Contemplation to Preparation chance: :blue-background[{st.session_state.alcohol_change_prob_preparation}]")
-        st.write(f" - Base Preparation to Action chance: :blue-background[{st.session_state.alcohol_change_prob_action}]")
-        st.write(f" - Base Contemplation to Pre-Contemplation lapse chance: :blue-background[{st.session_state.alcohol_lapse_prob_precontemplation}]")
-        st.write(f" - Base Preparation to Contemplation lapse chance: :blue-background[{st.session_state.alcohol_lapse_prob_contemplation}]")
-        st.write(f" - Base Action to Preparation lapse chance: :blue-background[{st.session_state.alcohol_lapse_prob_preparation}]")
-        st.write(f" - Periods before chances reset to base (the golden window): :blue-background[{st.session_state.alcohol_golden_window}]")
-        st.write(f" - Chance that a pre-Contemplation person not in a golden window is receptive to an intervention: :blue-background[{st.session_state.alcohol_prob_receptive}]")
-
         
     with colB:
-        st.markdown("#### Simulation Parameters")
+        st.markdown("#### Simulation")
         st.write(f" - Random Seed: :blue-background[{st.session_state.model_seed}]")
         st.write(f" - Number of Months to Simulate: :blue-background[{st.session_state.num_steps}]")
         st.write(f" - Animation Speed (seconds): :blue-background[{st.session_state.animation_speed}]")
+    
+    st.markdown("#### Stages of Change")
+    colC, colD = st.columns(2)
 
-    st.markdown("#### Service Parameters")
+    with colC:
+        st.write(f" - Chance that a pre-Contemplation person not in a golden window is receptive to an intervention: :blue-background[{st.session_state.alcohol_prob_receptive}]")    
+        st.markdown("**Base Positive Change Chance**")    
+        st.write(f" - Base Pre-Contemplation to Contemplation chance: :blue-background[{st.session_state.alcohol_change_prob_contemplation}]")
+        st.write(f" - Base Contemplation to Preparation chance: :blue-background[{st.session_state.alcohol_change_prob_preparation}]")
+        st.write(f" - Base Preparation to Action chance: :blue-background[{st.session_state.alcohol_change_prob_action}]")
+
+
+    with colD:
+        st.write(f" - Periods before chances reset to base (the golden window): :blue-background[{st.session_state.alcohol_golden_window}]")    
+        st.markdown("**Lapse Chance**")        
+        st.write(f" - Base Contemplation to Pre-Contemplation lapse chance: :blue-background[{st.session_state.alcohol_lapse_prob_precontemplation}]")
+        st.write(f" - Base Preparation to Contemplation lapse chance: :blue-background[{st.session_state.alcohol_lapse_prob_contemplation}]")
+        st.write(f" - Base Action to Preparation lapse chance: :blue-background[{st.session_state.alcohol_lapse_prob_preparation}]")
+
+    st.markdown("#### Services")
     col1, col2, col3, col4, col5, col6 = st.columns(6)
     column_dict = { 'Job Centre': col1
                     ,'Benefits Office': col2
@@ -83,16 +97,6 @@ with tab2:
             st.write(f" - Post Intervention Contemplation to Preparation chance: :blue-background[{st.session_state.alcohol_services_table.loc[service]['Post Intervention Contemplation to Preparation chance']}]")
             st.write(f" - Post Intervention Preparation to Action chance: :blue-background[{st.session_state.alcohol_services_table.loc[service]['Post Intervention Preparation to Action chance']}]")
 
-##################################
-### Logic Diagram 
-##################################
-
-with tab3:
-    st.image(create_logic_diagram_Alcohol(number_labels = True)
-        , caption="Diagram of Agent Model Logic"
-        , use_column_width=False)
-    
-######################################################
 
 ##################################
 ### Model 
@@ -163,7 +167,9 @@ with tab1:
                 progress = (step + 1) / st.session_state.num_steps
                 progress_bar.progress(progress)
 
+            print(f'\n\n*** No MECC - Step {step} ***')
             data_no_mecc = run_simulation_step(model_no_mecc)
+            print(f'\n\n*** MECC Trained - Step {step} ***')            
             data_mecc = run_simulation_step(model_mecc)
 
             fig1 = create_population_figure(data_no_mecc, data_mecc, step)
@@ -209,9 +215,6 @@ with tab1:
         ## drops the unformatted difference columns
         result.drop(['diff','diff_pc'],axis=1,inplace=True)
 
-        ## prints results to console for testing     
-        print(result)   
-        
         ## applies stat tests to the results
         result = results_chi(result,model_parameters=model_parameters)
         result = results_stage_chi(result,model_parameters=model_parameters)
