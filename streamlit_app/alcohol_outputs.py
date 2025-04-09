@@ -194,7 +194,7 @@ def chi_square_text(chi2, p, dof,N,sig_threshold):
     return f'χ² ({dof:,.0f}, N={N:,.0f}) = {chi2:,.2f} {p_txt}'
 
 
-# Perform chi square test
+### Perform chi square test
 def results_chi(result
                 ,model_parameters
                 ,sig_threhold = 0.025):
@@ -240,12 +240,8 @@ def results_chi(result
 
     return  result
 
-#### REMOVE EXTRA SITES FROM N
-### Add error handing for zero /zero ValueError: The internally computed table of expected frequencies has a zero element at (0, 0).
 
-### Look at regression to the mean of heavy alcohol uses
-
-# Perform Chi-Square Test for Independence
+### Perform Chi-Square Test for Independence
 def results_stage_chi(result
                       ,model_parameters
                       ,sig_threhold = 0.025
@@ -253,37 +249,55 @@ def results_stage_chi(result
                                         ,'Contemplation'
                                         ,'Preparation'
                                         ,'Action']):
+    ## concat stages into single regex
     stages = '|'.join(stages)
+       
+    ## gets N from params
+    N = model_parameters["N_people"]   
 
-        
-    N = model_parameters["N_people"]
-
+    ## Takes only rows with a stage
     result_stages = result.iloc[result.index.str.contains(stages, regex=True)].copy()
-    result_other = result.iloc[~result.index.str.contains(stages, regex=True)].copy()
-    contingency_array = np.array([result_stages['No MECC Training']
-                                    ,result_stages['MECC Trained'] ])
-    
 
+    ## Calculates total
+    result_stages_1 = result_stages.copy()
+    result_stages_1['Total'] = (result_stages_1['No MECC Training'] +
+                                result_stages_1['MECC Trained'])
+
+    ## Removes those stages with 0/0
+    result_stages_1 = result_stages_1[result_stages_1['Total'] != 0]
+
+    ## creates array to calculate chi square without 0/0 stages
+    contingency_array = np.array([result_stages_1['No MECC Training']
+                                    ,result_stages_1['MECC Trained'] ])
+
+    ## Other results
+    result_other = result.iloc[~result.index.str.contains(stages, regex=True)].copy()
+
+    ## Name of significance column    
     sig_column =('*Significant (p<=' +
         f'{sig_threhold:.3f}'.lstrip('0') +
         ')')
 
+    ## Calculate chi square
     try:
         chi2, p, dof, expected = chi2_contingency(contingency_array)
+
+        ## apply result to all, including 0/0 stages
         result_stages['p-value'] = p
         result_stages[sig_column] = result_stages['p-value'].apply(
                 lambda p: chi_square_text(chi2, p, dof,N,sig_threhold))
+    ## error handling
     except:
         result_stages['p-value'] = pd.NA
         result_stages[sig_column] = 'n/a'
 
-
-
+    ## creates columns for other results if they don't exist
     if 'p-value' in result_other.columns:
         pass
     else:
         result_other[sig_column] = ''
         result_other['p-value'] = ''
 
+    ## combines results
     output_results = pd.concat([result_other, result_stages])
     return  output_results
