@@ -349,32 +349,34 @@ def create_logic_diagram_Alcohol(number_labels = False, session_data = None):
     ## create a drawing class
     with schemdraw.Drawing() as d:
         
+        default_len = d.unit/5
+
         ## Population
         d.push() ## remembers current location
         d.move(dx=-d.unit*2,dy=0)
         services = flow.Circle(r=d.unit/2).label('Services').drop("S")
-        flow.Arrow().down(d.unit/2).at(services.S)
+        flow.Arrow().down(default_len).at(services.S)
         services_list = flow.Box().label(lb_services_list).drop("S")
 
         d.pop() ## returns previous remembered location
         person = flow.Circle(r=d.unit/2).label(lb_N_people).drop("S")
-        flow.Arrow().at(person.S).down(d.unit/2)
+        flow.Arrow().at(person.S).down(default_len)
 
         ## Inital State
         inital_state = flow.Box().label(lb_status_pre).drop("S")
-        flow.Arrow().down(d.unit/2).at(inital_state.S)
+        flow.Arrow().down(default_len).at(inital_state.S)
         
         period_start = flow.Start().label('Period Start').drop("S")       
-        flow.Arrow().down(d.unit/3).at(period_start.S)
+        flow.Arrow().down(default_len).at(period_start.S)
 
         ## service
         random_service = flow.Decision(S='').label(lb_random_service).drop("S")
         flow.Wire('|-',arrow ='->').at(services_list.S).to(random_service.W)
 
         d.pop() ## returns previous remembered location
-        flow.Arrow().down(d.unit/3).at(random_service.S)
+        flow.Arrow().down(default_len).at(random_service.S)
         service_select = flow.Start(S='').label('Select Service').drop("S")
-        flow.Arrow().down(d.unit/3).at(service_select.S)
+        flow.Arrow().down(default_len).at(service_select.S)
 
         visit = flow.Decision(S='Visit'
                             ,W='Not Visit').label(lb_visit_prob).drop("S")        
@@ -384,33 +386,33 @@ def create_logic_diagram_Alcohol(number_labels = False, session_data = None):
             service_box.linestyle(":")
             service_box.label("Service",loc="NW",halign="left",valign="top")
             visit_start = flow.Start().label('Visit Start').anchor('N')
-            flow.Arrow().down(d.unit/3).at(visit_start.S)
+            flow.Arrow().down(default_len).at(visit_start.S)
             interv = flow.Decision(W='No\nIntervention'
                                 ,S='Intervention').label(lb_make_intervention)
-            flow.Arrow().down(d.unit/3).at(interv.S)
+            flow.Arrow().down(default_len).at(interv.S)
 
             in_window = flow.Decision(W='Yes'
                                 ,S='No').label(lb_in_window)
-            flow.Arrow().down(d.unit/3).at(in_window.S)
+            flow.Arrow().down(default_len).at(in_window.S)
 
             check_status = flow.Decision(W='No'
                                 ,S='Yes').label("Is status:\nPre-Contemplation?")
             #d.push() ## remembers location
             
             #d.pop() ## returns to push location        
-            flow.Arrow().down(d.unit/3).at(check_status.S)
+            flow.Arrow().down(default_len).at(check_status.S)
 
             is_receptive = flow.Decision(E='Not\nReceptive'
                                 ,S='Receptive').label(lb_is_receptive)
-            flow.Arrow().down(d.unit/3).at(is_receptive.S)
+            flow.Arrow().down(default_len).at(is_receptive.S)
                  
             #flow.Wire('-|',arrow ='->').at(check_status.E).to(check_status.E)
 
             #flow.Arrow().right().at(check_status.E).to(is_receptive.N)
 
             start_window = flow.Box().anchor('N').label(lb_start_window)
-            flow.Wire('c',k=-d.unit/3 ,arrow ='->').at(check_status.W).to(start_window.W)
-            flow.Arrow().down(d.unit/3).at(start_window.S)
+            flow.Wire('c',k=-default_len ,arrow ='->').at(check_status.W).to(start_window.W)
+            flow.Arrow().down(default_len).at(start_window.S)
 
             #flow.Wire('-|',arrow ='->').at(is_receptive.W).to(start_window.N)
             #flow.Wire('-|',arrow ='->').at(is_receptive.E).to(start_window.N)
@@ -418,12 +420,12 @@ def create_logic_diagram_Alcohol(number_labels = False, session_data = None):
 
             interv_result = flow.Box().anchor('N').label(lb_intervention_effect)
             flow.Wire('c',k=-d.unit/2 ,arrow ='->').at(in_window.W).to(interv_result.W)
-            flow.Arrow().down(d.unit/3).at(interv_result.S)
+            flow.Arrow().down(default_len).at(interv_result.S)
 
 
             visit_end = flow.Start().label('Visit End').anchor('N')
             flow.Wire('c',k=-d.unit ,arrow ='->').at(interv.W).to(visit_end.W)
-            flow.Wire('c',k=d.unit/2 ,arrow ='->').at(is_receptive.E).to(visit_end.E)
+            flow.Wire('c',k=default_len ,arrow ='->').at(is_receptive.E).to(visit_end.E)
 
         flow.Arrow().down(d.unit/2).at(visit_end.S)
         last_service = flow.Decision(E='No'
@@ -439,13 +441,13 @@ def create_logic_diagram_Alcohol(number_labels = False, session_data = None):
                              ,loc="NW",halign="left",valign="top")
 
             status_update_start = flow.Start().label('Status Update Start').anchor('N')
-            flow.Arrow().down(d.unit/3).at(status_update_start.S)
+            flow.Arrow().down(default_len).at(status_update_start.S)
             
             ## Pre to Con
             status_pre = (flow.Decision(S='Yes'
                                         ,E='No')
                                         .label('Is status:\nPre-Contemplation?')) 
-            flow.Arrow().down(d.unit/3).at(status_pre.S)
+            flow.Arrow().down(default_len).at(status_pre.S)
             change_pre_to_con = (flow.Decision(W='Improves'
                                         ,E='No\nChange')
                                         .label(lb_change_pre_to_con)) 
@@ -462,10 +464,10 @@ def create_logic_diagram_Alcohol(number_labels = False, session_data = None):
             status_con = (flow.Decision(S='Yes'
                                         ,W='No')
                                         .label('Is status:\nContemplation?'))         
-            flow.Wire('n',k=-d.unit/6,arrow ='->').at(pre_to_con.S).to(status_con.N)
-            flow.Wire('n',k=-d.unit/6,arrow ='->').at(still_pre.S).to(status_con.N)
+            flow.Wire('n',k=-default_len,arrow ='->').at(pre_to_con.S).to(status_con.N)
+            flow.Wire('n',k=-default_len,arrow ='->').at(still_pre.S).to(status_con.N)
             flow.Wire('c',k=d.unit,arrow ='->').at(status_pre.E).to(status_con.E)
-            flow.Arrow().down(d.unit/3).at(status_con.S)
+            flow.Arrow().down(default_len).at(status_con.S)
             change_con_to_prp = (flow.Decision(W='Improves'
                                         ,E='No\nChange')
                                         .label(lb_change_con_to_prp)) 
@@ -482,10 +484,10 @@ def create_logic_diagram_Alcohol(number_labels = False, session_data = None):
             status_prp = (flow.Decision(S='Yes'
                                         ,E='No')
                                         .label('Is status:\nPreparation?'))         
-            flow.Wire('n',k=-d.unit/6,arrow ='->').at(con_to_prp.S).to(status_prp.N)
-            flow.Wire('n',k=-d.unit/6,arrow ='->').at(still_con.S).to(status_prp.N)
+            flow.Wire('n',k=-default_len,arrow ='->').at(con_to_prp.S).to(status_prp.N)
+            flow.Wire('n',k=-default_len,arrow ='->').at(still_con.S).to(status_prp.N)
             flow.Wire('c',k=-d.unit,arrow ='->').at(status_con.W).to(status_prp.W)
-            flow.Arrow().down(d.unit/3).at(status_prp.S)
+            flow.Arrow().down(default_len).at(status_prp.S)
             change_prp_to_act = (flow.Decision(W='Improves'
                                         ,E='No\nChange')
                                         .label(lb_change_prp_to_act)) 
@@ -502,10 +504,10 @@ def create_logic_diagram_Alcohol(number_labels = False, session_data = None):
             status_act = (flow.Decision(S='Yes'
                                         ,W='No')
                                         .label('Is status:\nAction?'))         
-            flow.Wire('n',k=-d.unit/6,arrow ='->').at(prp_to_act.S).to(status_act.N)
-            flow.Wire('n',k=-d.unit/6,arrow ='->').at(still_prp.S).to(status_act.N)
+            flow.Wire('n',k=-default_len,arrow ='->').at(prp_to_act.S).to(status_act.N)
+            flow.Wire('n',k=-default_len,arrow ='->').at(still_prp.S).to(status_act.N)
             flow.Wire('c',k=d.unit,arrow ='->').at(status_prp.E).to(status_act.E)
-            flow.Arrow().down(d.unit/3).at(status_act.S)
+            flow.Arrow().down(default_len).at(status_act.S)
             lapse_act_to_prp = (flow.Decision(W='Lapse'
                                         ,E='No\nChange')
                                         .label(lb_lapse_act_to_prp)) 
@@ -523,10 +525,10 @@ def create_logic_diagram_Alcohol(number_labels = False, session_data = None):
             status_prp2 = (flow.Decision(S='Yes'
                                         ,E='No')
                                         .label('Is status:\nPreparation?'))         
-            flow.Wire('n',k=-d.unit/6,arrow ='->').at(act_to_prp.S).to(status_prp2.N)
-            flow.Wire('n',k=-d.unit/6,arrow ='->').at(still_act.S).to(status_prp2.N)
+            flow.Wire('n',k=-default_len,arrow ='->').at(act_to_prp.S).to(status_prp2.N)
+            flow.Wire('n',k=-default_len,arrow ='->').at(still_act.S).to(status_prp2.N)
             flow.Wire('c',k=-d.unit,arrow ='->').at(status_act.W).to(status_prp2.W)
-            flow.Arrow().down(d.unit/3).at(status_prp2.S)
+            flow.Arrow().down(default_len).at(status_prp2.S)
             lapse_prp_to_con = (flow.Decision(W='Lapse'
                                         ,E='No\nChange')
                                         .label(lb_lapse_prp_to_con)) 
@@ -543,10 +545,10 @@ def create_logic_diagram_Alcohol(number_labels = False, session_data = None):
             status_con2 = (flow.Decision(S='Yes'
                                         ,W='No')
                                         .label('Is status:\nContemplation?'))         
-            flow.Wire('n',k=-d.unit/6,arrow ='->').at(act_to_prp.S).to(status_con2.N)
-            flow.Wire('n',k=-d.unit/6,arrow ='->').at(still_prp2.S).to(status_con2.N)
+            flow.Wire('n',k=-default_len,arrow ='->').at(act_to_prp.S).to(status_con2.N)
+            flow.Wire('n',k=-default_len,arrow ='->').at(still_prp2.S).to(status_con2.N)
             flow.Wire('c',k=d.unit,arrow ='->').at(status_prp2.E).to(status_con2.E)
-            flow.Arrow().down(d.unit/3).at(status_con2.S)
+            flow.Arrow().down(default_len).at(status_con2.S)
             lapse_con_to_pre = (flow.Decision(W='Lapse'
                                         ,E='No\nChange')
                                         .label(lb_lapse_con_to_pre)) 
@@ -564,7 +566,7 @@ def create_logic_diagram_Alcohol(number_labels = False, session_data = None):
         flow.Wire('n',k=-d.unit/6,arrow ='->').at(con_to_pre.S).to(status_update_end.N)
         flow.Wire('n',k=-d.unit/6,arrow ='->').at(still_con2.S).to(status_update_end.N)        
         flow.Wire('c',k=-d.unit,arrow ='->').at(status_con2.W).to(status_update_end.W)
-        flow.Arrow().down(d.unit).at(status_update_end.S)
+        flow.Arrow().down(d.unit*0.75).at(status_update_end.S)
 
         ## Golden Window update
         with d.container() as window_box:
@@ -573,28 +575,28 @@ def create_logic_diagram_Alcohol(number_labels = False, session_data = None):
                              ,loc="NW",halign="left",valign="top")
 
             window_update_start = flow.Start().label('"Golden Window"\nUpdate Start').anchor('N')
-            flow.Arrow().down(d.unit/3).at(window_update_start.S)
+            flow.Arrow().down(default_len).at(window_update_start.S)
             in_window2 = flow.Decision(S='Yes'
                                 ,W='No').label(lb_in_window)
-            flow.Arrow().down(d.unit/3).at(in_window2.S)
+            flow.Arrow().down(default_len).at(in_window2.S)
             window_time_add = flow.Box().label('"Golden Window"\nTimer +1')
-            flow.Arrow().down(d.unit/3).at(window_time_add.S)
+            flow.Arrow().down(default_len).at(window_time_add.S)
             window_time_up = flow.Decision(S='Yes'
                                     ,E='No').label(lb_window_time_up)
-            flow.Arrow().down(d.unit/3).at(window_time_up.S)
+            flow.Arrow().down(default_len).at(window_time_up.S)
             end_window = flow.Box().label(lb_end_window)
-            flow.Arrow().down(d.unit/3).at(end_window.S)
+            flow.Arrow().down(default_len).at(end_window.S)
 
             window_update_end = flow.Start().label('"Golden Window"\nUpdate End').anchor('N')
 
             flow.Wire('c',k=-d.unit/3 ,arrow ='->').at(in_window2.W).to(window_update_end.W)
             flow.Wire('c',k=d.unit/3 ,arrow ='->').at(window_time_up.E).to(window_update_end.E)
-        flow.Arrow().down(d.unit).at(window_update_end.S)
+        flow.Arrow().down(d.unit/2).at(window_update_end.S)
 
 
         ## End period
         period_end = flow.Start().label('Period End').drop("E")
-        flow.Arrow().right(d.unit/3).at(period_end.E)
+        flow.Arrow().right(d.unit).at(period_end.E)
 
         last_period = flow.Decision(E='No'
                             ,S='Yes').label(lb_last_period).drop("S")
