@@ -301,3 +301,84 @@ def results_stage_chi(result
     ## combines results
     output_results = pd.concat([result_other, result_stages])
     return  output_results
+
+
+def create_effectiveness_figure(results_no_mecc, results_mecc, step):
+    # print(results_mecc)
+    fig = make_subplots(
+        rows=1, 
+        cols=2,
+        subplot_titles=(
+            'Without MECC Training', 
+            'With MECC Training',    
+        ),
+        specs=[[{}, {}]],
+        row_heights=[1]
+    )
+    
+    service_colors = {
+        'Job Centre': 'red',
+        'Benefits Office': 'blue',
+        'Housing Officer': 'purple',
+        'Community Hub': 'orange',
+        'Pharmacy': 'yellow',
+        'GP Practice': 'green'
+    }
+
+    services = [s for s in service_colors 
+               if f'{s} Effectiveness' in results_mecc.columns]
+    
+    for service in services:
+        fig.add_trace(
+            go.Scatter(
+                x=results_no_mecc.index[:step+1],
+                y=results_no_mecc[f'{service} Effectiveness'][:step+1],
+                name=service,
+                line=dict(color=service_colors[service], dash='solid'),
+                opacity=0.7
+            ),
+            row=1, col=1
+        )
+        
+        fig.add_trace(
+            go.Scatter(
+                x=results_mecc.index[:step+1],
+                y=results_mecc[f'{service} Effectiveness'][:step+1],
+                name=service,
+                line=dict(color=service_colors[service], dash='solid'),
+                showlegend=False,
+                opacity=0.7
+            ),
+            row=1, col=2
+        )
+    
+    fig.update_layout(
+        height=400,
+        showlegend=True,
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.1,
+            xanchor="center",
+            x=0.5
+        ),
+        margin=dict(t=40, b=40)
+    )
+    
+    fig.update_xaxes(title_text="Month", row=1, col=1)
+    fig.update_xaxes(title_text="Month", row=1, col=2)
+    fig.update_yaxes(
+        title_text="Effectiveness (0-1 scale)", 
+        range=[0, 1.1],
+        row=1, col=1
+    )
+    fig.update_yaxes(
+        title_text="Effectiveness (0-1 scale)", 
+        range=[0, 1.1],
+        row=1, col=2
+    )
+    
+    fig.update_yaxes(matches='y', row=1)
+    fig.update_xaxes(matches='x', row=1)
+    
+    return fig

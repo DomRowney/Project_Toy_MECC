@@ -5,7 +5,7 @@ import numpy as np
 import streamlit as st
 import time
 from streamlit_model_functions import run_simulation_step, create_MECC_model,create_metrics_figure
-from alcohol_outputs import create_population_figure,create_intervention_figure, results_chi, results_stage_chi
+from alcohol_outputs import create_population_figure,create_intervention_figure, results_chi, results_stage_chi, create_effectiveness_figure
 import os
 import shutil
 import json
@@ -158,6 +158,7 @@ with tab1:
         chart_placeholder1 = st.empty()
         chart_placeholder2 = st.empty()
         chart_placeholder3 = st.empty()
+        chart_placeholder4 = st.empty() 
           
         for step in range(st.session_state.num_steps):
             if step == st.session_state.num_steps - 1:
@@ -183,6 +184,10 @@ with tab1:
             fig3 = create_intervention_figure(data_no_mecc, data_mecc, step,'Interventions')
             with chart_placeholder3:
                 st.plotly_chart(fig3, use_container_width=True)
+                
+            fig4 = create_effectiveness_figure(data_no_mecc, data_mecc, step)
+            with chart_placeholder4:
+                st.plotly_chart(fig4, use_container_width=True)
                         
             time.sleep(st.session_state.animation_speed)
                 

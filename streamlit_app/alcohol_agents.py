@@ -225,7 +225,16 @@ class AlcoholModel_ServiceAgent(ServiceAgent):
 
         ## Addintional Reporting variables
         self.successful_interventions_made = 0
+        
+        ## mecc training decay
+        self.mecc_trained = mecc_trained  # used for decay activation
+        self.training_age = 0  # months since training
+        if self.mecc_trained:
+            self.current_effectiveness = 1  
+        else:
+            self.current_effectiveness = 0  
             
+        self.decay_history = []  # track effectiveness over time   
 
     @classmethod
     def describe(cls):
@@ -237,10 +246,24 @@ class AlcoholModel_ServiceAgent(ServiceAgent):
         ## adds 1 to the successful intervention count
         self.successful_interventions_made += 1
 
-        ## Adds intervention effect
-        PersonAgent.change_prob_contemplation =+ self.contemplation_intervention
-        PersonAgent.change_prob_preparation =+ self.preparation_intervention
-        PersonAgent.change_prob_action =+ self.action_intervention
+        
+        if self.mecc_trained:
+            ## mecc training decay adjusted effects
+            ## thinking that mecc training becomes less effective over time and impacts the person agents probability 
+            adj_contemplation = self.contemplation_intervention * self.current_effectiveness
+            adj_preparation = self.preparation_intervention * self.current_effectiveness
+            adj_action = self.action_intervention * self.current_effectiveness
+            
+            ## apply to person
+            PersonAgent.change_prob_contemplation += adj_contemplation
+            PersonAgent.change_prob_preparation += adj_preparation
+            PersonAgent.change_prob_action += adj_action
+            
+        else:
+            ## Adds intervention effect
+            PersonAgent.change_prob_contemplation =+ self.contemplation_intervention
+            PersonAgent.change_prob_preparation =+ self.preparation_intervention
+            PersonAgent.change_prob_action =+ self.action_intervention
 
         ## Caps probabilities at 1
         if PersonAgent.change_prob_contemplation >= 1:
@@ -287,9 +310,19 @@ class AlcoholModel_ServiceAgent(ServiceAgent):
                   f"phase and not receptive to change")
 
 
-    ## doesn't do anything at each step
+    ## mecc training decay over time
     def step(self):
-        pass
+        if self.mecc_trained:
+            self.training_age += 1
+            half_life = 4  # months for 50% decay
+            self.current_effectiveness = 0.8 * (0.5 ** (self.training_age / half_life)) + 0.2
+        else:
+            self.current_effectiveness = 0  # no decay
+        
+        self.decay_history.append({
+            'month': self.model.schedule.time,
+            'effectiveness': self.current_effectiveness
+        })
 
 
 services_list = [ 'Job Centre'
@@ -424,6 +457,14 @@ class Alcohol_MECC_Model(MECC_Model):
                 "Community Hub Contacts": calculate_service_contacts_CommunityHub,
                 "Pharmacy Contacts": calculate_service_contacts_Pharmacy,
                 "GP Practice Contacts": calculate_service_contacts_GPPractice,
+                
+                ## Mecc training effectiveness metrics
+                "Job Centre Effectiveness": lambda m: calculate_service_effectiveness(m, "Job Centre"),
+                "Benefits Office Effectiveness": lambda m: calculate_service_effectiveness(m, "Benefits Office"),
+                "Housing Officer Effectiveness": lambda m: calculate_service_effectiveness(m, "Housing Officer"),
+                "Community Hub Effectiveness": lambda m: calculate_service_effectiveness(m, "Community Hub"),
+                "Pharmacy Effectiveness": lambda m: calculate_service_effectiveness(m, "Pharmacy"),
+                "GP Practice Effectiveness": lambda m: calculate_service_effectiveness(m, "GP Practice"),
             },
             agent_reporters={}
         )
@@ -573,3 +614,11 @@ def calculate_service_contacts_Pharmacy(model):
 
 def calculate_service_contacts_GPPractice(model):
     return calculate_service_contacts(model,"GP Practice")
+
+# NEW METRIC FUNCTION FOR EFFECTIVENESS
+def calculate_service_effectiveness(model, service_name):
+    services = [a for a in model.schedule.agents 
+               if isinstance(a, AlcoholModel_ServiceAgent) 
+               and a.category == service_name]
+    return services[0].current_effectiveness if services else 0
+
