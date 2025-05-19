@@ -96,6 +96,8 @@ with tab2:
             st.write(f" - Post Intervention Pre-Contemplation to Contemplation chance: :blue-background[{st.session_state.alcohol_services_table.loc[service]['Post Intervention Pre-Contemplation to Contemplation chance']}]")
             st.write(f" - Post Intervention Contemplation to Preparation chance: :blue-background[{st.session_state.alcohol_services_table.loc[service]['Post Intervention Contemplation to Preparation chance']}]")
             st.write(f" - Post Intervention Preparation to Action chance: :blue-background[{st.session_state.alcohol_services_table.loc[service]['Post Intervention Preparation to Action chance']}]")
+            st.write(f" - MECC Training Decay Half Life in Months: :blue-background[{st.session_state.alcohol_services_table.loc[service]['MECC Training Decay Half Life in Months']}]")
+            
 
 
 ##################################
@@ -124,6 +126,7 @@ with tab1:
         "contemplation_intervention": st.session_state.alcohol_services_table['Post Intervention Pre-Contemplation to Contemplation chance'].to_dict(),
         "preparation_intervention": st.session_state.alcohol_services_table['Post Intervention Contemplation to Preparation chance'].to_dict(),
         "action_intervention": st.session_state.alcohol_services_table['Post Intervention Preparation to Action chance'].to_dict(),
+        "mecc_training_decay_half_life": st.session_state.alcohol_services_table['MECC Training Decay Half Life in Months'].to_dict(),
     }
 
     # save to json file to be used later for the quarto report

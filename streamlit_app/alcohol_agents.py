@@ -209,6 +209,7 @@ class AlcoholModel_ServiceAgent(ServiceAgent):
                  , preparation_intervention
                  , action_intervention
                  , category
+                 , mecc_training_decay_half_life
                  ,):
         super().__init__(unique_id, model
                          , mecc_effect
@@ -225,6 +226,8 @@ class AlcoholModel_ServiceAgent(ServiceAgent):
 
         ## Addintional Reporting variables
         self.successful_interventions_made = 0
+        
+        self.mecc_training_decay_half_life = mecc_training_decay_half_life
         
         ## mecc training decay
         self.mecc_trained = mecc_trained  # used for decay activation
@@ -314,8 +317,8 @@ class AlcoholModel_ServiceAgent(ServiceAgent):
     def step(self):
         if self.mecc_trained:
             self.training_age += 1
-            half_life = 4  # months for 50% decay
-            self.current_effectiveness = 0.8 * (0.5 ** (self.training_age / half_life)) + 0.2
+            # half_life = 4  # months for 50% decay
+            self.current_effectiveness = 0.8 * (0.5 ** (self.training_age / self.mecc_training_decay_half_life)) + 0.2
         else:
             self.current_effectiveness = 0  # no decay
         
@@ -357,6 +360,7 @@ class Alcohol_MECC_Model(MECC_Model):
                  , contemplation_intervention
                  , preparation_intervention
                  , action_intervention
+                 , mecc_training_decay_half_life
 
                  ## change state probability
                  , prob_receptive
@@ -378,7 +382,8 @@ class Alcohol_MECC_Model(MECC_Model):
                 , mecc_effect = {}
                 , base_make_intervention_prob = {}
                 , mecc_trained = {}   
-
+                # , mecc_training_decay_half_life = {}
+                
                 , N_service = 0
                 ):
         super().__init__( N_people
@@ -419,6 +424,7 @@ class Alcohol_MECC_Model(MECC_Model):
         self.contemplation_intervention = contemplation_intervention
         self.preparation_intervention = preparation_intervention
         self.action_intervention = action_intervention
+        self.mecc_training_decay_half_life = mecc_training_decay_half_life
 
         ## Overwrite Data collector for metrics
         self.datacollector = DataCollector(
@@ -512,6 +518,7 @@ class Alcohol_MECC_Model(MECC_Model):
                     , contemplation_intervention = self.contemplation_intervention[service]
                     , preparation_intervention = self.preparation_intervention[service]
                     , action_intervention = self.action_intervention[service]
+                    , mecc_training_decay_half_life = self.mecc_training_decay_half_life[service]
                     )
         
             self.schedule.add(a)
