@@ -1,13 +1,66 @@
 ---
 title: "MECC: Agent Based Modelling"
-format: pptx
+format:
+    revealjs:
+            footer: "Project Toy MECC"
 ---
 
-# Title
+## Project Toy MECC
+:::: {.columns}
 
-## Slide 1
-- text
+::: {.column}
+
+:::
+
+::: {.column}
+- Dominic Rowney
+- Sam Vauntier
+- Luke Herbet
+:::
+
+::::
+
+## Meet the Team {.incremental}
+<!-- A brief intro to you and your role / organisation.  In particular, you should make mention of any prior coding / modelling / data science experience you had pre-HSMA (and if your experience was limited or non-existent, say that!  It’s fantastic for people to see how far you were able to come)-->
+This inital prototype started as a HSMA Hackday as part of the course.
+
+- **Dominic Rowney**</br><p>*Principle Information Analyst* at NHS North of England Commissioning Support</p>
+- **Sam Vauntier**</br><p>*Data Scientist* at Somerset NHS Foundation Trust</p>
+- **Luke Herbet**</br><p>*Eye Doctor* at Hospital
+
+## What the MECC?
+<!--What was the problem you were / are trying to solve, and why is it important?-->
+**M**aking **E**vent **C**ontact **C**ount **(MECC)** in North East and North Cumbria
+
+:::: {.columns}
+
+::: {.column}
 
 
-## Slide 2
-- text
+*"MECC is an approach to behaviour change that utilises the millions of day-to-day interactions that organisations and people have with other people to encourage changes in behaviour that have a positive effect on the health and wellbeing of individuals, communities and populations."*
+
+MECC interventions are difficult to study and the impact difficult to measure we proposed a simulation approach to allow generation of evidence to support implementation of MECC training and further programmes of work.
+:::
+
+::: {.column}
+
+:::
+
+::::
+
+## 4.	DES vs Agent based sim slide – essentially to explain agent based modelling in lay terms
+## 5.	Overview of app/model
+<!--An overview of the model / tool you’ve built, appropriate for a non-technical audience (live demos of StreamLit apps / models can be very effective - just be mindful to have things set up ready to run and be prepared for technical issues)-->
+## 6.	Live Demo!
+## 7.	Key results
+<!--    a.	What are the key results coming out of your model, and what do they mean?-->
+## 8.	Impact
+"We were very impressed with your ability to convey some very complex concepts.  The model looks very promising, and we look forward to the next phase of development"  Jill Harland, Regional MECC Team
+<!--a.	What impact has this work had - how is your organisation using this information?  What did they do?  Be as specific as possible.  If the impact has not yet happened, explain how they are going to be using this information, and what decisions etc it will feed into.  THIS IS A VITAL PART OF YOUR PRESENTATION.-->
+##  9.	Key points from the simulation / project summary / Next steps for the project.
+<!--a.	Where it is now
+b.	Future developments
+c.	Impact / intended impact
+d.	Lessons learnt-->
+##  10.	Experience on HSMA course
+<!--a.	What has been the impact of being part of HSMA on you and your organisation?  What does it mean to you to have developed these skills?  How is the organisation planning on using these new in-house skills moving forward?-->
