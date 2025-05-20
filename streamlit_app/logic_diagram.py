@@ -302,6 +302,10 @@ def create_logic_diagram_Alcohol(number_labels = False, session_data = None):
                     'chance status improves')
 
     lb_window_time_up = 'Is "Golden Window"\nTimer > Length?'
+
+    lbl_training_effectivness = ('Service\n'+
+                                'MECC Training\nEffectiveness:\n'+
+                                'reduce by half-life')
     lb_last_period = 'Is Last Period?'
 
     #lb_inital_state = 'Status:\nPre-Contemplation'
@@ -357,6 +361,8 @@ def create_logic_diagram_Alcohol(number_labels = False, session_data = None):
         services = flow.Circle(r=d.unit/2).label('Services').drop("S")
         flow.Arrow().down(default_len).at(services.S)
         services_list = flow.Box().label(lb_services_list).drop("S")
+        flow.Arrow().down(default_len).at(services_list.S)
+        training_status = flow.Box().label('Service\nMECC Training\nEffectiveness: 100%').drop("S")
 
         d.pop() ## returns previous remembered location
         person = flow.Circle(r=d.unit/2).label(lb_N_people).drop("S")
@@ -364,15 +370,16 @@ def create_logic_diagram_Alcohol(number_labels = False, session_data = None):
 
         ## Inital State
         inital_state = flow.Box().label(lb_status_pre).drop("S")
-        flow.Arrow().down(default_len).at(inital_state.S)
+        flow.Arrow().down(default_len*7).at(inital_state.S)
         
-        period_start = flow.Start().label('Period Start').drop("S")       
+        period_start = flow.Start().label('Period Start').drop("S")
+        flow.Wire('|-',arrow ='->').at(training_status.S).to(period_start.W)            
         flow.Arrow().down(default_len).at(period_start.S)
+        
 
         ## service
         random_service = flow.Decision(S='').label(lb_random_service).drop("S")
-        flow.Wire('|-',arrow ='->').at(services_list.S).to(random_service.W)
-
+    
         d.pop() ## returns previous remembered location
         flow.Arrow().down(default_len).at(random_service.S)
         service_select = flow.Start(S='').label('Select Service').drop("S")
@@ -593,6 +600,8 @@ def create_logic_diagram_Alcohol(number_labels = False, session_data = None):
             flow.Wire('c',k=d.unit/3 ,arrow ='->').at(window_time_up.E).to(window_update_end.E)
         flow.Arrow().down(d.unit/2).at(window_update_end.S)
 
+        training_effectivness = flow.Box().label(lbl_training_effectivness).drop("S")
+        flow.Arrow().down(default_len).at(training_effectivness.S)
 
         ## End period
         period_end = flow.Start().label('Period End').drop("E")
