@@ -1,0 +1,131 @@
+---
+title: "Toy MECC Simulation Report"
+# execute:
+#   echo: false
+format:
+    html:
+        toc: false
+        code-fold: false
+        embed-resources: true
+        # URL options
+        link-external-icon: true
+        link-external-newwindow: true
+        # Reference options
+        citations-hover: true
+        footnotes-hover: true
+        #####################
+        # NHS Theme options #
+        #####################
+        css: "NHS_report_theme.css"
+        callout-appearance: simple
+        callout-collapse: true
+        # Caption options
+        cap-location: bottom
+        # Title options
+        title-block-banner: '#005EB8'
+        backgroundcolor: '#f0f4f5'
+        # Set font
+        mainfont: 'Open Sans'
+execute: 
+    echo: true
+    warning: false
+    message: false
+---
+
+<!-- ![](resources\MECC.jpg){height=100} -->
+
+```{python}
+#| echo: false
+#| label: get_data
+
+import pandas as pd
+import json
+import plotly.graph_objects as go
+# from logic_diagram import create_logic_diagram_SmokeModel
+
+# Load session data from JSON
+with open("./outputs/session_data.json", "r") as f:
+    session_data = json.load(f)
+
+data_no_mecc = pd.read_csv("./outputs/data_no_mecc.csv")
+data_mecc = pd.read_csv("./outputs/data_mecc.csv")
+
+```
+
+# Alcohol Advice Model with MECC Training
+
+## Simulation Results
+
+```{python}
+#| echo: false
+#| label: plots
+from alcohol_outputs import create_population_figure
+from alcohol_outputs import create_intervention_figure
+from alcohol_outputs import create_effectiveness_figure
+
+step = len(data_no_mecc) - 1
+fig1 = create_population_figure(data_no_mecc, data_mecc, step)
+fig1.show()
+
+fig2 = create_intervention_figure(data_no_mecc, data_mecc, step,'Contacts')
+fig2.show()
+
+fig3 = create_intervention_figure(data_no_mecc, data_mecc, step,'Interventions')
+fig3.show()
+
+fig4 = create_effectiveness_figure(data_no_mecc, data_mecc, step)
+fig4.show()
+```
+
+## Final Statistics
+
+### Total
+```{python}
+#| echo: false
+#| label: Calculate smoking reduction for model without MECC
+
+```
+
+### Contacts by Services
+```{python}
+#| echo: false
+#| label: Calculate smoking reduction for model with MECC
+
+```
+
+### Sucessful Interventions by Services
+
+```{python}
+#| echo: false
+#| label: Calculate additional quits due to MECC
+
+```
+
+### All Interventions by Services
+```{python}
+#| echo: false
+#| label: Calculate additional quits due to MECC2
+
+```
+
+## Toy MECC Parameters
+
+### Population Parameters
+
+
+
+### Service Parameters
+
+
+### MECC Parameters
+
+
+### Simulation Parameters
+
+
+### Logic Diagram
+
+
+
+
+
