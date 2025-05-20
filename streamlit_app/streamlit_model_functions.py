@@ -73,7 +73,8 @@ def create_MECC_model(model_parameters
             ## site properties
             , mecc_effect = model_parameters["mecc_effect"]
             , base_make_intervention_prob = model_parameters["base_make_intervention_prob"]
-            , mecc_trained = model_parameters["mecc_trained"]
+            , mecc_trained = model_parameters["mecc_trained"]   
+            , mecc_training_decay_half_life = model_parameters["mecc_training_decay_half_life"]
             )
 
     elif model_type == 'Smoke':

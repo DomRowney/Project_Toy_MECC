@@ -78,7 +78,8 @@ def init_parameters():
                 ,'Chance Making a Brief Intervention After MECC Training': [0.90,0.90,0.90,0.90,0.90,0.90]
                 ,'Post Intervention Pre-Contemplation to Contemplation chance': [0.50,0.50,0.50,0.50,0.50,0.50]
                 ,'Post Intervention Contemplation to Preparation chance': [0.50,0.50,0.50,0.50,0.50,0.50]
-                ,'Post Intervention Preparation to Action chance': [0.50,0.50,0.50,0.50,0.50,0.50]}
+                ,'Post Intervention Preparation to Action chance': [0.10,0.10,0.10,0.10,0.10,0.10]
+                ,'MECC Training Decay Half Life in Months': [4,4,4,4,4,4]}
         )
         ## Sets service as index
         alcohol_services = alcohol_services.set_index('Service')    
@@ -272,7 +273,8 @@ alcohol_services = pd.DataFrame(
         ,'Chance Making a Brief Intervention After MECC Training': [0.90,0.90,0.90,0.90,0.90,0.90]
         ,'Post Intervention Pre-Contemplation to Contemplation chance': [0.50,0.50,0.50,0.50,0.50,0.50]
         ,'Post Intervention Contemplation to Preparation chance': [0.50,0.50,0.50,0.50,0.50,0.50]
-        ,'Post Intervention Preparation to Action chance': [0.50,0.50,0.50,0.50,0.50,0.50]}
+        ,'Post Intervention Preparation to Action chance': [0.10,0.10,0.10,0.10,0.10,0.10]
+        ,'MECC Training Decay Half Life in Months': [4,4,4,4,4,4]}
 )
 ## Sets service as index
 alcohol_services = alcohol_services.set_index('Service')
@@ -344,6 +346,13 @@ def alcohol_service_input(alcohol_services):
                 min_value=0.0,
                 max_value=1.0,
                 step=0.01,),
+            "MECC Training Decay Half Life in Months": st.column_config.NumberColumn(
+                "MECC Training Decay Half Life in Months",
+                width='medium',
+                help="What is the MECC Training Decay Half Life rate in Months (0-24)?",
+                min_value=0,
+                max_value=24,
+                step=1,),
                 },
         )
 
