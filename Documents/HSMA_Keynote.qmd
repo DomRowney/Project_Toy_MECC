@@ -8,6 +8,10 @@ author:
     affiliation: Somerset NHS FT
   - name: Luke Herbet
     affiliation: Surrey & Sussex NHS Trust
+title-slide-attributes:
+  data-background-image: MECC_Logo_Washout.png
+  data-background-size: contain
+  data-background-opacity: "0.5"
 format:
     revealjs:
             embed-resources: true
@@ -16,7 +20,7 @@ format:
             footer: "Project Toy MECC"
 ---
 
-## Meet the Team {.incremental}
+## Meet the Team
 <!-- A brief intro to you and your role / organisation.  In particular, you should make mention of any prior coding / modelling / data science experience you had pre-HSMA (and if your experience was limited or non-existent, say that!  It’s fantastic for people to see how far you were able to come)-->
 This project started as a Hackday for HSMA Cohort 6.
 
@@ -37,20 +41,57 @@ This project started as a Hackday for HSMA Cohort 6.
 
 ## What the MECC?
 <!--What was the problem you were / are trying to solve, and why is it important?-->
-**M**aking **E**vent **C**ontact **C**ount **(MECC)** in North East and North Cumbria
+**M**aking **E**vent **C**ontact **C**ount **(MECC)** in North East and North Cumbria is used across healthcare, local government, Department of Work & Pensions, charities, [etc.](https://www.meccgateway.co.uk/nenc/case-studies)
 
-
-::: {style="color=#ddeaf1"}
-> ❝ MECC is an approach to behaviour change that utilises the millions of day-to-day interactions that organisations and people have with other people to encourage changes in behaviour that have a positive effect on the health and wellbeing of individuals, communities and populations. ❞\
-**[About MECC](https://www.meccgateway.co.uk/nenc/about)**
+:::: {.columns}
+::: {.column width="20%"} 
+[![](MECC_Logo.png){.r-nostretch fig-align="left"}](https://www.meccgateway.co.uk/nenc/about)
 :::
 
-MECC interventions are difficult to study and the impact difficult to measure we proposed a simulation approach to allow generation of evidence to support implementation of MECC training and further programmes of work.
+::: {.column width="80%"} 
+:::{style="color=#ddeaf1"}
+> ❝ MECC is an approach to behaviour change that utilises the millions of day-to-day interactions that organisations and people have with other people to encourage changes in behaviour that have a positive effect on the health and wellbeing of individuals, communities and populations. ❞\
+:::
+:::
+::::
+
+. . .
+
+- MECC interventions are difficult to study and the impact difficult to measure so we proposed a **simulation approach** to allow generation of evidence to support the implementation of MECC training.
+
+. . .
+
+- The simulation would need to be **simple** to use and to be **flexible** for use across the wide range of settings and delivery models MECC has.
 
 ## Agent Based Simulation
+:::{.incremental}
+- **Agent Based Simulation** (ABS) is a simulation method that focuses on the behaviours, interactions and motivations of individuals (agents), and observes the population-level emergent behaviour that arises from these individual behaviours and interactions.
+- The model allows the user to set a range of parameters and rules that control the likelihood of events occurring, the starting states of the agents, and their interactions
+- Individuals within the starting population will proceed through the simulation and be subject to the chance of events occurring as they interact
+- The model can be set to run for any number of steps or iterations
+- In this case we use a python language package called **[Mesa](https://mesa.readthedocs.io/)** to create the underlying model and a **[Streamlit](https://streamlit.io/)** to create the interface
+:::
 
-## 5.	Overview of app/model
+## Development
+- Prototype models were developed as part of a Hackday, a generic model and a smoking cessation modek
+- In January 2025 we tasked the regional MECC strategy group to prioritise themes and pathways and to start to map those out
+- The top three thematic areas were **Alcohol**, Mental Health, and Smoking Cessation
+- The plan was to start with a well-defined area in order to prototype: Alcohol
+- In May 2025 an alcohol intervention model was presented to the MECC regional team for feedback
+
+
+## Overview of app/model
 <!--An overview of the model / tool you’ve built, appropriate for a non-technical audience (live demos of StreamLit apps / models can be very effective - just be mindful to have things set up ready to run and be prepared for technical issues)-->
+- The model consists of two types of agent: **People** and **Services**
+- People have a chance of visting services
+- Services then have a chance of performing an intervention on people that visit
+- Services can be MECC trained or not
+- With MECC training the interventions can be more frequent and/or more efficacious
+- Also includes:
+  + a period where repeated interventions can have an additive effect
+  + a decay of efficacy of the MECC training
+- The model is run **twice**, simultaneously, once with MECC training and once without
+
 ![](../alcohol_logic_diagram.png){.r-nostretch fig-align="center"}
 
 ## Live Demo! 
@@ -60,23 +101,41 @@ MECC interventions are difficult to study and the impact difficult to measure we
 **[Alcohol Intervention Toy MECC App](https://domrowney-project-toy-mecc-streamlit-appapp-alcohol-cqzaxu.streamlit.app/)**
 :::
 
-## 7.	Key results
+## Key results
 <!--    a.	What are the key results coming out of your model, and what do they mean?-->
 
-## 8.	Impact
+## Impact {.incremental}
+<!--a.	What impact has this work had - how is your organisation using this information?  What did they do?  Be as specific as possible.  If the impact has not yet happened, explain how they are going to be using this information, and what decisions etc it will feed into.  THIS IS A VITAL PART OF YOUR PRESENTATION.-->
 :::{}
 > ❝ *We were very impressed with your ability to convey some very complex concepts.  The model looks very promising, and we look forward to the next phase of development.* ❞\
 **Jill Harland, Regional MECC Team**
 :::
-<!--a.	What impact has this work had - how is your organisation using this information?  What did they do?  Be as specific as possible.  If the impact has not yet happened, explain how they are going to be using this information, and what decisions etc it will feed into.  THIS IS A VITAL PART OF YOUR PRESENTATION.-->
 
-##  9.	Key points from the simulation / project summary / Next steps for the project.
+. . .
+
+- The model is still in the prototype stage, finding the correct ranges of variables to use. This is why it is described as a toy
+
+. . .
+
+- It can currerntly be used to show decision makers what level of interventions MECC would need to produce
+
+. . .
+
+- It has generated some interest from the organisations part of the regional MECC strategy group for agent based modelling 
+
+## Next steps
+- Write up a paper to deliver to the MECC group
+- Add a report that outputs once the model runs
+- Make a file that allows saving and importing of parameters
+- Create a version of the model which includes parameters taken from randomised control trials of MECC
+- Find a specific test case to compare the model against reality
+- Continue developing a *Monte-Carlo* version of the models, where it is run many times to achieve average results
 <!--a.	Where it is now
 b.	Future developments
 c.	Impact / intended impact
 d.	Lessons learnt-->
 
-##  10.	Experience on HSMA course
+##  Experience on HSMA course
 <!--a.	What has been the impact of being part of HSMA on you and your organisation?  What does it mean to you to have developed these skills?  How is the organisation planning on using these new in-house skills moving forward?-->
 
 # Any Questions?
