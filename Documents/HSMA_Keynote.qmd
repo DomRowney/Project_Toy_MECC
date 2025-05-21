@@ -65,7 +65,15 @@ This project started as a Hackday for HSMA Cohort 6.
 
 ## Agent Based Simulation
 :::{.incremental}
+
+:::: {.columns}
+::: {.column width="70%"} 
 - **Agent Based Simulation** (ABS) is a simulation method that focuses on the behaviours, interactions and motivations of individuals (agents), and observes the population-level emergent behaviour that arises from these individual behaviours and interactions.
+:::
+::: {.column width="30%"} 
+![](https://upload.wikimedia.org/wikipedia/commons/e/e5/Gospers_glider_gun.gif){.r-nostretch fig-align="right"}
+:::
+::::
 - The model allows the user to set a range of parameters and rules that control the likelihood of events occurring, the starting states of the agents, and their interactions
 - Individuals within the starting population will proceed through the simulation and be subject to the chance of events occurring as they interact
 - The model can be set to run for any number of steps or iterations
@@ -73,26 +81,41 @@ This project started as a Hackday for HSMA Cohort 6.
 :::
 
 ## Development
-- Prototype models were developed as part of a Hackday, a generic model and a smoking cessation modek
+- Prototype models were developed as part of the HSMA hackday, a generic model and a smoking cessation modek
 - In January 2025 we tasked the regional MECC strategy group to prioritise themes and pathways and to start to map those out
 - The top three thematic areas were **Alcohol**, Mental Health, and Smoking Cessation
-- The plan was to start with a well-defined area in order to prototype: Alcohol
+- The plan was to start with a well-defined area in order to prototype: **Alcohol**
 - In May 2025 an alcohol intervention model was presented to the MECC regional team for feedback
 
+```{mermaid}
+flowchart LR
+  A[Hard edge] --> B(Round edge)
+  B --> C{Decision}
+  C --> D[Result one]
+  C --> E[Result two]
+```
 
-## Overview of app/model
+## Model Overview
 <!--An overview of the model / tool you’ve built, appropriate for a non-technical audience (live demos of StreamLit apps / models can be very effective - just be mindful to have things set up ready to run and be prepared for technical issues)-->
+
+:::: {.columns}
+::: {.column width="30%"} 
+![](../alcohol_logic_diagram.png){fig-align="center"}
+
+:::
+::: {.column width="70%"} 
+::: {.incremental}
 - The model consists of two types of agent: **People** and **Services**
-- People have a chance of visting services
-- Services then have a chance of performing an intervention on people that visit
-- Services can be MECC trained or not
+- **People** have a chance of visting services
+- **Services** then have a chance of performing an intervention on people that visit, and can be MECC trained or not
 - With MECC training the interventions can be more frequent and/or more efficacious
 - Also includes:
   + a period where repeated interventions can have an additive effect
   + a decay of efficacy of the MECC training
-- The model is run **twice**, simultaneously, once with MECC training and once without
-
-![](../alcohol_logic_diagram.png){.r-nostretch fig-align="center"}
+- The model is run **twice**, simultaneously, once with MECC training and once without. Results can then be compared.
+:::
+:::
+::::
 
 ## Live Demo! 
 ![](MECCStreamlitApp_Alcohol.png){.r-stretch  fig-align="center"}
@@ -101,35 +124,32 @@ This project started as a Hackday for HSMA Cohort 6.
 **[Alcohol Intervention Toy MECC App](https://domrowney-project-toy-mecc-streamlit-appapp-alcohol-cqzaxu.streamlit.app/)**
 :::
 
-## Key results
+## Impact 
 <!--    a.	What are the key results coming out of your model, and what do they mean?-->
-
-## Impact {.incremental}
 <!--a.	What impact has this work had - how is your organisation using this information?  What did they do?  Be as specific as possible.  If the impact has not yet happened, explain how they are going to be using this information, and what decisions etc it will feed into.  THIS IS A VITAL PART OF YOUR PRESENTATION.-->
-:::{}
-> ❝ *We were very impressed with your ability to convey some very complex concepts.  The model looks very promising, and we look forward to the next phase of development.* ❞\
-**Jill Harland, Regional MECC Team**
+:::{style="color=#ddeaf1"}
+> ❝ *We were very impressed with your ability to convey some very complex concepts.  The model looks very promising, and we look forward to the next phase of development.* ❞
+:::
+:::{style="text-align: right"}
+**Jill Harland, Regional MECC Team</br></br>**
 :::
 
-. . .
-
+:::{.incremental}
 - The model is still in the prototype stage, finding the correct ranges of variables to use. This is why it is described as a toy
-
-. . .
-
 - It can currerntly be used to show decision makers what level of interventions MECC would need to produce
-
-. . .
-
-- It has generated some interest from the organisations part of the regional MECC strategy group for agent based modelling 
+- There has been some interest from the organisations part of the regional MECC strategy group for agent based modelling for MECC and other uses.
+:::
 
 ## Next steps
-- Write up a paper to deliver to the MECC group
-- Add a report that outputs once the model runs
+:::{.incremental}
+- Write up a board paper to deliver to the MECC group
+- Find a specific test case to compare the model against reality
+- Add a data report that outputs once the model runs
 - Make a file that allows saving and importing of parameters
 - Create a version of the model which includes parameters taken from randomised control trials of MECC
-- Find a specific test case to compare the model against reality
 - Continue developing a *Monte-Carlo* version of the models, where it is run many times to achieve average results
+- Make the list of services customisable
+:::
 <!--a.	Where it is now
 b.	Future developments
 c.	Impact / intended impact
@@ -137,5 +157,6 @@ d.	Lessons learnt-->
 
 ##  Experience on HSMA course
 <!--a.	What has been the impact of being part of HSMA on you and your organisation?  What does it mean to you to have developed these skills?  How is the organisation planning on using these new in-house skills moving forward?-->
+[![](HSMA%20logo.png){fig-align="center"}](https://hsma.co.uk/)
 
 # Any Questions?
