@@ -18,6 +18,8 @@ format:
             theme: default
             smaller: true
             footer: "Project Toy MECC"
+            mermaid:
+               theme: neutral
 ---
 
 ## Meet the Team
@@ -81,29 +83,39 @@ This project started as a Hackday for HSMA Cohort 6.
 :::
 
 ## Development
-- Prototype models were developed as part of the HSMA hackday, a generic model and a smoking cessation modek
+:::{.incremental}
+- Prototype models were developed as part of the HSMA hackday, a generic model and a smoking cessation model
 - In January 2025 we tasked the regional MECC strategy group to prioritise themes and pathways and to start to map those out
 - The top three thematic areas were **Alcohol**, Mental Health, and Smoking Cessation
 - The plan was to start with a well-defined area in order to prototype: **Alcohol**
+    + Mental Health was too complex and Smoking Cessation already high acceptance
 - In May 2025 an alcohol intervention model was presented to the MECC regional team for feedback
+:::
 
-```{mermaid}
-flowchart LR
-  A[Hard edge] --> B(Round edge)
-  B --> C{Decision}
-  C --> D[Result one]
-  C --> E[Result two]
-```
 
 ## Model Overview
-<!--An overview of the model / tool you’ve built, appropriate for a non-technical audience (live demos of StreamLit apps / models can be very effective - just be mindful to have things set up ready to run and be prepared for technical issues)-->
-
-:::: {.columns}
-::: {.column width="30%"} 
+<!--An overview of the model / tool you’ve built, appropriate for a non-technical audience (live demos of StreamLit apps / models can be very effective - just be mindful to have things set up ready to run and be prepared for technical issues)
 ![](../alcohol_logic_diagram.png){fig-align="center"}
+-->
+:::: {.columns}
+::: {.column width="20%"} 
+```{mermaid .incremental}
 
+%%{init: {'theme':'neutral'}}%%
+
+flowchart TB
+ subgraph s1["Service"]
+        C("Interaction")
+  end
+    A(("Population")) --> B("Person")
+    B --> s1
+    C --> D("Outcome")
+    D --> E(("Population
+    Change"))
+
+```
 :::
-::: {.column width="70%"} 
+::: {.column width="80%"} 
 ::: {.incremental}
 - The model consists of two types of agent: **People** and **Services**
 - **People** have a chance of visting services
@@ -111,7 +123,7 @@ flowchart LR
 - With MECC training the interventions can be more frequent and/or more efficacious
 - Also includes:
   + a period where repeated interventions can have an additive effect
-  + a decay of efficacy of the MECC training
+  + decay of efficacy of the MECC training
 - The model is run **twice**, simultaneously, once with MECC training and once without. Results can then be compared.
 :::
 :::
@@ -124,7 +136,7 @@ flowchart LR
 **[Alcohol Intervention Toy MECC App](https://domrowney-project-toy-mecc-streamlit-appapp-alcohol-cqzaxu.streamlit.app/)**
 :::
 
-## Impact 
+## Wider Impact 
 <!--    a.	What are the key results coming out of your model, and what do they mean?-->
 <!--a.	What impact has this work had - how is your organisation using this information?  What did they do?  Be as specific as possible.  If the impact has not yet happened, explain how they are going to be using this information, and what decisions etc it will feed into.  THIS IS A VITAL PART OF YOUR PRESENTATION.-->
 :::{style="color=#ddeaf1"}
@@ -138,6 +150,7 @@ flowchart LR
 - The model is still in the prototype stage, finding the correct ranges of variables to use. This is why it is described as a toy
 - It can currerntly be used to show decision makers what level of interventions MECC would need to produce
 - There has been some interest from the organisations part of the regional MECC strategy group for agent based modelling for MECC and other uses.
+- Sammi developed a way for the app to produce report documents, which will be useful to HSMA and beyond
 :::
 
 ## Next steps
@@ -155,8 +168,16 @@ b.	Future developments
 c.	Impact / intended impact
 d.	Lessons learnt-->
 
-##  Experience on HSMA course
+##  Personal Impact
 <!--a.	What has been the impact of being part of HSMA on you and your organisation?  What does it mean to you to have developed these skills?  How is the organisation planning on using these new in-house skills moving forward?-->
+:::{.incremental}
+- NHS NECS has written up a case study as Agent Based Simulation is now a service they can offer to organisations
+- A positive experience with creating an open source product
+- Skills picked up have already been applied to other projects
+:::
+
+. . .
+
 [![](HSMA%20logo.png){fig-align="center"}](https://hsma.co.uk/)
 
-# Any Questions?
+# Any Questions? {background-image="MECC_Logo_Washout.png" background-opacity="0.5" background-size="contain"}
