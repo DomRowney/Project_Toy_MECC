@@ -98,7 +98,7 @@ This project started as a Hackday for HSMA Cohort 6.
 ![](../alcohol_logic_diagram.png){fig-align="center"}
 -->
 :::: {.columns}
-::: {.column width="20%"} 
+::: {.column width="30%"} 
 ```{mermaid .incremental}
 
 %%{init: {'theme':'neutral'}}%%
@@ -115,7 +115,7 @@ flowchart TB
 
 ```
 :::
-::: {.column width="80%"} 
+::: {.column width="70%"} 
 ::: {.incremental}
 - The model consists of two types of agent: **People** and **Services**
 - **People** have a chance of visting services
