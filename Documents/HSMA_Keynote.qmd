@@ -1,10 +1,10 @@
 ---
-title: "Project Toy MECC"
-subtitle: "Evaluating Making Every Contact Count with Agent Based Modelling"
+title: "<span style='color:#0D4C6B;'>**Project Toy MECC**</span>"
+subtitle: "Evaluating <span style='color:#0D4C6B;'>**M**</span>aking <span style='color:#0D4C6B;'>**E**</span>very <span style='color:#0D4C6B;'>**C**</span>ontact <span style='color:#0D4C6B;'>**C**</span>ount with Agent Based Modelling"
 author:
   - name: Dominic Rowney
     affiliation: NHS NECS
-  - name: Sam Vauntier
+  - name: Sam Vautier
     affiliation: Somerset NHS FT
   - name: Luke Herbet
     affiliation: Surrey & Sussex NHS Trust
@@ -28,17 +28,17 @@ This project started as a Hackday for HSMA Cohort 6.
 -->
 . . .
 
-- **Dominic Rowney** *Principle Information Analyst* at NHS NECS</br>
+- <span style='color:#C71E85;'>**Dominic Rowney**</span> *Principle Information Analyst* at NHS NECS</br>
 <p><span style="color:DarkGrey;">Dominic had dabbled in data science prior to the HSMA course, mainly using R and SQL. He now uses python to improve everyday tasks and looks for places where HSMA training can be implemented in his work</p></span>
 
 . . .
 
-- **Sam Vauntier** *Data Scientist* at Somerset NHS FT</br>
+- <span style='color:#C71E85;'>**Sam Vautier**</span> *Data Scientist* at Somerset NHS FT</br>
 <p><span style="color:DarkGrey;">Before joining HSMA, Sam's coding experience was mostly in SQL, with very little python. She had no prior experience in modelling and had only recently transitioned into data science from a data engineering role within the Trust.</p></span>
 
 . . .
 
-- **Mr Luke Herbet** *Consultant Ophthalmologist* at Surrey & Sussex NHS Trust</br>
+- <span style='color:#C71E85;'>**Mr Luke Herbet**</span> *Consultant Ophthalmologist* at Surrey & Sussex NHS Trust</br>
 <p><span style="color:DarkGrey;">Luke is a retinal surgeon who learned python coding on the HSMA course and is also using his HSMA training to look at resource issues in ophthalmology.</p></span>
 
 . . .
@@ -47,7 +47,7 @@ This project started as a Hackday for HSMA Cohort 6.
 
 ## What the MECC?
 <!--What was the problem you were / are trying to solve, and why is it important?-->
-**M**aking **E**vent **C**ontact **C**ount **(MECC)** in North East and North Cumbria is used across healthcare, local government, Department of Work & Pensions, charities, [etc.](https://www.meccgateway.co.uk/nenc/case-studies)
+<span style='color:#C71E85;'>**M**</span>aking <span style='color:#C71E85;'>**E**</span>very <span style='color:#C71E85;'>**C**</span>ontact <span style='color:#C71E85;'>**C**</span>ount <span style='color:#C71E85;'>**(MECC)**</span> in North East and North Cumbria is used across healthcare, local government, Department of Work & Pensions, charities, [<u>**etc.**</u>](https://www.meccgateway.co.uk/nenc/case-studies)
 
 :::: {.columns}
 ::: {.column width="20%"} 
@@ -63,35 +63,35 @@ This project started as a Hackday for HSMA Cohort 6.
 
 . . .
 
-- MECC interventions are difficult to study and the impact difficult to measure so we proposed a **simulation approach** to allow generation of evidence to support the implementation of MECC training.
+- MECC interventions are difficult to study and the impact difficult to measure so we proposed a <span style='color:#C71E85;'>**simulation approach**</span> to allow generation of evidence to support the implementation of MECC training.
 
 . . .
 
-- The simulation would need to be **simple** to use and to be **flexible** for use across the wide range of settings and delivery models MECC has.
+- The simulation would need to be <span style='color:#C71E85;'>**simple**</span> to use and to be <span style='color:#C71E85;'>**flexible**</span> for use across the wide range of settings and delivery models MECC has.
 
 ## Agent Based Simulation
 :::{.incremental}
 
 :::: {.columns}
 ::: {.column width="70%"} 
-- **Agent Based Simulation** (ABS) is a simulation method that focuses on the behaviours, interactions and motivations of individuals (agents), and observes the population-level emergent behaviour that arises from these individual behaviours and interactions.
+<span style='color:#C71E85;'>**Agent Based Simulation**</span> (ABS) is a simulation method that focuses on the behaviours, interactions and motivations of individuals (agents), and observes the population-level emergent behaviour that arises from these individual behaviours and interactions.
 :::
 ::: {.column width="30%"} 
 ![](https://upload.wikimedia.org/wikipedia/commons/e/e5/Gospers_glider_gun.gif){.r-nostretch fig-align="right"}
 :::
 ::::
-- The model allows the user to set a range of parameters and rules that control the likelihood of events occurring, the starting states of the agents, and their interactions
+- The model allows the user to <span style='color:#C71E85;'>**set a range of parameters and rules**</span> that control the likelihood of events occurring, the starting states of the agents, and their interactions
 - Individuals within the starting population will proceed through the simulation and be subject to the chance of events occurring as they interact
 - The model can be set to run for any number of steps or iterations
-- In this case we use a python language package called **[Mesa](https://mesa.readthedocs.io/)** to create the underlying model and a **[Streamlit](https://streamlit.io/)** to create the interface
+- In this case we use a python language package called [<u>**Mesa**</u>](https://mesa.readthedocs.io/) to create the underlying model and a [<u>**Streamlit**</u>](https://streamlit.io/) to create the interface
 :::
 
 ## Development
 :::{.incremental}
-- Prototype models were developed as part of the HSMA hackday, a generic model and a smoking cessation model
+- Prototype models were developed as part of the <span style='color:#C71E85;'>**HSMA hackday**</span>, a generic model and a smoking cessation model
 - In January 2025 we tasked the regional MECC strategy group to prioritise themes and pathways and to start to map those out
-- The top three thematic areas were **Alcohol**, Mental Health, and Smoking Cessation
-- The plan was to start with a well-defined area in order to prototype: **Alcohol**
+- The top three thematic areas were <span style='color:#C71E85;'>**Alcohol**</span>, Mental Health, and Smoking Cessation
+- The plan was to start with a well-defined area in order to prototype: <span style='color:#C71E85;'>**Alcohol**</span>
     + Mental Health was too complex and Smoking Cessation already high acceptance
 - In May 2025 an alcohol intervention model was presented to the MECC regional team for feedback
 :::
@@ -121,14 +121,14 @@ flowchart TB
 :::
 ::: {.column width="70%"} 
 ::: {.incremental}
-- The model consists of two types of agent: **People** and **Services**
-- **People** have a chance of visiting services
-- **Services** then have a chance of performing an intervention on people that visit, and can be MECC trained or not
-- With MECC training the interventions can be more frequent and/or more efficacious
+- The model consists of two types of agent: <span style='color:#C71E85;'>**People**</span> and <span style='color:#C71E85;'>**Services**</span>
+- <span style='color:#C71E85;'>**People**</span> have a chance of visiting services
+- <span style='color:#C71E85;'>**Services**</span> then have a chance of performing an intervention on people that visit, and can be MECC trained or not
+- With <span style='color:#C71E85;'>**MECC training**</span> the interventions can be more frequent and/or more efficacious
 - Also includes:
-  + a period where repeated interventions can have an additive effect
-  + decay of efficacy of the MECC training
-- The model is run **twice**, simultaneously, once with MECC training and once without. Results can then be compared.
+  + a period where <span style='color:#C71E85;'>**repeated interventions**</span> can have an additive effect
+  + <span style='color:#C71E85;'>**decay of efficacy**</span> of the MECC training
+- The model is run <span style='color:#C71E85;'>**twice**</span>, simultaneously, once with MECC training and once without. Results can then be compared.
 :::
 :::
 ::::
@@ -137,7 +137,7 @@ flowchart TB
 ![](MECCStreamlitApp_Alcohol.png){.r-stretch  fig-align="center"}
 
 :::{style="text-align: center"}
-**[Alcohol Intervention Toy MECC App](https://domrowney-project-toy-mecc-streamlit-appapp-alcohol-cqzaxu.streamlit.app/)**
+[<u>**Alcohol Intervention Toy MECC App**</u>](https://domrowney-project-toy-mecc-streamlit-appapp-alcohol-cqzaxu.streamlit.app/)
 :::
 
 ## Wider Impact 
@@ -185,3 +185,26 @@ d.	Lessons learnt-->
 [![](HSMA%20logo.png){fig-align="center"}](https://hsma.co.uk/)
 
 # Any Questions? {background-image="MECC_Logo_Washout.png" background-opacity="0.5" background-size="contain"}
+
+
+## 
+
+::::{.columns}
+
+:::{.column width="50%"} 
+
+![](MECCStreamlitApp_Alcohol.png){.r-nostretch  fig-align="center"}
+
+:::{style="text-align: center"}
+[<u>**Alcohol Intervention Toy MECC App**</u>](https://domrowney-project-toy-mecc-streamlit-appapp-alcohol-cqzaxu.streamlit.app/)
+:::
+:::
+
+:::{.column width="50%"} 
+:::{.r-fit-text style="text-align: center"}
+**Thank\
+you!**
+:::
+:::
+
+::::
