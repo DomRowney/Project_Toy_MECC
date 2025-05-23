@@ -23,9 +23,9 @@ format:
 ---
 
 ## Meet the Team
-<!-- A brief intro to you and your role / organisation.  In particular, you should make mention of any prior coding / modelling / data science experience you had pre-HSMA (and if your experience was limited or non-existent, say that!  It’s fantastic for people to see how far you were able to come)-->
+<!-- A brief intro to you and your role / organisation.  In particular, you should make mention of any prior coding / modelling / data science experience you had pre-HSMA (and if your experience was limited or non-existent, say that!  It’s fantastic for people to see how far you were able to come)
 This project started as a Hackday for HSMA Cohort 6.
-
+-->
 . . .
 
 - **Dominic Rowney** *Principle Information Analyst* at NHS NECS</br>
@@ -40,6 +40,10 @@ This project started as a Hackday for HSMA Cohort 6.
 
 - **Mr Luke Herbet** *Consultant Ophthalmologist* at Surrey & Sussex NHS Trust</br>
 <p><span style="color:DarkGrey;">Luke is a retinal surgeon who learned python coding on the HSMA course and is also using his HSMA training to look at resource issues in ophthalmology.</p></span>
+
+. . .
+
+- With thanks to Sammi and Dan from PenChord for their support, and Richard Hall and Richard Harrety from NECS 
 
 ## What the MECC?
 <!--What was the problem you were / are trying to solve, and why is it important?-->
