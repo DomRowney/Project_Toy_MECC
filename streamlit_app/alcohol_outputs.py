@@ -303,82 +303,84 @@ def results_stage_chi(result
     return  output_results
 
 
-def create_effectiveness_figure(results_no_mecc, results_mecc, step):
-    # print(results_mecc)
+def create_intervention_decay_figure(results_no_mecc, results_mecc, step):
+    """Create side-by-side comparison figures"""
+
+    no_mecc_subtitle = ('Intervention Probability (No MECC Training)')
+    mecc_subtitle = ('Intervention Probability (MECC Trained)')
+
+    service_colour_dict = { 'Job Centre': "red"
+                    ,'Benefits Office': "blue"
+                    ,'Housing Officer': "orange"
+                    ,'Community Hub': "purple"
+                    ,'Pharmacy': "yellow"
+                    ,'GP Practice': "green"}
+    
+
     fig = make_subplots(
         rows=1, 
         cols=2,
         subplot_titles=(
-            'Without MECC Training', 
-            'With MECC Training',    
+            no_mecc_subtitle,
+            mecc_subtitle,
         ),
         specs=[[{}, {}]],
         row_heights=[1]
     )
-    
-    service_colors = {
-        'Job Centre': 'red',
-        'Benefits Office': 'blue',
-        'Housing Officer': 'purple',
-        'Community Hub': 'orange',
-        'Pharmacy': 'yellow',
-        'GP Practice': 'green'
-    }
 
-    services = [s for s in service_colors 
-               if f'{s} Effectiveness' in results_mecc.columns]
-    
-    for service in services:
+
+    for service in service_colour_dict:
+        # Interventions and Quit Attempts - Without MECC
         fig.add_trace(
             go.Scatter(
                 x=results_no_mecc.index[:step+1],
-                y=results_no_mecc[f'{service} Effectiveness'][:step+1],
-                name=service,
-                line=dict(color=service_colors[service], dash='solid'),
-                opacity=0.7
+                y=results_no_mecc[f'{service} Intervention Decay'][:step+1],
+                name=f"{service}",
+                line=dict(color=service_colour_dict[service]
+                          , dash='solid')
             ),
             row=1, col=1
         )
-        
+
+        # Interventions and Quit Attempts - With MECC
         fig.add_trace(
             go.Scatter(
                 x=results_mecc.index[:step+1],
-                y=results_mecc[f'{service} Effectiveness'][:step+1],
-                name=service,
-                line=dict(color=service_colors[service], dash='solid'),
-                showlegend=False,
-                opacity=0.7
+                y=results_mecc[f'{service} Intervention Decay'][:step+1],
+                name=f"{service}",
+                line=dict(color=service_colour_dict[service]
+                          , dash='solid'),
+                showlegend=False          
             ),
             row=1, col=2
         )
     
+    # Update layout
     fig.update_layout(
-        height=400,
+        height=400,  
         showlegend=True,
-        legend=dict(
-            orientation="h",
-            yanchor="bottom",
-            y=1.1,
-            xanchor="center",
-            x=0.5
-        ),
-        margin=dict(t=40, b=40)
+        barmode='group'
     )
-    
+
+    # Update legend
+    fig.update_layout(legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=1.1,
+        xanchor="center",
+        x=0.5
+    ))
+
+    # Update axes labels
     fig.update_xaxes(title_text="Month", row=1, col=1)
     fig.update_xaxes(title_text="Month", row=1, col=2)
-    fig.update_yaxes(
-        title_text="Effectiveness (0-1 scale)", 
-        range=[0, 1.1],
-        row=1, col=1
-    )
-    fig.update_yaxes(
-        title_text="Effectiveness (0-1 scale)", 
-        range=[0, 1.1],
-        row=1, col=2
-    )
     
+    # Update y-axes labels
+    fig.update_yaxes(title_text="Intervention Probability", row=1, col=1)
+    fig.update_yaxes(title_text="Intervention Probability", row=1, col=2)
+    
+    # Link the axes for each pair of charts in the same row
     fig.update_yaxes(matches='y', row=1)
     fig.update_xaxes(matches='x', row=1)
-    
+
     return fig

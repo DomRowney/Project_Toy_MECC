@@ -4,8 +4,8 @@ import pandas as pd
 import numpy as np
 import streamlit as st
 import time
-from streamlit_model_functions import run_simulation_step, create_MECC_model,create_metrics_figure
-from alcohol_outputs import create_population_figure,create_intervention_figure, results_chi, results_stage_chi, create_effectiveness_figure
+from streamlit_model_functions import run_simulation_step, create_MECC_model #, create_metrics_figure
+from alcohol_outputs import create_population_figure,create_intervention_figure, results_chi, results_stage_chi, create_intervention_decay_figure
 import os
 import shutil
 import json
@@ -188,9 +188,10 @@ with tab1:
             with chart_placeholder3:
                 st.plotly_chart(fig3, use_container_width=True)
                 
-            fig4 = create_effectiveness_figure(data_no_mecc, data_mecc, step)
+            fig4 = create_intervention_decay_figure(data_no_mecc, data_mecc, step)
             with chart_placeholder4:
                 st.plotly_chart(fig4, use_container_width=True)
+                
                         
             time.sleep(st.session_state.animation_speed)
                 
