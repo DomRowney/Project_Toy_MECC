@@ -94,7 +94,9 @@ pg = st.navigation(
     st.Page("alcohol_mecc_model.py",
              title="Model",
              icon=":material/add_notes:"),                   
-     
+    st.Page("alcohol_sim_report_page.py",
+             title="Download Report",
+             icon=":material/download:"),        
      ]
      )
 
