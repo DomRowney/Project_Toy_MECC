@@ -1,6 +1,7 @@
 ## alcohol_parameters.py
 import pandas as pd
 import streamlit as st
+import os
 
 #########
 
@@ -357,5 +358,10 @@ def alcohol_service_input(alcohol_services):
         )
 
     st.session_state['alcohol_services_table'] = alcohol_services_edit.copy()
+    
+    output_path = os.path.join(os.getcwd(),'streamlit_app','outputs')
+    alcohol_services_edit_file = os.path.join(output_path,'alcohol_services_edit.csv')
+    alcohol_services_edit.to_csv(alcohol_services_edit_file, index=True)
+    
 
 alcohol_service_input(st.session_state.alcohol_services_table)
