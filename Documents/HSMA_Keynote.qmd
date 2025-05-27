@@ -45,6 +45,10 @@ This project started as a Hackday for HSMA Cohort 6.
 
 - With thanks to Sammi and Dan from PenChord for their support, and Richard Hall and Richard Harrety from NECS 
 
+::: {.notes}
+Dom
+:::
+
 ## What the MECC?
 <!--What was the problem you were / are trying to solve, and why is it important?-->
 <span style='color:#C71E85;'>**M**</span>aking <span style='color:#C71E85;'>**E**</span>very <span style='color:#C71E85;'>**C**</span>ontact <span style='color:#C71E85;'>**C**</span>ount <span style='color:#C71E85;'>**(MECC)**</span> in North East and North Cumbria is used across healthcare, local government, Department of Work & Pensions, charities, [<u>**etc.**</u>](https://www.meccgateway.co.uk/nenc/case-studies)
@@ -69,6 +73,10 @@ This project started as a Hackday for HSMA Cohort 6.
 
 - The simulation would need to be <span style='color:#C71E85;'>**simple**</span> to use and to be <span style='color:#C71E85;'>**flexible**</span> for use across the wide range of settings and delivery models MECC has.
 
+::: {.notes}
+Sam
+:::
+
 ## Agent Based Simulation
 :::{.incremental}
 
@@ -86,6 +94,10 @@ This project started as a Hackday for HSMA Cohort 6.
 - In this case we use a python language package called [<u>**Mesa**</u>](https://mesa.readthedocs.io/) to create the underlying model and a [<u>**Streamlit**</u>](https://streamlit.io/) to create the interface
 :::
 
+::: {.notes}
+Sam
+:::
+
 ## Development
 :::{.incremental}
 - Prototype models were developed as part of the <span style='color:#C71E85;'>**HSMA hackday**</span>, a generic model and a smoking cessation model
@@ -96,6 +108,9 @@ This project started as a Hackday for HSMA Cohort 6.
 - In May 2025 an alcohol intervention model was presented to the MECC regional team for feedback
 :::
 
+::: {.notes}
+Dom
+:::
 
 ## Model Overview
 <!--An overview of the model / tool you’ve built, appropriate for a non-technical audience (live demos of StreamLit apps / models can be very effective - just be mindful to have things set up ready to run and be prepared for technical issues)
@@ -133,11 +148,20 @@ flowchart TB
 :::
 ::::
 
+::: {.notes}
+Dom
+:::
+
+
 ## Live Demo! 
 ![](MECCStreamlitApp_Alcohol.png){.r-stretch  fig-align="center"}
 
 :::{style="text-align: center"}
 [<u>**Alcohol Intervention Toy MECC App**</u>](https://domrowney-project-toy-mecc-streamlit-appapp-alcohol-cqzaxu.streamlit.app/)
+:::
+
+::: {.notes}
+Dom
 :::
 
 ## Wider Impact 
@@ -151,41 +175,57 @@ flowchart TB
 :::
 
 :::{.incremental}
-- The model is still in the prototype stage, finding the correct ranges of variables to use. This is why it is described as a toy
-- It can currently be used to show decision makers what level of interventions MECC would need to produce
-- There has been some interest from the organisations part of the regional MECC strategy group for agent based modelling for MECC and other uses.
-- Sammi developed a way for the app to produce report documents, which will be useful to HSMA and beyond
+- The model is still in the <span style='color:#C71E85;'>**prototype stage**</span>, finding the correct ranges of variables to use. This is why it is described as a toy
+  + It can currently be used to show decision makers what level of interventions MECC would need to produce
+- There has been some  <span style='color:#C71E85;'>**interest**</span> from the organisations part of the regional MECC strategy group for <span style='color:#C71E85;'>**agent based modelling**</span> for MECC and other uses
+- <span style='color:#C71E85;'>**Sammi**</span> developed a way for the app to produce report documents with the [<u>**Quarto**</u>](https://quarto.org/) system, which will be useful to HSMA and beyond
+:::
+
+::: {.notes}
+Dom
 :::
 
 ## Next steps
 :::{.incremental}
-- Write up a board paper to deliver to the MECC group
-- Find a specific test case to compare the model against reality
-- Add a data report that outputs once the model runs
-- Make a file that allows saving and importing of parameters
-- Create a version of the model which includes parameters taken from randomised control trials of MECC
-- Continue developing a *Monte-Carlo* version of the models, where it is run many times to achieve average results
-- Make the list of services customisable
+- Write up a <span style='color:#C71E85;'>**board paper**</span> to deliver to the MECC group
+- Find a specific <span style='color:#C71E85;'>**test case **</span> to compare the model against reality
+- Add a <span style='color:#C71E85;'>**data report**</span> that outputs once the model runs
+- Make a file that allows saving and <span style='color:#C71E85;'>**importing of parameters**</span>
+- Create a version of the model which includes <span style='color:#C71E85;'>**parameters taken from randomised control trials**</span> of MECC
+- Continue developing a <span style='color:#C71E85;'>***Monte-Carlo***</span> version of the models, where it is run many times to achieve average results
+- Make the list of <span style='color:#C71E85;'>**services customisable**</span>
+- Investigate the possibility of writing up a <span style='color:#C71E85;'>**publishable paper**</span>
 :::
 <!--a.	Where it is now
 b.	Future developments
 c.	Impact / intended impact
 d.	Lessons learnt-->
 
+::: {.notes}
+Sam
+:::
+
 ##  Personal Impact
 <!--a.	What has been the impact of being part of HSMA on you and your organisation?  What does it mean to you to have developed these skills?  How is the organisation planning on using these new in-house skills moving forward?-->
 :::{.incremental}
-- NHS NECS has written up a case study as Agent Based Simulation is now a service they can offer to organisations
-- A positive experience with creating an open source product
-- Skills picked up have already been applied to other projects
+- NHS NECS has written up a <span style='color:#C71E85;'>**case study**</span> as Agent Based Simulation is now a service they can offer to organisations
+- A positive experience with creating an <span style='color:#C71E85;'>**open source product**</span>
+- Skills picked up have <span style='color:#C71E85;'>**already been applied**</span> to other projects
 :::
 
 . . .
 
 [![](HSMA%20logo.png){fig-align="center"}](https://hsma.co.uk/)
 
+::: {.notes}
+Sam
+:::
+
 # Any Questions? {background-image="MECC_Logo_Washout.png" background-opacity="0.5" background-size="contain"}
 
+::: {.notes}
+Dom + Sam
+:::
 
 ## 
 
@@ -208,3 +248,7 @@ you!**
 :::
 
 ::::
+
+::: {.notes}
+Dom + Sam
+:::
