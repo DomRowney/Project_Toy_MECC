@@ -171,7 +171,7 @@ class AlcoholModel_PersonAgent(PersonAgent):
 
     ## Replaces action to make a visit to a service in base agent
     def move(self,services = [ 'Job Centre'
-                              ,'Benefits Office'
+                              #,'Benefits Office'
                               ,'Housing Officer'
                               ,'Community Hub'
                               ,'Pharmacy'
@@ -336,7 +336,7 @@ class AlcoholModel_ServiceAgent(ServiceAgent):
         self.training_decay()  
 
 services_list = [ 'Job Centre'
-            ,'Benefits Office'
+            #,'Benefits Office'
             ,'Housing Officer'
             ,'Community Hub'
             ,'Pharmacy'
@@ -402,7 +402,7 @@ class Alcohol_MECC_Model(MECC_Model):
                 , seed )  # Properly initialize the MECC_Model class
 
         self.services_list = [ 'Job Centre'
-                    ,'Benefits Office'
+                    #,'Benefits Office'
                     ,'Housing Officer'
                     ,'Community Hub'
                     ,'Pharmacy'
@@ -449,7 +449,7 @@ class Alcohol_MECC_Model(MECC_Model):
 
                 ## Service intervention metrics
                 "Job Centre Interventions": calculate_service_interventions_JobCentre,
-                "Benefits Office Interventions": calculate_service_interventions_BenefitsOffice,
+                #"Benefits Office Interventions": calculate_service_interventions_BenefitsOffice,
                 "Housing Officer Interventions": calculate_service_interventions_HousingOfficer,
                 "Community Hub Interventions": calculate_service_interventions_CommunityHub,
                 "Pharmacy Interventions": calculate_service_interventions_Pharmacy,
@@ -457,7 +457,7 @@ class Alcohol_MECC_Model(MECC_Model):
 
                 ## Service successful intervention metrics
                 "Job Centre Successful Interventions": calculate_service_successful_interventions_JobCentre,
-                "Benefits Office Successful Interventions": calculate_service_successful_interventions_BenefitsOffice,
+                #"Benefits Office Successful Interventions": calculate_service_successful_interventions_BenefitsOffice,
                 "Housing Officer Successful Interventions": calculate_service_successful_interventions_HousingOfficer,
                 "Community Hub Successful Interventions": calculate_service_successful_interventions_CommunityHub,
                 "Pharmacy Successful Interventions": calculate_service_successful_interventions_Pharmacy,
@@ -465,7 +465,7 @@ class Alcohol_MECC_Model(MECC_Model):
 
                 ## Service contact metrics
                 "Job Centre Contacts": calculate_service_contacts_JobCentre,
-                "Benefits Office Contacts": calculate_service_contacts_BenefitsOffice,
+                #"Benefits Office Contacts": calculate_service_contacts_BenefitsOffice,
                 "Housing Officer Contacts": calculate_service_contacts_HousingOfficer,
                 "Community Hub Contacts": calculate_service_contacts_CommunityHub,
                 "Pharmacy Contacts": calculate_service_contacts_Pharmacy,
@@ -473,7 +473,7 @@ class Alcohol_MECC_Model(MECC_Model):
                 
                 ## Mecc training decay metrics
                 "Job Centre Intervention Decay": lambda m: calculate_service_intervention_prob(m, "Job Centre"),
-                "Benefits Office Intervention Decay": lambda m: calculate_service_intervention_prob(m, "Benefits Office"),
+                #"Benefits Office Intervention Decay": lambda m: calculate_service_intervention_prob(m, "Benefits Office"),
                 "Housing Officer Intervention Decay": lambda m: calculate_service_intervention_prob(m, "Housing Officer"),
                 "Community Hub Intervention Decay": lambda m: calculate_service_intervention_prob(m, "Community Hub"),
                 "Pharmacy Intervention Decay": lambda m: calculate_service_intervention_prob(m, "Pharmacy"),
@@ -561,8 +561,8 @@ def calculate_service_interventions(model,service):
 def calculate_service_interventions_JobCentre(model): 
     return calculate_service_interventions(model,"Job Centre")
 
-def calculate_service_interventions_BenefitsOffice(model):
-    return calculate_service_interventions(model,"Benefits Office")
+#def calculate_service_interventions_BenefitsOffice(model):
+#    return calculate_service_interventions(model,"Benefits Office")
 
 def calculate_service_interventions_HousingOfficer(model): 
     return calculate_service_interventions(model,"Housing Officer")
@@ -590,8 +590,8 @@ def calculate_service_successful_interventions(model,service):
 def calculate_service_successful_interventions_JobCentre(model): 
     return calculate_service_successful_interventions(model,"Job Centre")
 
-def calculate_service_successful_interventions_BenefitsOffice(model):
-    return calculate_service_successful_interventions(model,"Benefits Office")
+#def calculate_service_successful_interventions_BenefitsOffice(model):
+#    return calculate_service_successful_interventions(model,"Benefits Office")
 
 def calculate_service_successful_interventions_HousingOfficer(model): 
     return calculate_service_successful_interventions(model,"Housing Officer")
@@ -614,8 +614,8 @@ def calculate_service_contacts(model,service):
 def calculate_service_contacts_JobCentre(model): 
     return calculate_service_contacts(model,"Job Centre")
 
-def calculate_service_contacts_BenefitsOffice(model):
-    return calculate_service_contacts(model,"Benefits Office")
+#def calculate_service_contacts_BenefitsOffice(model):
+#    return calculate_service_contacts(model,"Benefits Office")
 
 def calculate_service_contacts_HousingOfficer(model): 
     return calculate_service_contacts(model,"Housing Officer")

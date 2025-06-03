@@ -73,9 +73,10 @@ with tab2:
         st.write(f" - Base Action to Preparation lapse chance: :blue-background[{st.session_state.alcohol_lapse_prob_preparation}]")
 
     st.markdown("#### Services")
-    col1, col2, col3, col4, col5, col6 = st.columns(6)
+    #col1, col2, col3, col4, col5, col6 = st.columns(6)
+    col1, col3, col4, col5, col6 = st.columns(5)
     column_dict = { 'Job Centre': col1
-                    ,'Benefits Office': col2
+                    #,'Benefits Office': col2
                     ,'Housing Officer': col3
                     ,'Community Hub': col4
                     ,'Pharmacy': col5

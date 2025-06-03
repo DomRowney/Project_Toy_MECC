@@ -72,15 +72,33 @@ def init_parameters():
     if 'alcohol_services_table' not in st.session_state:
         ## sets a dataframe up one row for each service type
         alcohol_services = pd.DataFrame(
-                {'Service': ['Job Centre','Benefits Office','Housing Officer','Community Hub','Pharmacy','GP Practice']
-                ,'Person Visit Probability': [0.20,0.20,0.20,0.20,0.1,0.1]
-                ,'Chance a Brief Intervention Made Without MECC Training': [0.01,0.01,0.01,0.01,0.10,0.10]
-                ,'MECC Trained': [True,True,True,True,False,False]
-                ,'Chance Making a Brief Intervention After MECC Training': [0.90,0.90,0.90,0.90,0.90,0.90]
-                ,'Post Intervention Pre-Contemplation to Contemplation chance': [0.50,0.50,0.50,0.50,0.50,0.50]
-                ,'Post Intervention Contemplation to Preparation chance': [0.50,0.50,0.50,0.50,0.50,0.50]
-                ,'Post Intervention Preparation to Action chance': [0.50,0.50,0.50,0.50,0.50,0.50]
-                ,'MECC Training Decay Half Life in Months': [4,4,4,4,4,4]}
+                {'Service': ['Job Centre'
+                             #,'Benefits Office',
+                             ,'Housing Officer','Community Hub','Pharmacy','GP Practice']
+                ,'Person Visit Probability': [0.20
+                                              #,0.20
+                                              ,0.20,0.20,0.1,0.1]
+                ,'Chance a Brief Intervention Made Without MECC Training': [0.01
+                                                                            #,0.01
+                                                                            ,0.01,0.01,0.10,0.10]
+                ,'MECC Trained': [True
+                                  #,True
+                                  ,True,True,False,False]
+                ,'Chance Making a Brief Intervention After MECC Training': [0.90
+                                                                            #,0.90
+                                                                            ,0.90,0.90,0.90,0.90]
+                ,'Post Intervention Pre-Contemplation to Contemplation chance': [0.50
+                                                                                 #,0.50
+                                                                                 ,0.50,0.50,0.50,0.50]
+                ,'Post Intervention Contemplation to Preparation chance': [0.50
+                                                                           #,0.50
+                                                                           ,0.50,0.50,0.50,0.50]
+                ,'Post Intervention Preparation to Action chance': [0.50
+                                                                    #,0.50
+                                                                    ,0.50,0.50,0.50,0.50]
+                ,'MECC Training Decay Half Life in Months': [4
+                                                             #,4
+                                                             ,4,4,4,4]}
         )
         ## Sets service as index
         alcohol_services = alcohol_services.set_index('Service')    
@@ -267,16 +285,34 @@ with colB:
 
 ## sets a dataframe up one row for each service type
 alcohol_services = pd.DataFrame(
-        {'Service': ['Job Centre','Benefits Office','Housing Officer','Community Hub','Pharmacy','GP Practice']
-        ,'Person Visit Probability': [0.20,0.20,0.20,0.20,0.1,0.1]
-        ,'Chance a Brief Intervention Made Without MECC Training': [0.01,0.01,0.01,0.01,0.10,0.10]
-        ,'MECC Trained': [True,True,True,True,False,False]
-        ,'Chance Making a Brief Intervention After MECC Training': [0.90,0.90,0.90,0.90,0.90,0.90]
-        ,'Post Intervention Pre-Contemplation to Contemplation chance': [0.50,0.50,0.50,0.50,0.50,0.50]
-        ,'Post Intervention Contemplation to Preparation chance': [0.50,0.50,0.50,0.50,0.50,0.50]
-        ,'Post Intervention Preparation to Action chance': [0.50,0.50,0.50,0.50,0.50,0.50]
-        ,'MECC Training Decay Half Life in Months': [12,12,12,12,12,12]}
-)
+                {'Service': ['Job Centre'
+                             #,'Benefits Office',
+                             ,'Housing Officer','Community Hub','Pharmacy','GP Practice']
+                ,'Person Visit Probability': [0.20
+                                              #,0.20
+                                              ,0.20,0.20,0.1,0.1]
+                ,'Chance a Brief Intervention Made Without MECC Training': [0.01
+                                                                            #,0.01
+                                                                            ,0.01,0.01,0.10,0.10]
+                ,'MECC Trained': [True
+                                  #,True
+                                  ,True,True,False,False]
+                ,'Chance Making a Brief Intervention After MECC Training': [0.90
+                                                                            #,0.90
+                                                                            ,0.90,0.90,0.90,0.90]
+                ,'Post Intervention Pre-Contemplation to Contemplation chance': [0.50
+                                                                                 #,0.50
+                                                                                 ,0.50,0.50,0.50,0.50]
+                ,'Post Intervention Contemplation to Preparation chance': [0.50
+                                                                           #,0.50
+                                                                           ,0.50,0.50,0.50,0.50]
+                ,'Post Intervention Preparation to Action chance': [0.50
+                                                                    #,0.50
+                                                                    ,0.50,0.50,0.50,0.50]
+                ,'MECC Training Decay Half Life in Months': [4
+                                                             #,4
+                                                             ,4,4,4,4]}
+    )
 ## Sets service as index
 alcohol_services = alcohol_services.set_index('Service')
 

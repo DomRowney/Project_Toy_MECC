@@ -283,7 +283,7 @@ def create_logic_diagram_Alcohol(number_labels = False, session_data = None):
     lb_N_people = 'Number of\nPeople'
     lb_services_list = ('Services:\n' +                      
                         'Job Centre\n' +
-                        'Benefits Office\n' +
+                        #'Benefits Office\n' +
                         'Housing Officer\n' +
                         'Community Hub\n' +
                         'Pharmacy\n' +

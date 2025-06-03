@@ -100,7 +100,7 @@ def create_intervention_figure(results_no_mecc, results_mecc, step, figure_type 
                         ' (MECC Trained)')
 
     service_colour_dict = { 'Job Centre': "red"
-                    ,'Benefits Office': "blue"
+                    #,'Benefits Office': "blue"
                     ,'Housing Officer': "orange"
                     ,'Community Hub': "purple"
                     ,'Pharmacy': "yellow"
@@ -310,7 +310,7 @@ def create_intervention_decay_figure(results_no_mecc, results_mecc, step):
     mecc_subtitle = ('Intervention Probability (MECC Trained)')
 
     service_colour_dict = { 'Job Centre': "red"
-                    ,'Benefits Office': "blue"
+                    #,'Benefits Office': "blue"
                     ,'Housing Officer': "orange"
                     ,'Community Hub': "purple"
                     ,'Pharmacy': "yellow"
