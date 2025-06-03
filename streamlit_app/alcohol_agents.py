@@ -239,6 +239,14 @@ class AlcoholModel_ServiceAgent(ServiceAgent):
             
         self.decay_history = []  # track intervention probability over time   
 
+        
+    ## Overwrites Property for probability of making an intervention
+    ## now based on current probability
+    @property
+    def make_intervention_prob(self):
+        return self.current_intervention_prob
+
+
     @classmethod
     def describe(cls):
         """Class method to print class information."""
@@ -297,23 +305,35 @@ class AlcoholModel_ServiceAgent(ServiceAgent):
         else:
             print(f"    > Person {PersonAgent.unique_id} is in {PersonAgent.alcohol_status['status']}" + 
                   f"phase and not receptive to change")
-
+            
     ## mecc training decay over time
-    def step(self):
+    def training_decay(self):
         if self.mecc_trained:
             self.training_age += 1
             decay_factor = 0.5 ** (self.training_age / self.mecc_training_decay_half_life)
-            self.current_intervention_prob = ((self.mecc_effect * decay_factor * 0.8)  + 0.2)
+            ##decayed_intervention_prob = ((self.mecc_effect * decay_factor * 0.8)  + 0.2)
+            decayed_intervention_prob = self.mecc_effect * decay_factor
+
+            ## checks if current intervention chance is more than baseline
+            if decayed_intervention_prob > self.base_make_intervention_prob:
+                self.current_intervention_prob = decayed_intervention_prob
+            ## baseline minimum
+            else:
+                self.current_intervention_prob = self.base_make_intervention_prob
         else:
-            pass
             ## no decay for non-mecc trained service
-            
-        
+            pass
+
+        ## stores record
         self.decay_history.append({
             'service': self.category,
             'month': self.model.schedule.time,
             'current_intervention_prob': self.current_intervention_prob
         })
+
+    ## Defines actions at each step
+    def step(self):
+        self.training_decay()  
 
 services_list = [ 'Job Centre'
             ,'Benefits Office'
