@@ -9,8 +9,7 @@ st.title("Download Alcohol Simulation Results Report")
 
 st.write("""
 Download the most recent simulation results as an HTML report.
-You can convert the downloaded file to PDF if needed.
-""")
+""") ##You can convert the downloaded file to PDF if needed.
 
 if "download_clicked" not in st.session_state:
     st.session_state.download_clicked = False
@@ -23,16 +22,16 @@ if not st.session_state.simulation_completed:
 
 ## checkbox options - currently not being utilised.
 st.subheader("Select Report Sections:")
-incl_charts = st.checkbox("Include Charts Section", value=True)
-incl_final_stats = st.checkbox("Include Final Statistics Section", value=True)
-incl_sim_param = st.checkbox("Include Simulation Parameters Section", value=True)
-incl_ld = st.checkbox("Include Logic Diagram", value=True)
+incl_charts = st.checkbox("Include Charts Section", value=True,disabled=True)
+incl_final_stats = st.checkbox("Include Final Statistics Section", value=True,disabled=True)
+incl_sim_param = st.checkbox("Include Simulation Parameters Section", value=True,disabled=True)
+incl_ld = st.checkbox("Include Logic Diagram", value=True,disabled=True)
        
         
 if st.session_state.simulation_completed:
      if st.button("Generate Report"):
         report_message = st.empty()
-        report_message.info(f"Generaing Report for Download...")
+        report_message.info(f"Generating Report for Download...")
         
         model_parameters = {
             "model_seed": st.session_state.model_seed,

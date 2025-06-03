@@ -41,6 +41,8 @@ execute:
 import pandas as pd
 import json
 import plotly.graph_objects as go
+# import great_tables as GT
+import itables
 
 # Load session data from JSON
 with open("./outputs/session_data.json", "r") as f:
@@ -48,6 +50,10 @@ with open("./outputs/session_data.json", "r") as f:
 
 data_no_mecc = pd.read_csv("./outputs/data_no_mecc.csv")
 data_mecc = pd.read_csv("./outputs/data_mecc.csv")
+
+## iniate itables
+itables.init_notebook_mode(all_interactive=True)
+
 ```
 
 # Alcohol Advice Model with MECC Training
@@ -78,31 +84,27 @@ fig4.show()
 ## Final Statistics
 
 ### Total
+
 ```{python}
 #| echo: false
-#| label: Total section
-
-# print(session_data)
-
-# import great_tables as GT
-from itables import show
+#| label: Total_section
+#from itables import show
 
 result_total = pd.read_csv("./outputs/result_total.csv",index_col=0)
-show(result_total)
+
+itables.show(result_total, html=False)
 
 ```
 
 ### Contacts by Services
+
 ```{python}
 #| echo: false
-#| label: Contacts by Services section
-
-# import great_tables as GT
-from itables import show
+#| label: Contacts_by_Services_section
 
 result_contact = pd.read_csv("./outputs/result_contact.csv",index_col=0)
 
-show(result_contact)
+itables.show(result_contact)
 
 ```
 
@@ -110,28 +112,25 @@ show(result_contact)
 
 ```{python}
 #| echo: false
-#| label: Sucessful Interventions by Services section
+#| label: Sucessful_Interventions_by_Services_section
 
-# import great_tables as GT
-from itables import show
+result_successful = pd.read_csv("./outputs/result_successful.csv"
+                                ,index_col=0)
 
-result_successful = pd.read_csv("./outputs/result_successful.csv")
-
-show(result_successful)
+itables.show(result_successful)
 
 ```
 
 ### All Interventions by Services
+
 ```{python}
 #| echo: false
-#| label: All Interventions by Services section
+#| label: All_Interventions_by_Services_section
 
-# import great_tables as GT
-from itables import show
+result_intervention = pd.read_csv("./outputs/result_intervention.csv"
+                                    ,index_col=0)
 
-result_intervention = pd.read_csv("./outputs/result_intervention.csv")
-
-show(result_intervention)
+itables.show(result_intervention)
 
 ```
 
@@ -157,14 +156,12 @@ show(result_intervention)
 ### Services
 ```{python}
 #| echo: false
-#| label: service parameters
+#| label: service_parameters
 
-from itables import show
+alcohol_services_edit = pd.read_csv("./outputs/alcohol_services_edit.csv"
+                                    ,index_col=0)
 
-alcohol_services_edit = pd.read_csv("./outputs/alcohol_services_edit.csv")
-
-show(alcohol_services_edit)
-
+itables.show(alcohol_services_edit)
 
 ```
 
@@ -176,7 +173,7 @@ show(alcohol_services_edit)
 
 ## Logic Diagram
 
-![](..\alcohol_logic_diagram.png){.r-stretch  fig-align="center"}
+![](../alcohol_logic_diagram.png){.r-stretch  fig-align="center"}
 
 
 <!-- {'model_seed': 42, 'N_people': 50, 'N_service': 1, 'initial_smoking_prob': 0.5, 'visit_prob': 0.1, 'quit_attempt_prob': 0.01, 'base_smoke_relapse_prob': 0.01, 'base_make_intervention_prob': 0.1, 'mecc_effect': 0.9, 'intervention_effect': 1.1, 'num_steps': 24, 'animation_speed': 0, 'iterations': 100, 'prob_receptive': 0.75, 'change_prob_contemplation': 0.01, 'change_prob_preparation': 0.01, 'change_prob_action': 0.01, 'lapse_prob_precontemplation': 0.01, 'lapse_prob_contemplation': 0.01, 'lapse_prob_preparation': 0.01, 'golden_window': 3, 'contemplation_intervention': {'Job Centre': 0.5, 'Benefits Office': 0.5, 'Housing Officer': 0.5, 'Community Hub': 0.5, 'Pharmacy': 0.5, 'GP Practice': 0.5}, 'preparation_intervention': {'Job Centre': 0.5, 'Benefits Office': 0.5, 'Housing Officer': 0.5, 'Community Hub': 0.5, 'Pharmacy': 0.5, 'GP Practice': 0.5}, 'action_intervention': {'Job Centre': 0.5, 'Benefits Office': 0.5, 'Housing Officer': 0.5, 'Community Hub': 0.5, 'Pharmacy': 0.5, 'GP Practice': 0.5}} -->
