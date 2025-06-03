@@ -32,6 +32,14 @@ The model is an Agent based simulation:
           any contact will lead to a Very Brief Intervention.
 + The model compares results for the same simultion with and without MECC training.
 """)
+
+st.write("""
+The effect of MECC training reduces over time:
++ The chance of making an intervention reduces
++ Chance of intervention reduces via a half-life calculation (exponential decay)
++ The half-life is the time it takes for the intervention chance to be halved
++ The minimum effect is the same as the service having no MECC training
+""") 
          
 st.write("""        
 People are modelled using the Stages of Change Model, also known as the [Transtheoretical Model](https://doi.org/10.4278/0890-1171-12.1.38):

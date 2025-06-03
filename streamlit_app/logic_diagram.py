@@ -303,9 +303,10 @@ def create_logic_diagram_Alcohol(number_labels = False, session_data = None):
 
     lb_window_time_up = 'Is "Golden Window"\nTimer > Length?'
 
-    lbl_training_effectivness = ('Service\n'+
-                                'MECC Training\nEffectiveness:\n'+
-                                'reduce by half-life')
+    lb_training_effectivness = ('Service\n'+
+                                'MECC Training Effectiveness:\n'+
+                                'Reduce intervention chance by half-life\n'+
+                                'to minimum of base intervention chance')
     lb_last_period = 'Is Last Period?'
 
     #lb_inital_state = 'Status:\nPre-Contemplation'
@@ -362,7 +363,8 @@ def create_logic_diagram_Alcohol(number_labels = False, session_data = None):
         flow.Arrow().down(default_len).at(services.S)
         services_list = flow.Box().label(lb_services_list).drop("S")
         flow.Arrow().down(default_len).at(services_list.S)
-        training_status = flow.Box().label('Service\nMECC Training\nEffectiveness: 100%').drop("S")
+        training_status = flow.Box().label('Service\nMECC Training Effectiveness:\n' +
+                                           ' Intervention chance maximum').drop("S")
 
         d.pop() ## returns previous remembered location
         person = flow.Circle(r=d.unit/2).label(lb_N_people).drop("S")
@@ -600,7 +602,7 @@ def create_logic_diagram_Alcohol(number_labels = False, session_data = None):
             flow.Wire('c',k=d.unit/3 ,arrow ='->').at(window_time_up.E).to(window_update_end.E)
         flow.Arrow().down(d.unit/2).at(window_update_end.S)
 
-        training_effectivness = flow.Box().label(lbl_training_effectivness).drop("S")
+        training_effectivness = flow.Box().label(lb_training_effectivness).drop("S")
         flow.Arrow().down(default_len).at(training_effectivness.S)
 
         ## End period
