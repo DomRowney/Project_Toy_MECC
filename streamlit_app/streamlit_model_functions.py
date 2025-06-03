@@ -50,22 +50,22 @@ def create_MECC_model(model_parameters
             , seed = model_parameters["model_seed"]
 
             ## dictionaries of intervention chance
-            , contemplation_intervention = model_parameters["contemplation_intervention"]
-            , preparation_intervention = model_parameters["preparation_intervention"]
-            , action_intervention = model_parameters["action_intervention"]
+            #, contemplation_intervention = model_parameters["contemplation_intervention"]
+            #, preparation_intervention = model_parameters["preparation_intervention"]
+            #, action_intervention = model_parameters["action_intervention"]
 
             ## change state probability
             , prob_receptive = model_parameters["prob_receptive"]
 
-            , change_prob_contemplation = model_parameters[ "change_prob_contemplation"]
-            , change_prob_preparation = model_parameters["change_prob_preparation"]
-            , change_prob_action = model_parameters["change_prob_action"]
+            #, change_prob_contemplation = model_parameters[ "change_prob_contemplation"]
+            #, change_prob_preparation = model_parameters["change_prob_preparation"]
+            #, change_prob_action = model_parameters["change_prob_action"]
 
-            , lapse_prob_precontemplation = model_parameters["lapse_prob_precontemplation"]
-            , lapse_prob_contemplation = model_parameters["lapse_prob_contemplation"]
-            , lapse_prob_preparation = model_parameters["lapse_prob_preparation"]
+            #, lapse_prob_precontemplation = model_parameters["lapse_prob_precontemplation"]
+            #, lapse_prob_contemplation = model_parameters["lapse_prob_contemplation"]
+            #, lapse_prob_preparation = model_parameters["lapse_prob_preparation"]
 
-            , golden_window = model_parameters["golden_window"]
+            #, golden_window = model_parameters["golden_window"]
             
             ## visit probability
             , visit_prob = model_parameters["visit_prob"]

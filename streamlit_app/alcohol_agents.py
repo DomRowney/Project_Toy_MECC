@@ -32,24 +32,25 @@ class AlcoholModel_PersonAgent(PersonAgent):
                  , age
                  , deprivation
 
-                 ## change state probability
+                ## change state probability
                  , prob_receptive
 
-                 , change_prob_contemplation
-                 , change_prob_preparation
-                 , change_prob_action
+                #, change_prob_contemplation
+                #, change_prob_preparation
+                #, change_prob_action
 
-                 , lapse_prob_precontemplation
-                 , lapse_prob_contemplation
-                 , lapse_prob_preparation
+                #, lapse_prob_precontemplation
+                #, lapse_prob_contemplation
+                #, lapse_prob_preparation
 
-                 , golden_window               
+                #, golden_window
 
                 ## visit probability
                  , visit_prob = {}            
                  
                 ## alcohol
-                 , inital_alcohol_status = "Pre-contemplation"
+                 #, inital_alcohol_status = "Pre-contemplation"
+                 , inital_alcohol_status = "No Change"
                  ):
         super().__init__(unique_id, model,  visit_prob)
 
@@ -59,25 +60,25 @@ class AlcoholModel_PersonAgent(PersonAgent):
                             ,"deprivation": deprivation}
 
         ## Alcohol properties
-        self.alcohol_status = {"status": inital_alcohol_status
-                               ,"in window": False
-                                ,"window time": 0}
+        self.alcohol_status = {"status": inital_alcohol_status}
+                               #,"in window": False
+                               # ,"window time": 0}
 
         self.prob_receptive = prob_receptive
 
-        self.change_prob_contemplation_base = change_prob_contemplation
-        self.change_prob_preparation_base = change_prob_preparation
-        self.change_prob_action_base = change_prob_action
+        #self.change_prob_contemplation_base = change_prob_contemplation
+        #self.change_prob_preparation_base = change_prob_preparation
+        #self.change_prob_action_base = change_prob_action
 
-        self.change_prob_contemplation = self.change_prob_contemplation_base
-        self.change_prob_preparation = self.change_prob_preparation_base
-        self.change_prob_action = self.change_prob_action_base
+        #self.change_prob_contemplation = self.change_prob_contemplation_base
+        #self.change_prob_preparation = self.change_prob_preparation_base
+        #self.change_prob_action = self.change_prob_action_base
 
-        self.lapse_prob_precontemplation = lapse_prob_precontemplation
-        self.lapse_prob_contemplation = lapse_prob_contemplation
-        self.lapse_prob_preparation = lapse_prob_preparation
+        #self.lapse_prob_precontemplation = lapse_prob_precontemplation
+        #self.lapse_prob_contemplation = lapse_prob_contemplation
+        #self.lapse_prob_preparation = lapse_prob_preparation
 
-        self.golden_window = golden_window
+        #self.golden_window = golden_window
 
         ## Visit properties
         self.visit_prob = visit_prob 
@@ -109,53 +110,57 @@ class AlcoholModel_PersonAgent(PersonAgent):
             
     def update_alcohol_status(self):
         '''
-        cycles through the possible status updating each one
-        then reverse order for lapses
         '''
-        ## Positive Change
-        self.update_status("Pre-contemplation"
-                           ,"Contemplation"
-                           ,self.change_prob_contemplation
-                           ,'improved')
-        self.update_status("Contemplation"
-                           ,"Preparation"
-                           ,self.change_prob_preparation
-                           ,'improved')
-        self.update_status("Preparation"
-                           ,"Action"
-                           ,self.change_prob_action
-                           ,'improved')
 
-        ## Lapse
-        self.update_status("Action"
-                           ,"Preparation"
-                           ,self.lapse_prob_preparation
-                           ,'lapsed')
-        self.update_status("Preparation"
-                           ,"Contemplation"
-                           ,self.lapse_prob_contemplation
-                           ,'lapsed')
-        self.update_status("Contemplation"
-                           ,"Pre-contemplation"
-                           ,self.lapse_prob_precontemplation
-                           ,'lapsed')
+        pass
+        #'''
+        #cycles through the possible status updating each one
+        #then reverse order for lapses
+        #'''
+        ### Positive Change
+        #self.update_status("Pre-contemplation"
+        #                   ,"Contemplation"
+        #                   ,self.change_prob_contemplation
+        #                   ,'improved')
+        #self.update_status("Contemplation"
+        #                   ,"Preparation"
+        #                   ,self.change_prob_preparation
+        #                   ,'improved')
+        #self.update_status("Preparation"
+        #                   ,"Action"
+        #                   ,self.change_prob_action
+        #                   ,'improved')
+
+        ### Lapse
+        #self.update_status("Action"
+        #                   ,"Preparation"
+        #                   ,self.lapse_prob_preparation
+        #                   ,'lapsed')
+        #self.update_status("Preparation"
+        #                   ,"Contemplation"
+        #                   ,self.lapse_prob_contemplation
+        #                   ,'lapsed')
+        #self.update_status("Contemplation"
+        #                   ,"Pre-contemplation"
+        #                   ,self.lapse_prob_precontemplation
+        #                   ,'lapsed')
 
         ## Adds one to time
         #self.alcohol_status["time"] += 1
     
-    def update_golden_window(self):
-        if (self.alcohol_status["in window"] & 
-            (self.alcohol_status["window time"] > self.golden_window) ):
-            print(f" > Person {self.unique_id}'s golden window ended. Reset probabilities.")
-            ## resets probabilities to base
-            self.change_prob_contemplation = self.change_prob_contemplation_base
-            self.change_prob_preparation = self.change_prob_preparation_base
-            self.change_prob_action = self.change_prob_action_base
-        elif self.alcohol_status["in window"]:
-            ## increases timer
-            self.alcohol_status["window time"] += 1
-        else:
-            pass
+    #def update_golden_window(self):
+    #    if (self.alcohol_status["in window"] & 
+    #        (self.alcohol_status["window time"] > self.golden_window) ):
+    #        print(f" > Person {self.unique_id}'s golden window ended. Reset probabilities.")
+    #        ## resets probabilities to base
+    #        self.change_prob_contemplation = self.change_prob_contemplation_base
+    #        self.change_prob_preparation = self.change_prob_preparation_base
+    #        self.change_prob_action = self.change_prob_action_base
+    #    elif self.alcohol_status["in window"]:
+    #        ## increases timer
+    #        self.alcohol_status["window time"] += 1
+    #    else:
+    #        pass
 
     def visit(self,service,probability):
         if self.random.uniform(0,1) <= probability:
@@ -190,7 +195,7 @@ class AlcoholModel_PersonAgent(PersonAgent):
         print(f"Person {self.unique_id}")
         super().step()
         self.update_alcohol_status()
-        self.update_golden_window()
+        #self.update_golden_window()
 
 
 ##################################
@@ -205,9 +210,9 @@ class AlcoholModel_ServiceAgent(ServiceAgent):
                  , mecc_effect
                  , base_make_intervention_prob
                  , mecc_trained
-                 , contemplation_intervention
-                 , preparation_intervention
-                 , action_intervention
+                 #, contemplation_intervention
+                 #, preparation_intervention
+                 #, action_intervention
                  , category
                  , mecc_training_decay_half_life
                  ,):
@@ -220,9 +225,9 @@ class AlcoholModel_ServiceAgent(ServiceAgent):
         self.category = category
 
         ## Intervention Effect
-        self.contemplation_intervention = contemplation_intervention
-        self.preparation_intervention = preparation_intervention
-        self.action_intervention = action_intervention
+        #self.contemplation_intervention = contemplation_intervention
+        #self.preparation_intervention = preparation_intervention
+        #self.action_intervention = action_intervention
 
         ## Additional Reporting variables
         self.successful_interventions_made = 0
@@ -257,54 +262,69 @@ class AlcoholModel_ServiceAgent(ServiceAgent):
         ## adds 1 to the successful intervention count
         self.successful_interventions_made += 1
 
+        PersonAgent.alcohol_status["status"] = "Change"
+        print(f"    >   > Person {PersonAgent.unique_id} status is now *{PersonAgent.alcohol_status['status']}*")
+
         ## no decay applied to effectiveness
-        PersonAgent.change_prob_contemplation =+ self.contemplation_intervention
-        PersonAgent.change_prob_preparation =+ self.preparation_intervention
-        PersonAgent.change_prob_action =+ self.action_intervention
+        #PersonAgent.change_prob_contemplation =+ self.contemplation_intervention
+        #PersonAgent.change_prob_preparation =+ self.preparation_intervention
+        #PersonAgent.change_prob_action =+ self.action_intervention
 
         ## Caps probabilities at 1
-        if PersonAgent.change_prob_contemplation >= 1:
-            PersonAgent.change_prob_contemplation = 1
-        else: 
-            pass
+        #if PersonAgent.change_prob_contemplation >= 1:
+        #    PersonAgent.change_prob_contemplation = 1
+        #else: 
+        #    pass
         
-        if PersonAgent.change_prob_preparation > 1:
-            PersonAgent.change_prob_preparation = 1
-        else: 
-            pass
+        #if PersonAgent.change_prob_preparation > 1:
+        #    PersonAgent.change_prob_preparation = 1
+        #else: 
+        #    pass
 
-        if PersonAgent.change_prob_action > 1:
-            PersonAgent.change_prob_action = 1
-        else: 
-            pass          
+        #if PersonAgent.change_prob_action > 1:
+        #    PersonAgent.change_prob_action = 1
+        #else: 
+        #    pass          
 
     ## Override to perform alcohol-specific interventions
     def perform_intervention(self, PersonAgent):
-        ## adds 1 to the intervention count
-        self.interventions_made += 1
-
-        ## if the change probability is lower than the intervention,
-        print(f"  > {self.category} did an intervention on Person {PersonAgent.unique_id}")
-        
-        if PersonAgent.alcohol_status["in window"]:
-            print(f"    > Person {PersonAgent.unique_id} is in a golden window and is receptive to change.")
-            self.intervention_effect(PersonAgent)
-        
-        elif PersonAgent.alcohol_status["status"] != 'Pre-contemplation':
-            print(f"    > Person {PersonAgent.unique_id} is in {PersonAgent.alcohol_status['status']}" +
-                  f"phase and golden window started at {self.category}.")
-            PersonAgent.alcohol_status["in window"] = True            
-            self.intervention_effect(PersonAgent)
-
-        elif PersonAgent.random.uniform(0, 1) <= PersonAgent.prob_receptive:
-            print(f"    > Person {PersonAgent.unique_id} is in {PersonAgent.alcohol_status['status']}" +
-                   f" phase, receptive to change, and golden window started at {self.category}.")
-            PersonAgent.alcohol_status["in window"] = True
-            self.intervention_effect(PersonAgent)
-        
+        ## check
+        if PersonAgent.alcohol_status["status"] == "Change":
+            print(f"  > {self.category} did not an intervention on Person {PersonAgent.unique_id}" +
+                  f" because status is *{PersonAgent.alcohol_status['status']}*")
         else:
-            print(f"    > Person {PersonAgent.unique_id} is in {PersonAgent.alcohol_status['status']}" + 
-                  f"phase and not receptive to change")
+            ## adds 1 to the intervention count
+            self.interventions_made += 1
+
+            ## if the change probability is lower than the intervention,
+            print(f"  > {self.category} attempted an intervention on Person {PersonAgent.unique_id}")
+
+            if PersonAgent.random.uniform(0, 1) <= PersonAgent.prob_receptive:
+                print(f"    >   > Person {PersonAgent.unique_id} is in receptive to intervention")
+                self.intervention_effect(PersonAgent)
+            else:
+                print(f"    >   > Person {PersonAgent.unique_id} is not receptive to intervention")
+
+        #    self.intervention_effect(PersonAgent)        
+        #if PersonAgent.alcohol_status["in window"]:
+        #    print(f"    > Person {PersonAgent.unique_id} is in a golden window and is receptive to change.")
+        #    self.intervention_effect(PersonAgent)
+        
+        #elif PersonAgent.alcohol_status["status"] != 'Pre-contemplation':
+        #    print(f"    > Person {PersonAgent.unique_id} is in {PersonAgent.alcohol_status['status']}" +
+        #          f"phase and golden window started at {self.category}.")
+        #    PersonAgent.alcohol_status["in window"] = True            
+        #    self.intervention_effect(PersonAgent)
+
+        #elif PersonAgent.random.uniform(0, 1) <= PersonAgent.prob_receptive:
+        #    print(f"    > Person {PersonAgent.unique_id} is in {PersonAgent.alcohol_status['status']}" +
+        #           f" phase, receptive to change, and golden window started at {self.category}.")
+        #    PersonAgent.alcohol_status["in window"] = True
+        #    self.intervention_effect(PersonAgent)
+        #
+        #else:
+        #    print(f"    > Person {PersonAgent.unique_id} is in {PersonAgent.alcohol_status['status']}" + 
+        #          f"phase and not receptive to change")
             
     ## mecc training decay over time
     def training_decay(self):
@@ -364,23 +384,23 @@ class Alcohol_MECC_Model(MECC_Model):
                 , seed
 
                 ## dictionaries of intervention chance
-                 , contemplation_intervention
-                 , preparation_intervention
-                 , action_intervention
+                 #, contemplation_intervention
+                 #, preparation_intervention
+                 #, action_intervention
                  , mecc_training_decay_half_life
 
                  ## change state probability
                  , prob_receptive
 
-                 , change_prob_contemplation
-                 , change_prob_preparation
-                 , change_prob_action
+                 #, change_prob_contemplation
+                 #, change_prob_preparation
+                 #, change_prob_action
 
-                 , lapse_prob_precontemplation
-                 , lapse_prob_contemplation
-                 , lapse_prob_preparation
+                 #, lapse_prob_precontemplation
+                 #, lapse_prob_contemplation
+                 #, lapse_prob_preparation
     
-                , golden_window
+                #, golden_window
 
                 ## visit probability
                  , visit_prob = {}
@@ -411,16 +431,16 @@ class Alcohol_MECC_Model(MECC_Model):
         ## alcohol features for person agents
         self.prob_receptive              = prob_receptive        
 
-        self.change_prob_contemplation   = change_prob_contemplation
-        self.change_prob_preparation     = change_prob_preparation
-        self.change_prob_action          = change_prob_action
+        #self.change_prob_contemplation   = change_prob_contemplation
+        #self.change_prob_preparation     = change_prob_preparation
+        #self.change_prob_action          = change_prob_action
 
-        self.lapse_prob_precontemplation = lapse_prob_precontemplation
-        self.lapse_prob_contemplation    = lapse_prob_contemplation
-        self.lapse_prob_preparation      = lapse_prob_preparation
+        #self.lapse_prob_precontemplation = lapse_prob_precontemplation
+        #self.lapse_prob_contemplation    = lapse_prob_contemplation
+        #self.lapse_prob_preparation      = lapse_prob_preparation
 
         self.visit_prob      = visit_prob
-        self.golden_window   = golden_window
+        #self.golden_window   = golden_window
 
         ## Overwrite base properties with dict versions
         self.mecc_effect = mecc_effect
@@ -428,9 +448,9 @@ class Alcohol_MECC_Model(MECC_Model):
         self.mecc_trained = mecc_trained
 
         ## site intervention chance
-        self.contemplation_intervention = contemplation_intervention
-        self.preparation_intervention = preparation_intervention
-        self.action_intervention = action_intervention
+        #self.contemplation_intervention = contemplation_intervention
+        #self.preparation_intervention = preparation_intervention
+        #self.action_intervention = action_intervention
         self.mecc_training_decay_half_life = mecc_training_decay_half_life
 
         ## Overwrite Data collector for metrics
@@ -442,10 +462,12 @@ class Alcohol_MECC_Model(MECC_Model):
                 "Total Successful Interventions": calculate_total_successful_interventions,
 
                 ## Population metrics
-                "Total Pre-contemplation":  calculate_number_status_precontemplation,
-                "Total Contemplation":  calculate_number_status_contemplation,
-                "Total Preparation":  calculate_number_status_preparation,
-                "Total Action":  calculate_number_status_action,
+                "Total No Change":  calculate_number_status_no_change,
+                "Total Change":  calculate_number_status_change,                
+                #"Total Pre-contemplation":  calculate_number_status_precontemplation,
+                #"Total Contemplation":  calculate_number_status_contemplation,
+                #"Total Preparation":  calculate_number_status_preparation,
+                #"Total Action":  calculate_number_status_action,
 
                 ## Service intervention metrics
                 "Job Centre Interventions": calculate_service_interventions_JobCentre,
@@ -497,15 +519,15 @@ class Alcohol_MECC_Model(MECC_Model):
                             ## change state probability
                             , prob_receptive = self.prob_receptive
 
-                            , change_prob_contemplation = self.change_prob_contemplation
-                            , change_prob_preparation = self.change_prob_preparation
-                            , change_prob_action = self.change_prob_action
+                            #, change_prob_contemplation = self.change_prob_contemplation
+                            #, change_prob_preparation = self.change_prob_preparation
+                            #, change_prob_action = self.change_prob_action
 
-                            , lapse_prob_precontemplation = self.lapse_prob_precontemplation
-                            , lapse_prob_contemplation = self.lapse_prob_contemplation
-                            , lapse_prob_preparation = self.lapse_prob_preparation
+                            #, lapse_prob_precontemplation = self.lapse_prob_precontemplation
+                            #, lapse_prob_contemplation = self.lapse_prob_contemplation
+                            #, lapse_prob_preparation = self.lapse_prob_preparation
 
-                            , golden_window = self.golden_window
+                            #, golden_window = self.golden_window
 
                             ## visit probability
                             , visit_prob = self.visit_prob
@@ -522,9 +544,9 @@ class Alcohol_MECC_Model(MECC_Model):
                     , mecc_effect = self.mecc_effect[service]
                     , base_make_intervention_prob  = self.base_make_intervention_prob[service]
                     , mecc_trained = self.mecc_trained[service]
-                    , contemplation_intervention = self.contemplation_intervention[service]
-                    , preparation_intervention = self.preparation_intervention[service]
-                    , action_intervention = self.action_intervention[service]
+                    #, contemplation_intervention = self.contemplation_intervention[service]
+                    #, preparation_intervention = self.preparation_intervention[service]
+                    #, action_intervention = self.action_intervention[service]
                     , mecc_training_decay_half_life = self.mecc_training_decay_half_life[service]
                     )
         
@@ -540,17 +562,23 @@ def calculate_number_status(model,status):
               if isinstance(agent, AlcoholModel_PersonAgent)
                 and agent.alcohol_status["status"] == status)
 
-def calculate_number_status_precontemplation(model):
-    return calculate_number_status(model,"Pre-contemplation")
+def calculate_number_status_no_change(model):
+    return calculate_number_status(model,"No Change")
 
-def calculate_number_status_contemplation(model):
-    return calculate_number_status(model,"Contemplation")
+def calculate_number_status_change(model):
+    return calculate_number_status(model,"Change")
 
-def calculate_number_status_preparation(model):
-    return calculate_number_status(model,"Preparation")
+#def calculate_number_status_precontemplation(model):
+#    return calculate_number_status(model,"Pre-contemplation")
 
-def calculate_number_status_action(model):
-    return calculate_number_status(model,"Action")
+#def calculate_number_status_contemplation(model):
+#    return calculate_number_status(model,"Contemplation")
+
+#def calculate_number_status_preparation(model):
+#    return calculate_number_status(model,"Preparation")
+
+#def calculate_number_status_action(model):
+#    return calculate_number_status(model,"Action")
 
 ## number of interventions by a service type
 def calculate_service_interventions(model,service):

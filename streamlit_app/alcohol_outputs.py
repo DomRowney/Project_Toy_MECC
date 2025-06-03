@@ -25,10 +25,12 @@ def create_population_figure(results_no_mecc, results_mecc, step):
     )
     
     stage_colour_dict = {
-                "Pre-contemplation":  "red",
-                "Contemplation":  "orange",
-                "Preparation":  "blue",
-                "Action":  "green",
+                "No Change":  "red",
+                "Change":  "green",
+                #"Pre-contemplation":  "red",
+                #"Contemplation":  "orange",
+                #"Preparation":  "blue",
+                #"Action":  "green",
     }
 
     for stage in stage_colour_dict:
@@ -99,7 +101,7 @@ def create_intervention_figure(results_no_mecc, results_mecc, step, figure_type 
     mecc_subtitle = (f'{figure_type}' +
                         ' (MECC Trained)')
 
-    service_colour_dict = { 'Job Centre': "red"
+    service_colour_dict = { 'Job Centre': "blue"
                     #,'Benefits Office': "blue"
                     ,'Housing Officer': "orange"
                     ,'Community Hub': "purple"
@@ -245,10 +247,11 @@ def results_chi(result
 def results_stage_chi(result
                       ,model_parameters
                       ,sig_threhold = 0.025
-                      ,stages=['Pre-contemplation'
-                                        ,'Contemplation'
-                                        ,'Preparation'
-                                        ,'Action']):
+                      ,stages=['No Change','Change']):
+                      #,stages=['Pre-contemplation'
+                      #                  ,'Contemplation'
+                      #                  ,'Preparation'
+                      #                  ,'Action']):
     ## concat stages into single regex
     stages = '|'.join(stages)
        
@@ -309,7 +312,7 @@ def create_intervention_decay_figure(results_no_mecc, results_mecc, step):
     no_mecc_subtitle = ('Intervention Probability (No MECC Training)')
     mecc_subtitle = ('Intervention Probability (MECC Trained)')
 
-    service_colour_dict = { 'Job Centre': "red"
+    service_colour_dict = { 'Job Centre':  "blue"
                     #,'Benefits Office': "blue"
                     ,'Housing Officer': "orange"
                     ,'Community Hub': "purple"

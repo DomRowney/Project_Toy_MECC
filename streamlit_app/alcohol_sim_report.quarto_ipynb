@@ -1,0 +1,280 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "title: \"Toy MECC - Alcohol Simulation Report\"\n",
+        "# execute:\n",
+        "#   echo: false\n",
+        "format:\n",
+        "    html:\n",
+        "        toc: false\n",
+        "        code-fold: false\n",
+        "        embed-resources: true\n",
+        "        # URL options\n",
+        "        link-external-icon: true\n",
+        "        link-external-newwindow: true\n",
+        "        # Reference options\n",
+        "        citations-hover: true\n",
+        "        footnotes-hover: true\n",
+        "        #####################\n",
+        "        # NHS Theme options #\n",
+        "        #####################\n",
+        "        css: \"NHS_report_theme.css\"\n",
+        "        callout-appearance: simple\n",
+        "        callout-collapse: true\n",
+        "        # Caption options\n",
+        "        cap-location: bottom\n",
+        "        # Title options\n",
+        "        title-block-banner: '#005EB8'\n",
+        "        backgroundcolor: '#f0f4f5'\n",
+        "        # Set font\n",
+        "        mainfont: 'Open Sans'\n",
+        "execute: \n",
+        "    echo: true\n",
+        "    warning: false\n",
+        "    message: false\n",
+        "    # include: false \n",
+        "---\n",
+        "\n",
+        "\n",
+        "<!-- ![](resources\\MECC.jpg){height=100} -->\n"
+      ],
+      "id": "df1b2f42"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| echo: false\n",
+        "#| label: get_data\n",
+        "import pandas as pd\n",
+        "import json\n",
+        "import plotly.graph_objects as go\n",
+        "# import great_tables as GT\n",
+        "import itables\n",
+        "\n",
+        "# Load session data from JSON\n",
+        "with open(\"./outputs/session_data.json\", \"r\") as f:\n",
+        "    session_data = json.load(f)\n",
+        "\n",
+        "data_no_mecc = pd.read_csv(\"./outputs/data_no_mecc.csv\")\n",
+        "data_mecc = pd.read_csv(\"./outputs/data_mecc.csv\")\n",
+        "\n",
+        "## iniate itables\n",
+        "itables.init_notebook_mode(all_interactive=True)"
+      ],
+      "id": "get_data",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "# Alcohol Advice Model with MECC Training\n",
+        "\n",
+        "## Simulation Results\n"
+      ],
+      "id": "ef5dd46f"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| echo: false\n",
+        "#| label: plots\n",
+        "from alcohol_outputs import create_population_figure\n",
+        "from alcohol_outputs import create_intervention_figure\n",
+        "from alcohol_outputs import create_intervention_decay_figure\n",
+        "\n",
+        "step = len(data_no_mecc) - 1\n",
+        "fig1 = create_population_figure(data_no_mecc, data_mecc, step)\n",
+        "fig1.show()\n",
+        "\n",
+        "fig2 = create_intervention_figure(data_no_mecc, data_mecc, step,'Contacts')\n",
+        "fig2.show()\n",
+        "\n",
+        "fig3 = create_intervention_figure(data_no_mecc, data_mecc, step,'Interventions')\n",
+        "fig3.show()\n",
+        "\n",
+        "fig4 = create_intervention_decay_figure(data_no_mecc, data_mecc, step)\n",
+        "fig4.show()"
+      ],
+      "id": "plots",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## Final Statistics\n",
+        "\n",
+        "### Total\n"
+      ],
+      "id": "d7dd9bcd"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| echo: false\n",
+        "#| label: Total_section\n",
+        "#from itables import show\n",
+        "\n",
+        "result_total = pd.read_csv(\"./outputs/result_total.csv\",index_col=0)\n",
+        "\n",
+        "itables.show(result_total, html=False)"
+      ],
+      "id": "Total_section",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### Contacts by Services\n"
+      ],
+      "id": "b3e4e731"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| echo: false\n",
+        "#| label: Contacts_by_Services_section\n",
+        "\n",
+        "result_contact = pd.read_csv(\"./outputs/result_contact.csv\",index_col=0)\n",
+        "\n",
+        "itables.show(result_contact)"
+      ],
+      "id": "Contacts_by_Services_section",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### Sucessful Interventions by Services\n"
+      ],
+      "id": "5f736c2e"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| echo: false\n",
+        "#| label: Sucessful_Interventions_by_Services_section\n",
+        "\n",
+        "result_successful = pd.read_csv(\"./outputs/result_successful.csv\"\n",
+        "                                ,index_col=0)\n",
+        "\n",
+        "itables.show(result_successful)"
+      ],
+      "id": "Sucessful_Interventions_by_Services_section",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### All Interventions by Services\n"
+      ],
+      "id": "de0eb304"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| echo: false\n",
+        "#| label: All_Interventions_by_Services_section\n",
+        "\n",
+        "result_intervention = pd.read_csv(\"./outputs/result_intervention.csv\"\n",
+        "                                    ,index_col=0)\n",
+        "\n",
+        "itables.show(result_intervention)"
+      ],
+      "id": "All_Interventions_by_Services_section",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## Toy MECC Parameters\n",
+        "\n",
+        "### Population Parameters\n",
+        " - Number of People: **`{python} session_data[\"N_people\"]`** \n",
+        "\n",
+        "### Stages of Change\n",
+        " - Chance that a pre-Contemplation person not in a golden window is receptive to an intervention: **`{python} session_data[\"prob_receptive\"]`**\n",
+        " - Periods before chances reset to base (the golden window): **`{python} session_data[\"golden_window\"]`**\n",
+        "\n",
+        "### Stages of Change - Base Positive Change Chance\n",
+        " - Base Pre-Contemplation to Contemplation chance: **`{python} session_data[\"change_prob_contemplation\"]`**\n",
+        " - Base Contemplation to Preparation chance: **`{python} session_data[\"change_prob_preparation\"]`**\n",
+        " - Base Preparation to Action chance: **`{python} session_data[\"change_prob_action\"]`**\n",
+        "\n",
+        "### Stages of Change - Lapse Chance\n",
+        " - Base Contemplation to Pre-Contemplation lapse chance: **`{python} session_data[\"lapse_prob_precontemplation\"]`**\n",
+        " - Base Preparation to Contemplation lapse chance: **`{python} session_data[\"lapse_prob_contemplation\"]`**\n",
+        " - Base Action to Preparation lapse chance: **`{python} session_data[\"lapse_prob_preparation\"]`**\n",
+        "\n",
+        "### Services"
+      ],
+      "id": "56d8b89f"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| echo: false\n",
+        "#| label: service_parameters\n",
+        "\n",
+        "alcohol_services_edit = pd.read_csv(\"./outputs/alcohol_services_edit.csv\"\n",
+        "                                    ,index_col=0)\n",
+        "\n",
+        "itables.show(alcohol_services_edit)"
+      ],
+      "id": "service_parameters",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### Simulation Parameters\n",
+        " - Random Seed: **`{python} session_data[\"model_seed\"]`**\n",
+        " - Number of Months to Simulate: **`{python} session_data[\"num_steps\"]`**\n",
+        " - Animation Speed (seconds): **`{python} session_data[\"animation_speed\"]`**\n",
+        "\n",
+        "\n",
+        "## Logic Diagram\n",
+        "\n",
+        "![](../alcohol_logic_diagram.png){.r-stretch  fig-align=\"center\"}\n",
+        "\n",
+        "\n",
+        "<!-- {'model_seed': 42, 'N_people': 50, 'N_service': 1, 'initial_smoking_prob': 0.5, 'visit_prob': 0.1, 'quit_attempt_prob': 0.01, 'base_smoke_relapse_prob': 0.01, 'base_make_intervention_prob': 0.1, 'mecc_effect': 0.9, 'intervention_effect': 1.1, 'num_steps': 24, 'animation_speed': 0, 'iterations': 100, 'prob_receptive': 0.75, 'change_prob_contemplation': 0.01, 'change_prob_preparation': 0.01, 'change_prob_action': 0.01, 'lapse_prob_precontemplation': 0.01, 'lapse_prob_contemplation': 0.01, 'lapse_prob_preparation': 0.01, 'golden_window': 3, 'contemplation_intervention': {'Job Centre': 0.5, 'Benefits Office': 0.5, 'Housing Officer': 0.5, 'Community Hub': 0.5, 'Pharmacy': 0.5, 'GP Practice': 0.5}, 'preparation_intervention': {'Job Centre': 0.5, 'Benefits Office': 0.5, 'Housing Officer': 0.5, 'Community Hub': 0.5, 'Pharmacy': 0.5, 'GP Practice': 0.5}, 'action_intervention': {'Job Centre': 0.5, 'Benefits Office': 0.5, 'Housing Officer': 0.5, 'Community Hub': 0.5, 'Pharmacy': 0.5, 'GP Practice': 0.5}} -->"
+      ],
+      "id": "590dc425"
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "name": "python3",
+      "language": "python",
+      "display_name": "Python 3 (ipykernel)",
+      "path": "/home/dominic_rowney/anaconda3/envs/mecc/share/jupyter/kernels/python3"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}

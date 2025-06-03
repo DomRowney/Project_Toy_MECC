@@ -46,28 +46,28 @@ def init_parameters():
 
     ## alcohol specific parameters
     if 'alcohol_prob_receptive' not in st.session_state:
-        st.session_state.alcohol_prob_receptive = 0.75
+        st.session_state.alcohol_prob_receptive = 0.1
 
-    if 'alcohol_change_prob_contemplation' not in st.session_state:
-        st.session_state.alcohol_change_prob_contemplation = 0.01
-
-    if 'alcohol_change_prob_preparation' not in st.session_state:
-        st.session_state.alcohol_change_prob_preparation = 0.01
-
-    if 'alcohol_change_prob_action' not in st.session_state:
-        st.session_state.alcohol_change_prob_action = 0.01
-
-    if 'alcohol_lapse_prob_precontemplation' not in st.session_state:
-        st.session_state.alcohol_lapse_prob_precontemplation = 0.01
-
-    if 'alcohol_lapse_prob_contemplation' not in st.session_state:
-        st.session_state.alcohol_lapse_prob_contemplation = 0.01
-
-    if 'alcohol_lapse_prob_preparation' not in st.session_state:
-        st.session_state.alcohol_lapse_prob_preparation = 0.01
-
-    if 'alcohol_golden_window' not in st.session_state:
-        st.session_state.alcohol_golden_window = 3
+    #if 'alcohol_change_prob_contemplation' not in st.session_state:
+    #    st.session_state.alcohol_change_prob_contemplation = 0.01
+#
+    #if 'alcohol_change_prob_preparation' not in st.session_state:
+    #    st.session_state.alcohol_change_prob_preparation = 0.01
+#
+    #if 'alcohol_change_prob_action' not in st.session_state:
+    #    st.session_state.alcohol_change_prob_action = 0.01
+#
+    #if 'alcohol_lapse_prob_precontemplation' not in st.session_state:
+    #    st.session_state.alcohol_lapse_prob_precontemplation = 0.01
+#
+    #if 'alcohol_lapse_prob_contemplation' not in st.session_state:
+    #    st.session_state.alcohol_lapse_prob_contemplation = 0.01
+#
+    #if 'alcohol_lapse_prob_preparation' not in st.session_state:
+    #    st.session_state.alcohol_lapse_prob_preparation = 0.01
+#
+    #if 'alcohol_golden_window' not in st.session_state:
+    #    st.session_state.alcohol_golden_window = 3
 
     if 'alcohol_services_table' not in st.session_state:
         ## sets a dataframe up one row for each service type
@@ -84,18 +84,18 @@ def init_parameters():
                 ,'MECC Trained': [True
                                   #,True
                                   ,True,True,False,False]
-                ,'Chance Making a Brief Intervention After MECC Training': [0.90
-                                                                            #,0.90
-                                                                            ,0.90,0.90,0.90,0.90]
-                ,'Post Intervention Pre-Contemplation to Contemplation chance': [0.50
-                                                                                 #,0.50
-                                                                                 ,0.50,0.50,0.50,0.50]
-                ,'Post Intervention Contemplation to Preparation chance': [0.50
-                                                                           #,0.50
-                                                                           ,0.50,0.50,0.50,0.50]
-                ,'Post Intervention Preparation to Action chance': [0.50
-                                                                    #,0.50
-                                                                    ,0.50,0.50,0.50,0.50]
+               ,'Chance Making a Brief Intervention After MECC Training': [0.90
+                                                                           #,0.90
+                                                                           ,0.90,0.90,0.90,0.90]
+               #,'Post Intervention Pre-Contemplation to Contemplation chance': [0.50
+               #                                                                 #,0.50
+               #                                                                 ,0.50,0.50,0.50,0.50]
+               #,'Post Intervention Contemplation to Preparation chance': [0.50
+               #                                                           #,0.50
+               #                                                           ,0.50,0.50,0.50,0.50]
+               #,'Post Intervention Preparation to Action chance': [0.50
+               #                                                    #,0.50
+               #                                                    ,0.50,0.50,0.50,0.50]
                 ,'MECC Training Decay Half Life in Months': [4
                                                              #,4
                                                              ,4,4,4,4]}
@@ -120,6 +120,18 @@ with col1:
         st.session_state.N_people = 50
     st.session_state.N_people = st.slider("Number of People", 10, 1000, st.session_state.N_people, step=10)
 
+    if 'alcohol_prob_receptive' not in st.session_state:
+            st.session_state.alcohol_prob_receptive = 0.1
+
+    alcohol_prob_receptive =  st.slider(
+            "Chance that a person is receptive to an intervention"
+            , 0.0, 1.0
+            , st.session_state.alcohol_prob_receptive
+            , on_change=lambda: setattr(st.session_state,
+                        'alcohol_prob_receptive',
+                        st.session_state['alcohol probability receptive'])
+            ,key='alcohol probability receptive')
+    
 with col2:
     st.markdown("#### Simulation")
 
@@ -135,151 +147,152 @@ with col2:
         st.session_state.animation_speed = 0.1
     st.session_state.animation_speed = st.slider("Animation Speed (seconds)", 0)
 
-st.markdown("#### Stages of Change")
-colA, colB = st.columns(2)
-with colA:
-    @st.fragment()
-    def population_parameters_alcohol_A():
-        
-        ##################
-        # alcohol_prob_receptive
-        #################
-        
-        if 'alcohol_prob_receptive' not in st.session_state:
-            st.session_state.alcohol_prob_receptive = 0.75
-
-        alcohol_prob_receptive =  st.slider(
-            "Chance that a pre-Contemplation person not in a golden window is receptive to an intervention"
-            , 0.0, 1.0
-            , st.session_state.alcohol_prob_receptive
-            , on_change=lambda: setattr(st.session_state,
-                        'alcohol_prob_receptive',
-                        st.session_state['alcohol probability receptive'])
-            ,key='alcohol probability receptive')
-
-        st.markdown("**Base Positive Change Chance**")
-
-        ##################
-        # alcohol_change_prob_contemplation
-        #################
-        if 'alcohol_change_prob_contemplation' not in st.session_state:
-            st.session_state.alcohol_change_prob_contemplation = 0.01
-
-        alcohol_change_prob_contemplation =  st.slider(
-            "Base Pre-Contemplation to Contemplation chance"
-            , 0.0, 1.0
-            , st.session_state.alcohol_change_prob_contemplation
-            , on_change=lambda: setattr(st.session_state,
-                                        'alcohol_change_prob_contemplation',
-                                        st.session_state['alcohol Contemplation'])
-            ,key='alcohol Contemplation')
-
-        ##################
-        # alcohol_change_prob_preparation
-        #################
-
-        if 'alcohol_change_prob_preparation' not in st.session_state:
-            st.session_state.alcohol_change_prob_preparation = 0.01
-
-        alcohol_change_prob_preparation =  st.slider(
-            "Base Contemplation to Preparation chance"
-            , 0.0, 1.0
-            , st.session_state.alcohol_change_prob_preparation
-            , on_change=lambda: setattr(st.session_state,
-                                        'alcohol_change_prob_preparation',
-                                        st.session_state['alcohol Preparation'])
-            ,key='alcohol Preparation')
-
-        ##################
-        # alcohol_change_prob_action
-        #################
-
-        if 'alcohol_change_prob_action' not in st.session_state:
-            st.session_state.alcohol_change_prob_action = 0.01
-
-        alcohol_change_prob_action =  st.slider(
-            "Base Preparation to Action chance"
-            , 0.0, 1.0
-            , st.session_state.alcohol_change_prob_action
-            , on_change=lambda: setattr(st.session_state,
-                                        'alcohol_change_prob_action',
-                                        st.session_state['alcohol Action'])
-            ,key='alcohol Action')
-
-    population_parameters_alcohol_A()
-
-with colB:
-    @st.fragment()
-    def population_parameters_alcohol_B():
-        ##################
-        # alcohol_golden_window
-        #################
-        
-        if 'alcohol_golden_window' not in st.session_state:
-            st.session_state.alcohol_golden_window = 3
-
-        alcohol_golden_window =  st.slider(
-            "Periods before chances reset to base (the golden window)"
-            , 0, 24
-            , st.session_state.alcohol_golden_window
-            , on_change=lambda: setattr(st.session_state,
-                        'alcohol_golden_window',
-                        st.session_state['alcohol golden window'])
-            ,key='alcohol golden window')
-        
-        ##################
-        # alcohol_lapse_prob_precontemplation
-        #################
-
-        st.markdown("**Lapse Chance**")
-
-        if 'alcohol_lapse_prob_precontemplation' not in st.session_state:
-            st.session_state.alcohol_lapse_prob_precontemplation = 0.01
-
-        alcohol_lapse_prob_precontemplation =  st.slider(
-            "Base Contemplation to Pre-Contemplation lapse chance"
-            , 0.0, 1.0
-            , st.session_state.alcohol_lapse_prob_precontemplation
-            , on_change=lambda: setattr(st.session_state,
-                                        'alcohol_lapse_prob_precontemplation',
-                                        st.session_state['alcohol lapse Pre-Contemplation'])
-            ,key='alcohol lapse Pre-Contemplation')
-
-        ##################
-        # alcohol_lapse_prob_contemplation
-        #################
-
-        if 'alcohol_lapse_prob_contemplation' not in st.session_state:
-            st.session_state.alcohol_lapse_prob_contemplation = 0.01
-
-        alcohol_lapse_prob_contemplation =  st.slider(
-            "Base Preparation to Contemplation lapse chance"
-            , 0.0, 1.0
-            , st.session_state.alcohol_lapse_prob_contemplation
-            , on_change=lambda: setattr(st.session_state,
-                        'alcohol_lapse_prob_contemplation',
-                        st.session_state['alcohol lapse Contemplation'])
-            ,key='alcohol lapse Contemplation')
-
-        ##################
-        # alcohol_lapse_prob_preparation
-        #################
-
-        if 'alcohol_lapse_prob_preparation' not in st.session_state:
-            st.session_state.alcohol_lapse_prob_preparation = 0.01
-
-        alcohol_lapse_prob_preparation =  st.slider(
-            "Base Action to Preparation lapse chance"
-            , 0.0, 1.0
-            , st.session_state.alcohol_lapse_prob_preparation
-            , on_change=lambda: setattr(st.session_state,
-                        'alcohol_lapse_prob_preparation',
-                        st.session_state['alcohol lapse Preparation'])
-            ,key='alcohol lapse Preparation')
-
-
-
-    population_parameters_alcohol_B()
+#st.markdown("#### Stages of Change")
+#colA, colB = st.columns(2)
+#with colA:
+#    @st.fragment()
+#    def population_parameters_alcohol_A():
+#        
+#        ##################
+#        # alcohol_prob_receptive
+#        #################
+#        
+#        if 'alcohol_prob_receptive' not in st.session_state:
+#            st.session_state.alcohol_prob_receptive = 0.75
+#
+#        alcohol_prob_receptive =  st.slider(
+#            #"Chance that a pre-Contemplation person not in a golden window is receptive to an intervention"
+#            "Chance that a person is receptive to an intervention"
+#            , 0.0, 1.0
+#            , st.session_state.alcohol_prob_receptive
+#            , on_change=lambda: setattr(st.session_state,
+#                        'alcohol_prob_receptive',
+#                        st.session_state['alcohol probability receptive'])
+#            ,key='alcohol probability receptive')
+#
+#        st.markdown("**Base Positive Change Chance**")
+#
+#        ##################
+#        # alcohol_change_prob_contemplation
+#        #################
+#        if 'alcohol_change_prob_contemplation' not in st.session_state:
+#            st.session_state.alcohol_change_prob_contemplation = 0.01
+#        
+#        alcohol_change_prob_contemplation =  st.slider(
+#            "Base Pre-Contemplation to Contemplation chance"
+#            , 0.0, 1.0
+#            , st.session_state.alcohol_change_prob_contemplation
+#            , on_change=lambda: setattr(st.session_state,
+#                                        'alcohol_change_prob_contemplation',
+#                                        st.session_state['alcohol Contemplation'])
+#            ,key='alcohol Contemplation')
+#
+#        ##################
+#        # alcohol_change_prob_preparation
+#        #################
+#
+#        if 'alcohol_change_prob_preparation' not in st.session_state:
+#            st.session_state.alcohol_change_prob_preparation = 0.01
+#        
+#        alcohol_change_prob_preparation =  st.slider(
+#            "Base Contemplation to Preparation chance"
+#            , 0.0, 1.0
+#            , st.session_state.alcohol_change_prob_preparation
+#            , on_change=lambda: setattr(st.session_state,
+#                                        'alcohol_change_prob_preparation',
+#                                        st.session_state['alcohol Preparation'])
+#            ,key='alcohol Preparation')
+#
+#        ##################
+#        # alcohol_change_prob_action
+#        #################
+#
+#        if 'alcohol_change_prob_action' not in st.session_state:
+#            st.session_state.alcohol_change_prob_action = 0.01
+#        
+#        alcohol_change_prob_action =  st.slider(
+#            "Base Preparation to Action chance"
+#            , 0.0, 1.0
+#            , st.session_state.alcohol_change_prob_action
+#            , on_change=lambda: setattr(st.session_state,
+#                                        'alcohol_change_prob_action',
+#                                        st.session_state['alcohol Action'])
+#            ,key='alcohol Action')
+#
+#    population_parameters_alcohol_A()
+#
+#with colB:
+#    @st.fragment()
+#    def population_parameters_alcohol_B():
+#        ##################
+#        # alcohol_golden_window
+#        #################
+#        
+#        if 'alcohol_golden_window' not in st.session_state:
+#            st.session_state.alcohol_golden_window = 3
+#
+#        alcohol_golden_window =  st.slider(
+#            "Periods before chances reset to base (the golden window)"
+#            , 0, 24
+#            , st.session_state.alcohol_golden_window
+#            , on_change=lambda: setattr(st.session_state,
+#                        'alcohol_golden_window',
+#                        st.session_state['alcohol golden window'])
+#            ,key='alcohol golden window')
+#        
+#        ##################
+#        # alcohol_lapse_prob_precontemplation
+#        #################
+#
+#        st.markdown("**Lapse Chance**")
+#
+#        if 'alcohol_lapse_prob_precontemplation' not in st.session_state:
+#            st.session_state.alcohol_lapse_prob_precontemplation = 0.01
+#
+#        alcohol_lapse_prob_precontemplation =  st.slider(
+#            "Base Contemplation to Pre-Contemplation lapse chance"
+#            , 0.0, 1.0
+#            , st.session_state.alcohol_lapse_prob_precontemplation
+#            , on_change=lambda: setattr(st.session_state,
+#                                        'alcohol_lapse_prob_precontemplation',
+#                                        st.session_state['alcohol lapse Pre-Contemplation'])
+#            ,key='alcohol lapse Pre-Contemplation')
+#
+#        ##################
+#        # alcohol_lapse_prob_contemplation
+#        #################
+#
+#        if 'alcohol_lapse_prob_contemplation' not in st.session_state:
+#            st.session_state.alcohol_lapse_prob_contemplation = 0.01
+#
+#        alcohol_lapse_prob_contemplation =  st.slider(
+#            "Base Preparation to Contemplation lapse chance"
+#            , 0.0, 1.0
+#            , st.session_state.alcohol_lapse_prob_contemplation
+#            , on_change=lambda: setattr(st.session_state,
+#                        'alcohol_lapse_prob_contemplation',
+#                        st.session_state['alcohol lapse Contemplation'])
+#            ,key='alcohol lapse Contemplation')
+#
+#        ##################
+#        # alcohol_lapse_prob_preparation
+#        #################
+#
+#        if 'alcohol_lapse_prob_preparation' not in st.session_state:
+#            st.session_state.alcohol_lapse_prob_preparation = 0.01
+#
+#        alcohol_lapse_prob_preparation =  st.slider(
+#            "Base Action to Preparation lapse chance"
+#            , 0.0, 1.0
+#            , st.session_state.alcohol_lapse_prob_preparation
+#            , on_change=lambda: setattr(st.session_state,
+#                        'alcohol_lapse_prob_preparation',
+#                        st.session_state['alcohol lapse Preparation'])
+#            ,key='alcohol lapse Preparation')
+#
+#
+#
+#    population_parameters_alcohol_B()
 
 ###################################################
 
@@ -300,15 +313,15 @@ alcohol_services = pd.DataFrame(
                 ,'Chance Making a Brief Intervention After MECC Training': [0.90
                                                                             #,0.90
                                                                             ,0.90,0.90,0.90,0.90]
-                ,'Post Intervention Pre-Contemplation to Contemplation chance': [0.50
-                                                                                 #,0.50
-                                                                                 ,0.50,0.50,0.50,0.50]
-                ,'Post Intervention Contemplation to Preparation chance': [0.50
-                                                                           #,0.50
-                                                                           ,0.50,0.50,0.50,0.50]
-                ,'Post Intervention Preparation to Action chance': [0.50
-                                                                    #,0.50
-                                                                    ,0.50,0.50,0.50,0.50]
+                #,'Post Intervention Pre-Contemplation to Contemplation chance': [0.50
+                #                                                                 #,0.50
+                #                                                                 ,0.50,0.50,0.50,0.50]
+                #,'Post Intervention Contemplation to Preparation chance': [0.50
+                #                                                           #,0.50
+                #                                                           ,0.50,0.50,0.50,0.50]
+                #,'Post Intervention Preparation to Action chance': [0.50
+                #                                                    #,0.50
+                #                                                    ,0.50,0.50,0.50,0.50]
                 ,'MECC Training Decay Half Life in Months': [4
                                                              #,4
                                                              ,4,4,4,4]}

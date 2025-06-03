@@ -138,8 +138,9 @@ itables.show(result_intervention)
 
 ### Population Parameters
  - Number of People: **`{python} session_data["N_people"]`** 
+ - Chance that a person is receptive to an intervention: **`{python} session_data["prob_receptive"]`**
 
-### Stages of Change
+<!-- ### Stages of Change
  - Chance that a pre-Contemplation person not in a golden window is receptive to an intervention: **`{python} session_data["prob_receptive"]`**
  - Periods before chances reset to base (the golden window): **`{python} session_data["golden_window"]`**
 
@@ -152,6 +153,7 @@ itables.show(result_intervention)
  - Base Contemplation to Pre-Contemplation lapse chance: **`{python} session_data["lapse_prob_precontemplation"]`**
  - Base Preparation to Contemplation lapse chance: **`{python} session_data["lapse_prob_contemplation"]`**
  - Base Action to Preparation lapse chance: **`{python} session_data["lapse_prob_preparation"]`**
+-->
 
 ### Services
 ```{python}

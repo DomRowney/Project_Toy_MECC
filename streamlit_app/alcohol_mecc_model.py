@@ -47,30 +47,31 @@ with tab2:
     with colA:
         st.markdown("#### Population")
         st.write(f" - Number of People: :blue-background[{st.session_state.N_people}]")
-        
+        st.write(f" - Chance that a person is receptive to an intervention: :blue-background[{st.session_state.alcohol_prob_receptive}]")    
+    
     with colB:
         st.markdown("#### Simulation")
         st.write(f" - Random Seed: :blue-background[{st.session_state.model_seed}]")
         st.write(f" - Number of Months to Simulate: :blue-background[{st.session_state.num_steps}]")
         st.write(f" - Animation Speed (seconds): :blue-background[{st.session_state.animation_speed}]")
     
-    st.markdown("#### Stages of Change")
-    colC, colD = st.columns(2)
+    #st.markdown("#### Stages of Change")
+    #colC, colD = st.columns(2)
 
-    with colC:
-        st.write(f" - Chance that a pre-Contemplation person not in a golden window is receptive to an intervention: :blue-background[{st.session_state.alcohol_prob_receptive}]")    
-        st.markdown("**Base Positive Change Chance**")    
-        st.write(f" - Base Pre-Contemplation to Contemplation chance: :blue-background[{st.session_state.alcohol_change_prob_contemplation}]")
-        st.write(f" - Base Contemplation to Preparation chance: :blue-background[{st.session_state.alcohol_change_prob_preparation}]")
-        st.write(f" - Base Preparation to Action chance: :blue-background[{st.session_state.alcohol_change_prob_action}]")
+    #with colC:
+        #st.write(f" - Chance that a pre-Contemplation person not in a golden window is receptive to an intervention: :blue-background[{st.session_state.alcohol_prob_receptive}]")    
+        #st.markdown("**Base Positive Change Chance**")    
+        #st.write(f" - Base Pre-Contemplation to Contemplation chance: :blue-background[{st.session_state.alcohol_change_prob_contemplation}]")
+        #st.write(f" - Base Contemplation to Preparation chance: :blue-background[{st.session_state.alcohol_change_prob_preparation}]")
+        #st.write(f" - Base Preparation to Action chance: :blue-background[{st.session_state.alcohol_change_prob_action}]")
 
 
-    with colD:
-        st.write(f" - Periods before chances reset to base (the golden window): :blue-background[{st.session_state.alcohol_golden_window}]")    
-        st.markdown("**Lapse Chance**")        
-        st.write(f" - Base Contemplation to Pre-Contemplation lapse chance: :blue-background[{st.session_state.alcohol_lapse_prob_precontemplation}]")
-        st.write(f" - Base Preparation to Contemplation lapse chance: :blue-background[{st.session_state.alcohol_lapse_prob_contemplation}]")
-        st.write(f" - Base Action to Preparation lapse chance: :blue-background[{st.session_state.alcohol_lapse_prob_preparation}]")
+    #with colD:
+    #    st.write(f" - Periods before chances reset to base (the golden window): :blue-background[{st.session_state.alcohol_golden_window}]")    
+    #    st.markdown("**Lapse Chance**")        
+    #    st.write(f" - Base Contemplation to Pre-Contemplation lapse chance: :blue-background[{st.session_state.alcohol_lapse_prob_precontemplation}]")
+    #    st.write(f" - Base Preparation to Contemplation lapse chance: :blue-background[{st.session_state.alcohol_lapse_prob_contemplation}]")
+    #    st.write(f" - Base Action to Preparation lapse chance: :blue-background[{st.session_state.alcohol_lapse_prob_preparation}]")
 
     st.markdown("#### Services")
     #col1, col2, col3, col4, col5, col6 = st.columns(6)
@@ -93,9 +94,9 @@ with tab2:
             else:
                 pass
             #st.write(f" - Chance Making a Brief Intervention After MECC Training: :blue-background[{st.session_state.alcohol_services_table.loc[service]['Person Visit Probability']}]")
-            st.write(f" - Post Intervention Pre-Contemplation to Contemplation chance: :blue-background[{st.session_state.alcohol_services_table.loc[service]['Post Intervention Pre-Contemplation to Contemplation chance']}]")
-            st.write(f" - Post Intervention Contemplation to Preparation chance: :blue-background[{st.session_state.alcohol_services_table.loc[service]['Post Intervention Contemplation to Preparation chance']}]")
-            st.write(f" - Post Intervention Preparation to Action chance: :blue-background[{st.session_state.alcohol_services_table.loc[service]['Post Intervention Preparation to Action chance']}]")
+            #st.write(f" - Post Intervention Pre-Contemplation to Contemplation chance: :blue-background[{st.session_state.alcohol_services_table.loc[service]['Post Intervention Pre-Contemplation to Contemplation chance']}]")
+            #st.write(f" - Post Intervention Contemplation to Preparation chance: :blue-background[{st.session_state.alcohol_services_table.loc[service]['Post Intervention Contemplation to Preparation chance']}]")
+            #st.write(f" - Post Intervention Preparation to Action chance: :blue-background[{st.session_state.alcohol_services_table.loc[service]['Post Intervention Preparation to Action chance']}]")
             st.write(f" - MECC Training Decay Half Life in Months: :blue-background[{st.session_state.alcohol_services_table.loc[service]['MECC Training Decay Half Life in Months']}]")
             
 
@@ -112,20 +113,20 @@ with tab1:
         "animation_speed" : st.session_state.animation_speed,    
         "N_people": st.session_state.N_people,
         "prob_receptive": st.session_state.alcohol_prob_receptive,
-        "change_prob_contemplation": st.session_state.alcohol_change_prob_contemplation,
-        "change_prob_preparation":st.session_state.alcohol_change_prob_preparation,
-        "change_prob_action": st.session_state.alcohol_change_prob_action,
-        "lapse_prob_precontemplation": st.session_state.alcohol_lapse_prob_precontemplation,
-        "lapse_prob_contemplation": st.session_state.alcohol_lapse_prob_contemplation,
-        "lapse_prob_preparation": st.session_state.alcohol_lapse_prob_preparation,
-        "golden_window": st.session_state.alcohol_golden_window,
+        #"change_prob_contemplation": st.session_state.alcohol_change_prob_contemplation,
+        #"change_prob_preparation":st.session_state.alcohol_change_prob_preparation,
+        #"change_prob_action": st.session_state.alcohol_change_prob_action,
+        #"lapse_prob_precontemplation": st.session_state.alcohol_lapse_prob_precontemplation,
+        #"lapse_prob_contemplation": st.session_state.alcohol_lapse_prob_contemplation,
+        #"lapse_prob_preparation": st.session_state.alcohol_lapse_prob_preparation,
+        #"golden_window": st.session_state.alcohol_golden_window,
         "visit_prob": st.session_state.alcohol_services_table['Person Visit Probability'].to_dict(),
         "base_make_intervention_prob": st.session_state.alcohol_services_table['Chance a Brief Intervention Made Without MECC Training'].to_dict(),
         "mecc_trained": st.session_state.alcohol_services_table['MECC Trained'].to_dict(),
         "mecc_effect": st.session_state.alcohol_services_table['Chance Making a Brief Intervention After MECC Training'].to_dict(),
-        "contemplation_intervention": st.session_state.alcohol_services_table['Post Intervention Pre-Contemplation to Contemplation chance'].to_dict(),
-        "preparation_intervention": st.session_state.alcohol_services_table['Post Intervention Contemplation to Preparation chance'].to_dict(),
-        "action_intervention": st.session_state.alcohol_services_table['Post Intervention Preparation to Action chance'].to_dict(),
+        #"contemplation_intervention": st.session_state.alcohol_services_table['Post Intervention Pre-Contemplation to Contemplation chance'].to_dict(),
+        #"preparation_intervention": st.session_state.alcohol_services_table['Post Intervention Contemplation to Preparation chance'].to_dict(),
+        #"action_intervention": st.session_state.alcohol_services_table['Post Intervention Preparation to Action chance'].to_dict(),
         "mecc_training_decay_half_life": st.session_state.alcohol_services_table['MECC Training Decay Half Life in Months'].to_dict(),
     }
 

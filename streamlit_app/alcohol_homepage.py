@@ -84,16 +84,16 @@ model_parameters = {
     "iterations":st.session_state.iterations,
     ## alcohol specific parameters
     "prob_receptive": st.session_state.alcohol_prob_receptive,
-    "change_prob_contemplation": st.session_state.alcohol_change_prob_contemplation,
-    "change_prob_preparation":st.session_state.alcohol_change_prob_preparation,
-    "change_prob_action": st.session_state.alcohol_change_prob_action,
-    "lapse_prob_precontemplation": st.session_state.alcohol_lapse_prob_precontemplation,
-    "lapse_prob_contemplation": st.session_state.alcohol_lapse_prob_contemplation,
-    "lapse_prob_preparation": st.session_state.alcohol_lapse_prob_preparation,
-    "golden_window": st.session_state.alcohol_golden_window,
-    "contemplation_intervention": st.session_state.alcohol_services_table['Post Intervention Pre-Contemplation to Contemplation chance'].to_dict(),
-    "preparation_intervention": st.session_state.alcohol_services_table['Post Intervention Contemplation to Preparation chance'].to_dict(),
-    "action_intervention": st.session_state.alcohol_services_table['Post Intervention Preparation to Action chance'].to_dict(),
+    #"change_prob_contemplation": st.session_state.alcohol_change_prob_contemplation,
+    #"change_prob_preparation":st.session_state.alcohol_change_prob_preparation,
+    #"change_prob_action": st.session_state.alcohol_change_prob_action,
+    #"lapse_prob_precontemplation": st.session_state.alcohol_lapse_prob_precontemplation,
+    #"lapse_prob_contemplation": st.session_state.alcohol_lapse_prob_contemplation,
+    #"lapse_prob_preparation": st.session_state.alcohol_lapse_prob_preparation,
+    #"golden_window": st.session_state.alcohol_golden_window,
+    #"contemplation_intervention": st.session_state.alcohol_services_table['Post Intervention Pre-Contemplation to Contemplation chance'].to_dict(),
+    #"preparation_intervention": st.session_state.alcohol_services_table['Post Intervention Contemplation to Preparation chance'].to_dict(),
+    #"action_intervention": st.session_state.alcohol_services_table['Post Intervention Preparation to Action chance'].to_dict(),
 }
 
 # save to json file to be used later for the quarto report
