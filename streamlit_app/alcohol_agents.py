@@ -3,6 +3,7 @@
 ##################################
 ### Packages
 ##################################
+from statistics import stdev, mean
 import mesa
 from mesa import Agent, Model
 from mesa.time import RandomActivation
@@ -49,8 +50,11 @@ class AlcoholModel_PersonAgent(PersonAgent):
                  , visit_prob = {}            
                  
                 ## alcohol
-                 #, inital_alcohol_status = "Pre-contemplation"
-                 , inital_alcohol_status = "No Change"
+                 #, initial_alcohol_status = "Pre-contemplation"
+                 , initial_alcohol_status = "No Change"
+                 , initial_units_per_week = 1
+                 , post_intervention_mean_units = 6.6
+                 , post_intervention_sd_units =  3.4
                  ):
         super().__init__(unique_id, model,  visit_prob)
 
@@ -60,12 +64,15 @@ class AlcoholModel_PersonAgent(PersonAgent):
                             ,"deprivation": deprivation}
 
         ## Alcohol properties
-        self.alcohol_status = {"status": inital_alcohol_status}
+        self.alcohol_status = {"status": initial_alcohol_status
+                               ,"change_made": False
+                               ,"units_per_week": initial_units_per_week}
                                #,"in window": False
                                # ,"window time": 0}
 
         self.prob_receptive = prob_receptive
-
+        self.post_intervention_mean_units = post_intervention_mean_units
+        self.post_intervention_sd_units =  post_intervention_sd_units
         #self.change_prob_contemplation_base = change_prob_contemplation
         #self.change_prob_preparation_base = change_prob_preparation
         #self.change_prob_action_base = change_prob_action
@@ -84,35 +91,45 @@ class AlcoholModel_PersonAgent(PersonAgent):
         self.visit_prob = visit_prob 
     
     ## function to update status
-    def update_status(self,start,end,probability,type):
-        change_state_rand = self.random.uniform(0, 1)
-        ## for checking
-        #st.write('-----\n\n'
-        #        f'Person {self.unique_id}\n\n'
-        #        f'{type} start: {start} to {end}\n\n'
-        #        f'Current status: {self.alcohol_status["status"]}\n\n'
-        #        f'change chance: {probability}\n\n'
-        #        f'random: {change_state_rand}')
-        if (
-            (self.alcohol_status["status"] == start) &
-                (change_state_rand <= probability)
-            ):
-            self.alcohol_status["status"] = end
-
-            print(f" > Person {self.unique_id} alcohol status {type} "
-                  + f"from {start} to {end}!")
-            #print('XXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXX\n')
-            ## for checking
-            #st.write(f"start: {start}"
-            #        f" > Person {self.unique_id} alcohol status {type} "
-            #      + f"from {start} to {end}"
-            #      )
+    #def update_status(self,start,end,probability,type):
+    #    change_state_rand = self.random.uniform(0, 1)
+    #    ## for checking
+    #    #st.write('-----\n\n'
+    #    #        f'Person {self.unique_id}\n\n'
+    #    #        f'{type} start: {start} to {end}\n\n'
+    #    #        f'Current status: {self.alcohol_status["status"]}\n\n'
+    #    #        f'change chance: {probability}\n\n'
+    #    #        f'random: {change_state_rand}')
+    #    if (
+    #        (self.alcohol_status["status"] == start) &
+    #            (change_state_rand <= probability)
+    #        ):
+    #        self.alcohol_status["status"] = end
+    #
+    #        print(f" > Person {self.unique_id} alcohol status {type} "
+    #              + f"from {start} to {end}!")
+    #        #print('XXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXX\n')
+    #        ## for checking
+    #        #st.write(f"start: {start}"
+    #        #        f" > Person {self.unique_id} alcohol status {type} "
+    #        #      + f"from {start} to {end}"
+    #        #      )
             
     def update_alcohol_status(self):
         '''
         '''
-
-        pass
+        if (self.alcohol_status['status'] == 'Change'
+            and self.alcohol_status['change_made'] == False):
+            self.post_intervention_units = round(self.random.normalvariate(
+                                                self.post_intervention_mean_units,
+                                                self.post_intervention_sd_units),2)
+            self.reduced_alcohol = self.alcohol_status['units_per_week'] - self.post_intervention_units
+            self.alcohol_status['units_per_week'] = self.post_intervention_units
+            print(f" > Person {self.unique_id} alcohol units per week changed by " +
+                  f"{self.reduced_alcohol} to {self.alcohol_status['units_per_week']}")
+        else:
+            pass
+        
         #'''
         #cycles through the possible status updating each one
         #then reverse order for lapses
@@ -290,7 +307,7 @@ class AlcoholModel_ServiceAgent(ServiceAgent):
     def perform_intervention(self, PersonAgent):
         ## check
         if PersonAgent.alcohol_status["status"] == "Change":
-            print(f"  > {self.category} did not an intervention on Person {PersonAgent.unique_id}" +
+            print(f"  > {self.category} did not do an intervention on Person {PersonAgent.unique_id}" +
                   f" because status is *{PersonAgent.alcohol_status['status']}*")
         else:
             ## adds 1 to the intervention count
@@ -391,6 +408,10 @@ class Alcohol_MECC_Model(MECC_Model):
 
                  ## change state probability
                  , prob_receptive
+                 , initial_units_per_week_mean = 8.86
+                 , initial_units_per_week_sd = 3.77
+                 , post_intervention_mean_units = 6.6
+                 , post_intervention_sd_units =  3.4
 
                  #, change_prob_contemplation
                  #, change_prob_preparation
@@ -429,7 +450,11 @@ class Alcohol_MECC_Model(MECC_Model):
                     ,'GP Practice']
     
         ## alcohol features for person agents
-        self.prob_receptive              = prob_receptive        
+        self.prob_receptive               = prob_receptive        
+        self.initial_units_per_week_mean  = initial_units_per_week_mean
+        self.initial_units_per_week_sd    = initial_units_per_week_sd
+        self.post_intervention_mean_units = post_intervention_mean_units
+        self.post_intervention_sd_units   = post_intervention_sd_units
 
         #self.change_prob_contemplation   = change_prob_contemplation
         #self.change_prob_preparation     = change_prob_preparation
@@ -463,7 +488,10 @@ class Alcohol_MECC_Model(MECC_Model):
 
                 ## Population metrics
                 "Total No Change":  calculate_number_status_no_change,
-                "Total Change":  calculate_number_status_change,                
+                "Total Change":  calculate_number_status_change,        
+
+                "Mean Alcohol Units per Week": calculate_mean_units_per_week,
+                "StDev Alcohol Units per Week": calculate_stdev_units_per_week,        
                 #"Total Pre-contemplation":  calculate_number_status_precontemplation,
                 #"Total Contemplation":  calculate_number_status_contemplation,
                 #"Total Preparation":  calculate_number_status_preparation,
@@ -508,7 +536,13 @@ class Alcohol_MECC_Model(MECC_Model):
         self.schedule = RandomActivation(self)
 
         ## Create person agents
+        print('\n\n*** Person Set-Up ***')
         for i in range(self.N_people):
+            self.initial_units_per_week = round(self.random.normalvariate(
+                                                    self.initial_units_per_week_mean
+                                                    ,self.initial_units_per_week_sd)
+                                                    ,2)
+
             a = AlcoholModel_PersonAgent(unique_id = i
                             , model = self
                             ## demographics
@@ -531,8 +565,12 @@ class Alcohol_MECC_Model(MECC_Model):
 
                             ## visit probability
                             , visit_prob = self.visit_prob
+                            , initial_units_per_week = self.initial_units_per_week
+                            , post_intervention_mean_units = self.post_intervention_mean_units
+                            , post_intervention_sd_units = self.post_intervention_sd_units  
                             )
             self.schedule.add(a)
+            print(f'Person {i} created. Initial alcohol per week: {self.initial_units_per_week}')
 
         ## Create service agents
         for i, service in enumerate(self.services_list,start=1):
@@ -567,6 +605,26 @@ def calculate_number_status_no_change(model):
 
 def calculate_number_status_change(model):
     return calculate_number_status(model,"Change")
+
+def calculate_stat_units_per_week(model,stat = "mean"):
+    units_per_week = [agent.alcohol_status["units_per_week"]
+                          for agent in model.schedule.agents 
+              if isinstance(agent, AlcoholModel_PersonAgent)]
+
+    if stat == "mean": 
+        value = mean(units_per_week)
+    elif stat == "stdev": 
+        value = stdev(units_per_week)        
+    else:
+        value = 0
+
+    return value
+
+def calculate_mean_units_per_week(model):
+    return calculate_stat_units_per_week(model,"mean")
+
+def calculate_stdev_units_per_week(model):
+    return calculate_stat_units_per_week(model,"stdev")
 
 #def calculate_number_status_precontemplation(model):
 #    return calculate_number_status(model,"Pre-contemplation")
