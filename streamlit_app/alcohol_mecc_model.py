@@ -4,7 +4,7 @@ import numpy as np
 import streamlit as st
 import time
 from streamlit_model_functions import run_simulation_step, create_MECC_model #, create_metrics_figure
-from alcohol_outputs import create_population_figure,create_intervention_figure, results_chi, results_stage_chi, create_intervention_decay_figure
+from alcohol_outputs import create_population_figure,create_intervention_figure, results_chi, results_stage_chi, create_intervention_decay_figure, create_units_figure
 import os
 import shutil
 import json
@@ -160,6 +160,7 @@ with tab1:
         model_message = st.info("Simulation Running")
         progress_bar = st.progress(0)
         chart_placeholder1 = st.empty()
+        chart_placeholder5 = st.empty()
         chart_placeholder2 = st.empty()
         chart_placeholder3 = st.empty()
         chart_placeholder4 = st.empty() 
@@ -180,7 +181,11 @@ with tab1:
             fig1 = create_population_figure(data_no_mecc, data_mecc, step)
             with chart_placeholder1:
                 st.plotly_chart(fig1, use_container_width=True)
-            
+
+            fig5 = create_units_figure(data_no_mecc, data_mecc, step)
+            with chart_placeholder5:
+                st.plotly_chart(fig5, use_container_width=True)
+
             fig2 = create_intervention_figure(data_no_mecc, data_mecc, step,'Contacts')
             with chart_placeholder2:
                 st.plotly_chart(fig2, use_container_width=True)

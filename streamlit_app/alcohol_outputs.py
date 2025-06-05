@@ -178,6 +178,142 @@ def create_intervention_figure(results_no_mecc, results_mecc, step, figure_type 
     return fig
 
 ##########################################
+## Outcome Units
+##########################################
+
+
+def create_units_figure(results_no_mecc, results_mecc, step,figure_type = 'Alcohol Units per Week'):
+    """Create side-by-side comparison figures"""
+
+    no_mecc_subtitle = (f'{figure_type}' +
+                           ' (No MECC Training)')
+    mecc_subtitle = (f'{figure_type}' +
+                        ' (MECC Trained)')
+    
+    fig = make_subplots(
+        rows=1, 
+        cols=2,
+        subplot_titles=(
+            no_mecc_subtitle,
+            mecc_subtitle,
+        ),
+        specs=[[{}, {}]],
+        row_heights=[1]
+    )
+
+
+    # +1 Std Dev - Without MECC
+    fig.add_trace(
+        go.Scatter(
+            x=results_no_mecc.index[:step+1],
+            y=(results_no_mecc['Mean Alcohol Units per Week'][:step+1]
+             + results_no_mecc['StDev Alcohol Units per Week'][:step+1]),
+            name=f"1 Standard Deviation",
+            line=dict(color='blue'
+                        , dash='dash')
+        ),
+        row=1, col=1
+    )
+
+    # +1 Std Dev - With MECC
+    fig.add_trace(
+        go.Scatter(
+            x=results_mecc.index[:step+1],
+            y=(results_mecc['Mean Alcohol Units per Week'][:step+1]
+             + results_mecc['StDev Alcohol Units per Week'][:step+1]),
+            name=f"1 Standard Deviation",
+            line=dict(color='blue'
+                        , dash='dash'),
+            showlegend=False          
+        ),
+        row=1, col=2
+    )
+
+    # -1 Std Dev - Without MECC
+    fig.add_trace(
+        go.Scatter(
+            x=results_no_mecc.index[:step+1],
+            y=(results_no_mecc['Mean Alcohol Units per Week'][:step+1]
+             - results_no_mecc['StDev Alcohol Units per Week'][:step+1]),
+            name=f"1 Standard Deviation",
+            line=dict(color='blue'
+                        , dash='dash'),
+            showlegend=False          
+        ),
+        row=1, col=1
+    )
+
+    # -1 Std Dev - With MECC
+    fig.add_trace(
+        go.Scatter(
+            x=results_mecc.index[:step+1],
+            y=(results_mecc['Mean Alcohol Units per Week'][:step+1]
+             - results_mecc['StDev Alcohol Units per Week'][:step+1]),
+            name=f"1 Standard Deviation",
+            line=dict(color='blue'
+                        , dash='dash'),
+            showlegend=False          
+        ),
+        row=1, col=2
+    )
+
+    # Mean - Without MECC
+    fig.add_trace(
+        go.Scatter(
+            x=results_no_mecc.index[:step+1],
+            y=results_no_mecc['Mean Alcohol Units per Week'][:step+1],
+            name=f"Mean Alcohol Units per Week",
+            line=dict(color='blue'
+                        , dash='solid')
+        ),
+        row=1, col=1
+    )
+
+    # Mean - With MECC
+    fig.add_trace(
+        go.Scatter(
+            x=results_mecc.index[:step+1],
+            y=results_mecc['Mean Alcohol Units per Week'][:step+1],
+            name=f"Mean Alcohol Units per Week",
+            line=dict(color='blue'
+                        , dash='solid'),
+            showlegend=False          
+        ),
+        row=1, col=2
+    )
+    
+    # Update layout
+    fig.update_layout(
+        height=400,  
+        showlegend=True,
+        barmode='group'
+    )
+
+    # Update legend
+    fig.update_layout(legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=1.1,
+        xanchor="center",
+        x=0.5
+    ))
+
+    # Update axes labels
+    fig.update_xaxes(title_text="Month", row=1, col=1)
+    fig.update_xaxes(title_text="Month", row=1, col=2)
+    
+    # Update y-axes labels
+    fig.update_yaxes(title_text="Count", row=1, col=1)
+    fig.update_yaxes(title_text="Count", row=1, col=2)
+    
+    # Link the axes for each pair of charts in the same row
+    fig.update_yaxes(matches='y', row=1)
+    fig.update_xaxes(matches='x', row=1)
+
+    return fig
+
+
+##########################################
 ## Significance Tests
 ##########################################
 
@@ -305,6 +441,10 @@ def results_stage_chi(result
     output_results = pd.concat([result_other, result_stages])
     return  output_results
 
+
+##########################################
+## Decay Figure 
+##########################################
 
 def create_intervention_decay_figure(results_no_mecc, results_mecc, step):
     """Create side-by-side comparison figures"""
