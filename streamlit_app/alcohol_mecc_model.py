@@ -8,8 +8,9 @@ from alcohol_outputs import create_population_figure,create_intervention_figure,
 import os
 import shutil
 import json
-from alcohol_agents import Alcohol_MECC_Model
+from alcohol_agents import Alcohol_MECC_Model, trace
 from alcohol_parameters import init_parameters
+
 
 ######################################################
 
@@ -173,9 +174,9 @@ with tab1:
                 progress = (step + 1) / st.session_state.num_steps
                 progress_bar.progress(progress)
 
-            print(f'\n\n*** No MECC - Step {step} ***')
+            trace(f'\n\n*** No MECC - Step {step} ***')
             data_no_mecc = run_simulation_step(model_no_mecc)
-            print(f'\n\n*** MECC Trained - Step {step} ***')            
+            trace(f'\n\n*** MECC Trained - Step {step} ***')            
             data_mecc = run_simulation_step(model_mecc)
 
             fig1 = create_population_figure(data_no_mecc, data_mecc, step)
@@ -238,7 +239,7 @@ with tab1:
         result.drop('p-value',axis=1,inplace=True)
 
         ## prints results to console for testing     
-        print(result)   
+        trace(result)   
 
         ## seperates results into sub tables
         result_total = result.iloc[result.index.str.contains('Total')].copy()
@@ -267,17 +268,29 @@ with tab1:
            
         ## save csv files for use in quarto
         result_total_file = os.path.join(output_path,'result_total.csv')
-        result_total.to_csv(result_total_file, index=True)
+        result_total.to_csv(result_total_file
+                            , index=True
+                            , index_label='Metric'
+                            , encoding="utf-8") ## encoding to allow for χ² charater to be displayed in quarto html
         
         result_contact_file = os.path.join(output_path,'result_contact.csv')
-        result_contact.to_csv(result_contact_file, index=True)
+        result_contact.to_csv(result_contact_file
+                              , index=True
+                              , index_label='Service'
+                              , encoding="utf-8") ## encoding to allow for χ² charater to be displayed in quarto html
         
         result_successful_file = os.path.join(output_path,'result_successful.csv')
-        result_successful.to_csv(result_successful_file, index=True)
+        result_successful.to_csv(result_successful_file
+                                 , index=True
+                                 , index_label='Service'
+                                 , encoding="utf-8") ## encoding to allow for χ² charater to be displayed in quarto html
          
         result_intervention_file = os.path.join(output_path,'result_intervention.csv')
-        result_intervention.to_csv(result_intervention_file, index=True)
-
+        result_intervention.to_csv(result_intervention_file
+                                   , index=True
+                                   , index_label='Service'
+                                   , encoding="utf-8") ## encoding to allow for χ² charater to be displayed in quarto html
+ 
 
 ######################################################
         st.markdown("### Raw Data")      
