@@ -41,8 +41,11 @@ execute:
 import pandas as pd
 import json
 import plotly.graph_objects as go
-# import great_tables as GT
-import itables
+from great_tables import GT
+
+# Load report preferences data from JSON
+with open("./outputs/report_preferences.json", "r") as f:
+    report_preferences = json.load(f)
 
 # Load session data from JSON
 with open("./outputs/session_data.json", "r") as f:
@@ -51,14 +54,11 @@ with open("./outputs/session_data.json", "r") as f:
 data_no_mecc = pd.read_csv("./outputs/data_no_mecc.csv")
 data_mecc = pd.read_csv("./outputs/data_mecc.csv")
 
-## iniate itables
-itables.init_notebook_mode(all_interactive=True)
-
+## Use this for debugging
+# print("Report section flags:", json.dumps(report_preferences, indent=2))
 ```
 
 # Alcohol Advice Model with MECC Training
-
-## Simulation Results
 
 ```{python}
 #| echo: false
@@ -67,18 +67,22 @@ from alcohol_outputs import create_population_figure
 from alcohol_outputs import create_intervention_figure
 from alcohol_outputs import create_intervention_decay_figure
 
-step = len(data_no_mecc) - 1
-fig1 = create_population_figure(data_no_mecc, data_mecc, step)
-fig1.show()
+if report_preferences["include_charts"]:
+    from IPython.display import Markdown
+    display(Markdown('## Simulation Charts'))
 
-fig2 = create_intervention_figure(data_no_mecc, data_mecc, step,'Contacts')
-fig2.show()
+    step = len(data_no_mecc) - 1
+    fig1 = create_population_figure(data_no_mecc, data_mecc, step)
+    fig1.show()
 
-fig3 = create_intervention_figure(data_no_mecc, data_mecc, step,'Interventions')
-fig3.show()
+    fig2 = create_intervention_figure(data_no_mecc, data_mecc, step,'Contacts')
+    fig2.show()
 
-fig4 = create_intervention_decay_figure(data_no_mecc, data_mecc, step)
-fig4.show()
+    fig3 = create_intervention_figure(data_no_mecc, data_mecc, step,'Interventions')
+    fig3.show()
+
+    fig4 = create_intervention_decay_figure(data_no_mecc, data_mecc, step)
+    fig4.show()
 ```
 
 ## Final Statistics
@@ -88,11 +92,18 @@ fig4.show()
 ```{python}
 #| echo: false
 #| label: Total_section
-#from itables import show
 
-result_total = pd.read_csv("./outputs/result_total.csv",index_col=0)
-
-itables.show(result_total, html=False)
+# if report_preferences["include_final_stats"]:
+result_total = pd.read_csv("./outputs/result_total.csv"
+                                    , encoding="utf-8" ## encoding to allow for χ² charater to be displayed in quarto html
+                                    , index_col=0)
+result_total = result_total.reset_index()
+(
+    GT(result_total)
+    .opt_stylize(style=4, color='blue',
+    add_row_striping=True)
+    .fmt_number(columns=["No MECC Training", "MECC Trained"], decimals=0)
+)
 
 ```
 
@@ -102,9 +113,20 @@ itables.show(result_total, html=False)
 #| echo: false
 #| label: Contacts_by_Services_section
 
-result_contact = pd.read_csv("./outputs/result_contact.csv",index_col=0)
+# if report_preferences["include_final_stats"]:
+result_contact = pd.read_csv("./outputs/result_contact.csv"
+                                    , encoding="utf-8" ## encoding to allow for χ² charater to be displayed in quarto html
+                                    , index_col=0)
 
-itables.show(result_contact)
+result_contact = result_contact.reset_index()
+
+(
+    GT(result_contact)
+    .opt_stylize(style=4, color='blue',
+    add_row_striping=True)
+    .fmt_number(columns=["No MECC Training", "MECC Trained"], decimals=0)
+
+)
 
 ```
 
@@ -114,10 +136,19 @@ itables.show(result_contact)
 #| echo: false
 #| label: Sucessful_Interventions_by_Services_section
 
+# if report_preferences["include_final_stats"]:
 result_successful = pd.read_csv("./outputs/result_successful.csv"
-                                ,index_col=0)
+                                    , encoding="utf-8" ## encoding to allow for χ² charater to be displayed in quarto html
+                                    , index_col=0)
 
-itables.show(result_successful)
+result_successful = result_successful.reset_index()
+
+(
+    GT(result_successful)
+    .opt_stylize(style=4, color='blue',
+    add_row_striping=True)
+    .fmt_number(columns=["No MECC Training", "MECC Trained"], decimals=0)
+)
 
 ```
 
@@ -127,55 +158,64 @@ itables.show(result_successful)
 #| echo: false
 #| label: All_Interventions_by_Services_section
 
+# if report_preferences["include_final_stats"]:
 result_intervention = pd.read_csv("./outputs/result_intervention.csv"
-                                    ,index_col=0)
+                                    , encoding="utf-8" ## encoding to allow for χ² charater to be displayed in quarto html
+                                    , index_col=0)
 
-itables.show(result_intervention)
+result_intervention = result_intervention.reset_index()
+
+(
+    GT(result_intervention)
+    .opt_stylize(style=4, color='blue',
+    add_row_striping=True)
+    .fmt_number(columns=["No MECC Training", "MECC Trained"], decimals=0)
+)
 
 ```
 
-## Toy MECC Parameters
+## Simulation Parameters
 
 ### Population Parameters
  - Number of People: **`{python} session_data["N_people"]`** 
  - Chance that a person is receptive to an intervention: **`{python} session_data["prob_receptive"]`**
-
-<!-- ### Stages of Change
- - Chance that a pre-Contemplation person not in a golden window is receptive to an intervention: **`{python} session_data["prob_receptive"]`**
- - Periods before chances reset to base (the golden window): **`{python} session_data["golden_window"]`**
-
-### Stages of Change - Base Positive Change Chance
- - Base Pre-Contemplation to Contemplation chance: **`{python} session_data["change_prob_contemplation"]`**
- - Base Contemplation to Preparation chance: **`{python} session_data["change_prob_preparation"]`**
- - Base Preparation to Action chance: **`{python} session_data["change_prob_action"]`**
-
-### Stages of Change - Lapse Chance
- - Base Contemplation to Pre-Contemplation lapse chance: **`{python} session_data["lapse_prob_precontemplation"]`**
- - Base Preparation to Contemplation lapse chance: **`{python} session_data["lapse_prob_contemplation"]`**
- - Base Action to Preparation lapse chance: **`{python} session_data["lapse_prob_preparation"]`**
--->
 
 ### Services
 ```{python}
 #| echo: false
 #| label: service_parameters
 
+# if report_preferences["include_sim_param"]:
 alcohol_services_edit = pd.read_csv("./outputs/alcohol_services_edit.csv"
-                                    ,index_col=0)
+                                    , encoding="utf-8" ## encoding to allow for χ² charater to be displayed in quarto html
+                                    , index_col=0)
 
-itables.show(alcohol_services_edit)
+alcohol_services_edit = alcohol_services_edit.reset_index()
+
+(
+    GT(alcohol_services_edit)
+    .opt_stylize(style=4, color='blue',
+    add_row_striping=True)
+    
+)
+
 
 ```
 
-### Simulation Parameters
+### Model Parameters
  - Random Seed: **`{python} session_data["model_seed"]`**
  - Number of Months to Simulate: **`{python} session_data["num_steps"]`**
  - Animation Speed (seconds): **`{python} session_data["animation_speed"]`**
 
 
-## Logic Diagram
+```{python}
+#| echo: false
+#| fig-align: center
+#| label: logic diagram
+#| output: asis  # Prevents cell wrapper from appearing
 
-![](../alcohol_logic_diagram.png){.r-stretch  fig-align="center"}
-
-
-<!-- {'model_seed': 42, 'N_people': 50, 'N_service': 1, 'initial_smoking_prob': 0.5, 'visit_prob': 0.1, 'quit_attempt_prob': 0.01, 'base_smoke_relapse_prob': 0.01, 'base_make_intervention_prob': 0.1, 'mecc_effect': 0.9, 'intervention_effect': 1.1, 'num_steps': 24, 'animation_speed': 0, 'iterations': 100, 'prob_receptive': 0.75, 'change_prob_contemplation': 0.01, 'change_prob_preparation': 0.01, 'change_prob_action': 0.01, 'lapse_prob_precontemplation': 0.01, 'lapse_prob_contemplation': 0.01, 'lapse_prob_preparation': 0.01, 'golden_window': 3, 'contemplation_intervention': {'Job Centre': 0.5, 'Benefits Office': 0.5, 'Housing Officer': 0.5, 'Community Hub': 0.5, 'Pharmacy': 0.5, 'GP Practice': 0.5}, 'preparation_intervention': {'Job Centre': 0.5, 'Benefits Office': 0.5, 'Housing Officer': 0.5, 'Community Hub': 0.5, 'Pharmacy': 0.5, 'GP Practice': 0.5}, 'action_intervention': {'Job Centre': 0.5, 'Benefits Office': 0.5, 'Housing Officer': 0.5, 'Community Hub': 0.5, 'Pharmacy': 0.5, 'GP Practice': 0.5}} -->
+if report_preferences["include_ld"]:
+    from IPython.display import Image, Markdown
+    display(Markdown('## Logic Diagram'))
+    display(Image(filename="../alcohol_logic_diagram.png", width="100%"))
+```
