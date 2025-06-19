@@ -10,6 +10,7 @@ from mesa.time import RandomActivation
 #from mesa.space import MultiGrid
 from mesa.datacollection import DataCollector
 #import random
+import os
 import streamlit as st
 from model_two_types_mecc import (PersonAgent
                                   , ServiceAgent
@@ -21,6 +22,28 @@ from model_two_types_mecc import (PersonAgent
 ##################################
 ### Person Agent Class
 ##################################
+
+output_path = os.path.join(os.getcwd(),'streamlit_app','outputs')
+print_output_file = os.path.join(output_path,"print_output.txt")
+
+def trace(msg):
+    """
+    Turning on and off tracing of agent actions.
+    """
+    TRACE = True 
+    OUTPUT = False
+    ## These CONTSTANTS should be set outside the function, but to keep it simple,
+    ## to toggle on/off in ONE place, I have added it here.
+    ## just import trace function in other files and replace print 
+    ## statements with trace.
+          
+    if OUTPUT:
+        with open(print_output_file, "a") as f:
+            print(msg, file=f)
+
+    if TRACE:
+        print(msg)
+        
 
 ## creates a subclass of person agent for the alcohol model
 class AlcoholModel_PersonAgent(PersonAgent):
@@ -125,7 +148,7 @@ class AlcoholModel_PersonAgent(PersonAgent):
                                                 self.post_intervention_sd_units),2)
             self.reduced_alcohol = self.alcohol_status['units_per_week'] - self.post_intervention_units
             self.alcohol_status['units_per_week'] = self.post_intervention_units
-            print(f" > Person {self.unique_id} alcohol units per week changed by " +
+            trace(f" > Person {self.unique_id} alcohol units per week changed by " +
                   f"{self.reduced_alcohol} to {self.alcohol_status['units_per_week']}")
         else:
             pass
@@ -181,7 +204,7 @@ class AlcoholModel_PersonAgent(PersonAgent):
 
     def visit(self,service,probability):
         if self.random.uniform(0,1) <= probability:
-            print(f" > Person {self.unique_id} visited a {service}")
+            trace(f" > Person {self.unique_id} visited a {service}")
             ## randomly selects a service agent
             ServiceAgent_list = [agent for agent in self.model.schedule.agents if isinstance(agent, AlcoholModel_ServiceAgent)]
             ServiceAgent_list = [agent for agent in ServiceAgent_list if agent.category == service]
@@ -209,7 +232,7 @@ class AlcoholModel_PersonAgent(PersonAgent):
 
     ## Defines actions at each step
     def step(self):
-        print(f"Person {self.unique_id}")
+        trace(f"Person {self.unique_id}")
         super().step()
         self.update_alcohol_status()
         #self.update_golden_window()
@@ -272,7 +295,7 @@ class AlcoholModel_ServiceAgent(ServiceAgent):
     @classmethod
     def describe(cls):
         """Class method to print class information."""
-        print(f"This is a service agent of the category {cls.category}")
+        trace(f"This is a service agent of the category {cls.category}")
 
 
     def intervention_effect(self,PersonAgent):
@@ -280,7 +303,7 @@ class AlcoholModel_ServiceAgent(ServiceAgent):
         self.successful_interventions_made += 1
 
         PersonAgent.alcohol_status["status"] = "Change"
-        print(f"    >   > Person {PersonAgent.unique_id} status is now *{PersonAgent.alcohol_status['status']}*")
+        trace(f"    >   > Person {PersonAgent.unique_id} status is now *{PersonAgent.alcohol_status['status']}*")
 
         ## no decay applied to effectiveness
         #PersonAgent.change_prob_contemplation =+ self.contemplation_intervention
@@ -307,20 +330,20 @@ class AlcoholModel_ServiceAgent(ServiceAgent):
     def perform_intervention(self, PersonAgent):
         ## check
         if PersonAgent.alcohol_status["status"] == "Change":
-            print(f"  > {self.category} did not do an intervention on Person {PersonAgent.unique_id}" +
+            trace(f"  > {self.category} did not do an intervention on Person {PersonAgent.unique_id}" +
                   f" because status is *{PersonAgent.alcohol_status['status']}*")
         else:
             ## adds 1 to the intervention count
             self.interventions_made += 1
 
             ## if the change probability is lower than the intervention,
-            print(f"  > {self.category} attempted an intervention on Person {PersonAgent.unique_id}")
+            trace(f"  > {self.category} attempted an intervention on Person {PersonAgent.unique_id}")
 
             if PersonAgent.random.uniform(0, 1) <= PersonAgent.prob_receptive:
-                print(f"    >   > Person {PersonAgent.unique_id} is in receptive to intervention")
+                trace(f"    >   > Person {PersonAgent.unique_id} is in receptive to intervention")
                 self.intervention_effect(PersonAgent)
             else:
-                print(f"    >   > Person {PersonAgent.unique_id} is not receptive to intervention")
+                trace(f"    >   > Person {PersonAgent.unique_id} is not receptive to intervention")
 
         #    self.intervention_effect(PersonAgent)        
         #if PersonAgent.alcohol_status["in window"]:
@@ -536,7 +559,7 @@ class Alcohol_MECC_Model(MECC_Model):
         self.schedule = RandomActivation(self)
 
         ## Create person agents
-        print('\n\n*** Person Set-Up ***')
+        trace('\n\n*** Person Set-Up ***')
         for i in range(self.N_people):
             self.initial_units_per_week = round(self.random.normalvariate(
                                                     self.initial_units_per_week_mean
@@ -570,7 +593,7 @@ class Alcohol_MECC_Model(MECC_Model):
                             , post_intervention_sd_units = self.post_intervention_sd_units  
                             )
             self.schedule.add(a)
-            print(f'Person {i} created. Initial alcohol per week: {self.initial_units_per_week}')
+            trace(f'Person {i} created. Initial alcohol per week: {self.initial_units_per_week}')
 
         ## Create service agents
         for i, service in enumerate(self.services_list,start=1):

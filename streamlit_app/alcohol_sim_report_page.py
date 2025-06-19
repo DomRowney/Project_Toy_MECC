@@ -21,11 +21,11 @@ if not st.session_state.simulation_completed:
     st.info("The generate report button will only appear once a simulation has been successfully run.")
 
 ## checkbox options - currently not being utilised.
-st.subheader("Select Report Sections:")
-incl_charts = st.checkbox("Include Charts Section", value=True,disabled=True)
-incl_final_stats = st.checkbox("Include Final Statistics Section", value=True,disabled=True)
-incl_sim_param = st.checkbox("Include Simulation Parameters Section", value=True,disabled=True)
-incl_ld = st.checkbox("Include Logic Diagram", value=True,disabled=True)
+st.subheader("Include Sections:")
+incl_charts = st.checkbox("Include Charts", value=True,disabled=False)
+# incl_final_stats = st.checkbox("Include Final Statistics Section", value=True,disabled=False)
+# incl_sim_param = st.checkbox("Include Simulation Parameters Section", value=True,disabled=False)
+incl_ld = st.checkbox("Include Logic Diagram", value=True,disabled=False)
        
         
 if st.session_state.simulation_completed:
@@ -75,6 +75,18 @@ if st.session_state.simulation_completed:
         html_filename = os.path.basename(qmd_filename).replace('.qmd', '.html')
         dest_html_path = os.path.join(output_dir,html_filename)
 
+        # save report preferences to json file to be used later for the quarto report
+        report_preferences = {
+            "include_charts": incl_charts,
+            # "include_final_stats": incl_final_stats,
+            # "include_sim_param": incl_sim_param,
+            "include_ld": incl_ld
+        }
+        report_preferences_path = os.path.join(output_path,'report_preferences.json')
+        with open(report_preferences_path, "w") as f:
+            json.dump(report_preferences, f, indent=4)
+
+
         try:
             ## forces result to be html
             result = subprocess.run(["quarto"
@@ -87,7 +99,7 @@ if st.session_state.simulation_completed:
                                     , capture_output=True
                                     , text=True)
             if os.path.exists(dest_html_path):
-                with open(dest_html_path, "r") as f:
+                with open(dest_html_path, "r", encoding="utf-8") as f: ## encoding to allow for χ² charater to be displayed in quarto html report
                     html_data = f.read()
 
                 report_message.success("Report ready for download!")
@@ -101,7 +113,6 @@ if st.session_state.simulation_completed:
                         "simulation_completed": False
                     })
                 )
-                # st.balloons()
             else:
                 report_message.error("Report failed to generate.")
                 st.code(result.stderr or "No error message available.")
