@@ -1,5 +1,6 @@
 # Toy MECC
 
+
 *This is a project for the HSMA 6 Hackday on 22nd Oct 2024*
 
 A (toy) model for showing the benefit of Making Every Contact Count (MECC) Training
@@ -23,6 +24,24 @@ Services with MECC training increase over time with a training rate
 A Very Brief Intervention increases the probability that a patient will make a quit attempt
 
 Outputs will be MECC training numbers, number of quit attempts and number of successful quits over time
+
+---------
+## Project Structure
+
+### [streamlit_app](https://github.com/DomRowney/Project_Toy_MECC/tree/main/streamlit_app)
+Contains the core app. See an output of it running on [Streamlit](https://domrowney-project-toy-mecc-streamlit-appapp-n0e5hf.streamlit.app/)
+
+### [Documents](https://github.com/DomRowney/Project_Toy_MECC/tree/main/Documents)
+Contains the presentation delivered as part of the HSMA 6 Cohort Showcase. See the video of the presentation [here](https://youtu.be/U6-_3q_CZtA?feature=shared)
+
+### [environment](https://github.com/DomRowney/Project_Toy_MECC/tree/main/environment)
+Contains the YAML file necessary to set up the project in Anaconda
+
+### [Archive](https://github.com/DomRowney/Project_Toy_MECC/tree/main/Archive)
+Contains elements of the project that were not used in the final release
+
+### [meta](https://github.com/DomRowney/Project_Toy_MECC/tree/main/meta) and [tests](https://github.com/DomRowney/Project_Toy_MECC/tree/main/tests)
+Contain elements used for early testing of the model
 
 ---------
 
@@ -68,3 +87,4 @@ integration of mesa and streamlit
 
 TODO:
 add MECC details
+
