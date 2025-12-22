@@ -1,30 +1,42 @@
 # Toy MECC
 
+## Summary
++ A toy simulation demonstrating how Very Brief Interventions delivered through services could influence behaviour change of alchohol consumption
++ An agent based simulation model hosted on a Streamlit App that enables the production of Quarto report outputs
 
-*This is a project for the HSMA 6 Hackday on 22nd Oct 2024*
+### Using the app and models
 
-A (toy) model for showing the benefit of Making Every Contact Count (MECC) Training
+- Open the [Streamlit app](https://domrowney-project-toy-mecc-streamlit-appapp-n0e5hf.streamlit.app/)
+- Change model parameters on the parameters tab and run simulations to explore outputs such as number of people in each behaviour state
+- The logic model shows how the simulation works
+- Download a report showing the finished results of the simulation
 
-Build a steamlit app for an Agent Based Simulation
+---------
 
-The pop culture 80's references will all be in the form of toy robots.
+## Background
+Making Every Contact Count (MECC) in North East and North Cumbria is used across healthcare, local government, Department of Work & Pensions, charities, etc.
 
-There is an inital group of people and an inital group of government services
+> MECC is an approach to behaviour change that utilises the millions of day-to-day interactions that organisations and people have with other people to encourage changes in behaviour that have a positive effect on the health and wellbeing of individuals, communities and populations. ~ [About MECC](https://www.meccgateway.co.uk/nenc/about)
 
-People can have lifestyle factors smoking/drinking/no exercise
+MECC interventions are difficult to study and the impact difficult to measure so we proposed a simulation approach to allow generation of evidence to support the implementation of MECC training.
 
-People make have a probability of making a quit attempt smoking/drinking/no exercise with a probability of success
+The simulation would need to be simple to use and to be flexible for use across the wide range of settings and delivery models MECC has.
 
-People have contact with government services at random
+The project was initially developed for the HSMA 6 Hackday on 22nd Oct 2024, and further developed as a full [HSMA project](https://hsma.co.uk/previous_projects/hsma_6/H6_6040_benefit_of_MECC_using_ABS/index.html) as part of Cohort 6.
 
-Services have can have MECC training, and therefore a probability that any contact will lead to a Very Brief Intervention
+The product is a Streamlit App that shows a proof of concept for the effects of the [Transtheoretical Model](https://www.ncbi.nlm.nih.gov/books/NBK556005/) on behaviour change. No data in existing research could be found on the probablilities of moving between these states. Users must use their expert opinion to determine suitible values.
 
-Services with MECC training increase over time with a training rate
 
-A Very Brief Intervention increases the probability that a patient will make a quit attempt
+### Model Overview
 
-Outputs will be MECC training numbers, number of quit attempts and number of successful quits over time
-
++ The model consists of two types of agent: People and Services
+  - People have a chance of visiting services
+  - Services then have a chance of performing an intervention on people that visit, and can be MECC trained or not
++ With MECC training the interventions can be more frequent and/or more efficacious
++ The model is run twice, simultaneously, once with MECC training and once without. Results can then be compared.
++ Also includes:
+  - a period where repeated interventions can have an additive effect
+  - decay of efficacy of the MECC training
 ---------
 ## Project Structure
 
@@ -45,46 +57,30 @@ Contain elements used for early testing of the model
 
 ---------
 
-## References
+## Quick start
 
-### General
+1. Create a Python environment and install dependencies (choose one):
 
-[gov.uk MECC evaluation guide 2020](https://www.gov.uk/government/publications/making-every-contact-count-mecc-practical-resources/mecc-evaluation-guide-2020#step-2-identify-the-existing-evidence-base)
+	- Conda:
 
+	  ```bash
+	  conda env create -f environment/environment.yml -n toy_mecc
+	  conda activate toy_mecc
+	  pip install -r requirements.txt
+	  ```
 
-[Comparison of brief interventions in primary care on smoking and excessive alcohol consumption: a population survey in England](https://bjgp.org/content/66/642/e1.short)
+2. Run the Streamlit app locally:
 
+	```bash
+	streamlit run streamlit_app/app.py
+	```
 
-### Smoking
+3. Run tests:
 
-[Cochrane Review: Physician advice for smoking cessation](https://pmc.ncbi.nlm.nih.gov/articles/PMC7064045/)
+	```bash
+	pytest -q
+	```
+---------
 
-*If an unassisted quit rate of 2% at 12 months in a population of primary care attenders is assumed, we can use the confidence intervals for the minimal intervention subgroup, 1.42 to 1.94, to estimate a number needed to treat for an additional beneficial outcome (NNTB) of 50 ‐ 120. If the background rate of quitting was expected to be 3%, then the same effect size estimate would translate to an NNTB of 35‐80. Using the pooled estimate from combining both intensity subgroups in the primary comparison would raise the lower confidence interval and reduce the upper estimate of the NNTBs.*
-
-*Based on the results of a meta‐analysis incorporating 28 trials and over 20,000 participants, a brief advice intervention is **likely to increase the quit rate by 1 to 3 percentage** points. The quit rate in the control groups in the included studies was very variable, ranging from 1% to 14% across the trials in the primary comparison. However the relative effect of the intervention was much less variable, because trials with low control group quit rates generally had low rates with intervention, and vice versa.*
-
-[Prevalence and correlates of receipt by smokers of general practitioner advice on smoking cessation in England: a cross-sectional survey of adults](https://pmc.ncbi.nlm.nih.gov/articles/PMC8432152/pdf/ADD-116-358.pdf)
-
-[Brief opportunistic smoking cessation interventions:a systematic review and meta-analysis to compareadvice to quit and offer of assistance](https://onlinelibrary.wiley.com/doi/full/10.1111/j.1360-0443.2011.03770.x?casa_token=KzcJE3JQ0cwAAAAA%3A-AKlcnickLE7jbewMjqR7N8z-uKBlEhcVtQV5Md000R_x-dHakikMEqaQUSrP1SW0N9TGGxOhTTDdMkc_A)
-
-*Three trials show strong statistical evidence that offering support for cessation motivates an additional **40–60%** of people to attempt cessation compared to being advised to stop smoking on medical grounds. In all three trials, cessation support was offered without screening for willingness to quit.*
-
-
-[ONS - Adult smoking habits in the UK: 2023](https://www.ons.gov.uk/peoplepopulationandcommunity/healthandsocialcare/healthandlifeexpectancies/bulletins/adultsmokinghabitsingreatbritain/2023)
-
-*Around 6.0 million people aged 18 years and over **(11.9%) smoked cigarettes** in the UK in 2023; this is the lowest proportion of current smokers since records began in 2011, based on our estimates from the Annual Population Survey (APS).*
-
-### Alcohol
-
-[Cochrane - Brief interventions for heavy alcohol users admitted to general hospital wards](https://www.cochranelibrary.com/cdsr/doi/10.1002/14651858.CD005191.pub3/full)
-
-
-
-Progress: 
-simple mesa simulation
-simple streamlit app
-integration of mesa and streamlit
-
-TODO:
-add MECC details
-
+## License
+This project includes a `LICENSE.txt` file at the repository root. See that file for license terms.
