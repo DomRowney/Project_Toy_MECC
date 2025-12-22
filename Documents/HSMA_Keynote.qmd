@@ -1,0 +1,254 @@
+---
+title: "<span style='color:#0D4C6B;'>**Project Toy MECC**</span>"
+subtitle: "Evaluating <span style='color:#0D4C6B;'>**M**</span>aking <span style='color:#0D4C6B;'>**E**</span>very <span style='color:#0D4C6B;'>**C**</span>ontact <span style='color:#0D4C6B;'>**C**</span>ount with Agent Based Modelling"
+author:
+  - name: Dominic Rowney
+    affiliation: NHS NECS
+  - name: Sam Vautier
+    affiliation: Somerset NHS FT
+  - name: Luke Herbet
+    affiliation: Surrey & Sussex NHS Trust
+title-slide-attributes:
+  data-background-image: MECC_Logo_Washout.png
+  data-background-size: contain
+  data-background-opacity: "0.5"
+format:
+    revealjs:
+            embed-resources: true
+            theme: default
+            smaller: true
+            footer: "Project Toy MECC"
+            mermaid:
+               theme: neutral
+---
+
+## Meet the Team
+<!-- A brief intro to you and your role / organisation.  In particular, you should make mention of any prior coding / modelling / data science experience you had pre-HSMA (and if your experience was limited or non-existent, say that!  It’s fantastic for people to see how far you were able to come)
+This project started as a Hackday for HSMA Cohort 6.
+-->
+. . .
+
+- <span style='color:#C71E85;'>**Dominic Rowney**</span> *Principle Information Analyst* at NHS NECS</br>
+<p><span style="color:DarkGrey;">Dominic had dabbled in data science prior to the HSMA course, mainly using R and SQL. He now uses python to improve everyday tasks and looks for places where HSMA training can be implemented in his work</p></span>
+
+. . .
+
+- <span style='color:#C71E85;'>**Sam Vautier**</span> *Data Scientist* at Somerset NHS FT</br>
+<p><span style="color:DarkGrey;">Before joining HSMA, Sam's coding experience was mostly in SQL, with very little python. She had no prior experience in modelling and had only recently transitioned into data science from a data engineering role within the Trust.</p></span>
+
+. . .
+
+- <span style='color:#C71E85;'>**Mr Luke Herbet**</span> *Consultant Ophthalmologist* at Surrey & Sussex NHS Trust</br>
+<p><span style="color:DarkGrey;">Luke is a retinal surgeon who learned python coding on the HSMA course and is also using his HSMA training to look at resource issues in ophthalmology.</p></span>
+
+. . .
+
+- With thanks to Sammi and Dan from PenChord for their support, and Richard Hall and Richard Harrety from NECS 
+
+::: {.notes}
+Dom
+:::
+
+## What the MECC?
+<!--What was the problem you were / are trying to solve, and why is it important?-->
+<span style='color:#C71E85;'>**M**</span>aking <span style='color:#C71E85;'>**E**</span>very <span style='color:#C71E85;'>**C**</span>ontact <span style='color:#C71E85;'>**C**</span>ount <span style='color:#C71E85;'>**(MECC)**</span> in North East and North Cumbria is used across healthcare, local government, Department of Work & Pensions, charities, [<u>**etc.**</u>](https://www.meccgateway.co.uk/nenc/case-studies)
+
+:::: {.columns}
+::: {.column width="20%"} 
+[![](MECC_Logo.png){.r-nostretch fig-align="left"}](https://www.meccgateway.co.uk/nenc/about)
+:::
+
+::: {.column width="80%"} 
+:::{style="color=#ddeaf1"}
+> ❝ MECC is an approach to behaviour change that utilises the millions of day-to-day interactions that organisations and people have with other people to encourage changes in behaviour that have a positive effect on the health and wellbeing of individuals, communities and populations. ❞\
+:::
+:::
+::::
+
+. . .
+
+- MECC interventions are difficult to study and the impact difficult to measure so we proposed a <span style='color:#C71E85;'>**simulation approach**</span> to allow generation of evidence to support the implementation of MECC training.
+
+. . .
+
+- The simulation would need to be <span style='color:#C71E85;'>**simple**</span> to use and to be <span style='color:#C71E85;'>**flexible**</span> for use across the wide range of settings and delivery models MECC has.
+
+::: {.notes}
+Sam
+:::
+
+## Agent Based Simulation
+:::{.incremental}
+
+:::: {.columns}
+::: {.column width="70%"} 
+<span style='color:#C71E85;'>**Agent Based Simulation**</span> (ABS) is a simulation method that focuses on the behaviours, interactions and motivations of individuals (agents), and observes the population-level emergent behaviour that arises from these individual behaviours and interactions.
+:::
+::: {.column width="30%"} 
+![](https://upload.wikimedia.org/wikipedia/commons/e/e5/Gospers_glider_gun.gif){.r-nostretch fig-align="right"}
+:::
+::::
+- The model allows the user to <span style='color:#C71E85;'>**set a range of parameters and rules**</span> that control the likelihood of events occurring, the starting states of the agents, and their interactions
+- Individuals within the starting population will proceed through the simulation and be subject to the chance of events occurring as they interact
+- The model can be set to run for any number of steps or iterations
+- In this case we use a python language package called [<u>**Mesa**</u>](https://mesa.readthedocs.io/) to create the underlying model and a [<u>**Streamlit**</u>](https://streamlit.io/) to create the interface
+:::
+
+::: {.notes}
+Sam
+:::
+
+## Development
+:::{.incremental}
+- Prototype models were developed as part of the <span style='color:#C71E85;'>**HSMA hackday**</span>, a generic model and a smoking cessation model
+- In January 2025 we tasked the regional MECC strategy group to prioritise themes and pathways and to start to map those out
+- The top three thematic areas were <span style='color:#C71E85;'>**Alcohol**</span>, Mental Health, and Smoking Cessation
+- The plan was to start with a well-defined area in order to prototype: <span style='color:#C71E85;'>**Alcohol**</span>
+    + Mental Health was too complex and Smoking Cessation already high acceptance
+- In May 2025 an alcohol intervention model was presented to the MECC regional team for feedback
+:::
+
+::: {.notes}
+Dom
+:::
+
+## Model Overview
+<!--An overview of the model / tool you’ve built, appropriate for a non-technical audience (live demos of StreamLit apps / models can be very effective - just be mindful to have things set up ready to run and be prepared for technical issues)
+![](../alcohol_logic_diagram.png){fig-align="center"}
+-->
+:::: {.columns}
+::: {.column width="30%"} 
+```{mermaid .incremental}
+
+%%{init: {'theme':'neutral'}}%%
+
+flowchart TB
+ subgraph s1["Service"]
+        C("Interaction")
+  end
+    A(("Population")) --> B("Person")
+    B --> s1
+    C --> D("Outcome")
+    D --> E(("Population
+    Change"))
+
+```
+:::
+::: {.column width="70%"} 
+::: {.incremental}
+- The model consists of two types of agent: <span style='color:#C71E85;'>**People**</span> and <span style='color:#C71E85;'>**Services**</span>
+- <span style='color:#C71E85;'>**People**</span> have a chance of visiting services
+- <span style='color:#C71E85;'>**Services**</span> then have a chance of performing an intervention on people that visit, and can be MECC trained or not
+- With <span style='color:#C71E85;'>**MECC training**</span> the interventions can be more frequent and/or more efficacious
+- Also includes:
+  + a period where <span style='color:#C71E85;'>**repeated interventions**</span> can have an additive effect
+  + <span style='color:#C71E85;'>**decay of efficacy**</span> of the MECC training
+- The model is run <span style='color:#C71E85;'>**twice**</span>, simultaneously, once with MECC training and once without. Results can then be compared.
+:::
+:::
+::::
+
+::: {.notes}
+Dom
+:::
+
+
+## Live Demo! 
+![](MECCStreamlitApp_Alcohol.png){.r-stretch  fig-align="center"}
+
+:::{style="text-align: center"}
+[<u>**Alcohol Intervention Toy MECC App**</u>](https://domrowney-project-toy-mecc-streamlit-appapp-alcohol-cqzaxu.streamlit.app/)
+:::
+
+::: {.notes}
+Dom
+:::
+
+## Wider Impact 
+<!--    a.	What are the key results coming out of your model, and what do they mean?-->
+<!--a.	What impact has this work had - how is your organisation using this information?  What did they do?  Be as specific as possible.  If the impact has not yet happened, explain how they are going to be using this information, and what decisions etc it will feed into.  THIS IS A VITAL PART OF YOUR PRESENTATION.-->
+:::{style="color=#ddeaf1"}
+> ❝ *We were very impressed with your ability to convey some very complex concepts.  The model looks very promising, and we look forward to the next phase of development.* ❞
+:::
+:::{style="text-align: right"}
+**Jill Harland, Regional MECC Team</br></br>**
+:::
+
+:::{.incremental}
+- The model is still in the <span style='color:#C71E85;'>**prototype stage**</span>, finding the correct ranges of variables to use. This is why it is described as a toy
+  + It can currently be used to show decision makers what level of interventions MECC would need to produce
+- There has been some  <span style='color:#C71E85;'>**interest**</span> from the organisations part of the regional MECC strategy group for <span style='color:#C71E85;'>**agent based modelling**</span> for MECC and other uses
+- <span style='color:#C71E85;'>**Sammi**</span> developed a way for the app to produce report documents with the [<u>**Quarto**</u>](https://quarto.org/) system, which will be useful to HSMA and beyond
+:::
+
+::: {.notes}
+Dom
+:::
+
+## Next steps
+:::{.incremental}
+- Write up a <span style='color:#C71E85;'>**board paper**</span> to deliver to the MECC group
+- Find a specific <span style='color:#C71E85;'>**test case **</span> to compare the model against reality
+- Add a <span style='color:#C71E85;'>**data report**</span> that outputs once the model runs
+- Make a file that allows saving and <span style='color:#C71E85;'>**importing of parameters**</span>
+- Create a version of the model which includes <span style='color:#C71E85;'>**parameters taken from randomised control trials**</span> of MECC
+- Continue developing a <span style='color:#C71E85;'>***Monte-Carlo***</span> version of the models, where it is run many times to achieve average results
+- Make the list of <span style='color:#C71E85;'>**services customisable**</span>
+- Investigate the possibility of writing up a <span style='color:#C71E85;'>**publishable paper**</span>
+:::
+<!--a.	Where it is now
+b.	Future developments
+c.	Impact / intended impact
+d.	Lessons learnt-->
+
+::: {.notes}
+Sam
+:::
+
+##  Personal Impact
+<!--a.	What has been the impact of being part of HSMA on you and your organisation?  What does it mean to you to have developed these skills?  How is the organisation planning on using these new in-house skills moving forward?-->
+:::{.incremental}
+- NHS NECS has written up a <span style='color:#C71E85;'>**case study**</span> as Agent Based Simulation is now a service they can offer to organisations
+- A positive experience with creating an <span style='color:#C71E85;'>**open source product**</span>
+- Skills picked up have <span style='color:#C71E85;'>**already been applied**</span> to other projects
+:::
+
+. . .
+
+[![](HSMA%20logo.png){fig-align="center"}](https://hsma.co.uk/)
+
+::: {.notes}
+Sam
+:::
+
+# Any Questions? {background-image="MECC_Logo_Washout.png" background-opacity="0.5" background-size="contain"}
+
+::: {.notes}
+Dom + Sam
+:::
+
+## 
+
+::::{.columns}
+
+:::{.column width="50%"} 
+
+![](MECCStreamlitApp_Alcohol.png){.r-nostretch  fig-align="center"}
+
+:::{style="text-align: center"}
+[<u>**Alcohol Intervention Toy MECC App**</u>](https://domrowney-project-toy-mecc-streamlit-appapp-alcohol-cqzaxu.streamlit.app/)
+:::
+:::
+
+:::{.column width="50%"} 
+:::{.r-fit-text style="text-align: center"}
+**Thank\
+you!**
+:::
+:::
+
+::::
+
+::: {.notes}
+Dom + Sam
+:::
