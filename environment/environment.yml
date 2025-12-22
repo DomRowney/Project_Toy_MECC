@@ -22,3 +22,5 @@ dependencies:
     - pytest-cov==4.1.0
     - hypothesis==6.98.0
     - pytest-snapshot==0.9.0
+    - scipy==1.15.2
+    - itables==2.4.0

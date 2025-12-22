@@ -100,10 +100,10 @@ class ServiceAgent(Agent):
     def __init__(self
                  , unique_id
                  , model
-                 , mecc_effect
-                 , base_make_intervention_prob
+                 , mecc_effect = 0
+                 , base_make_intervention_prob = 0
                  #, intervention_radius
-                 , mecc_trained=False):
+                 , mecc_trained = False):
         super().__init__(unique_id, model)
 
         ## Intervention 
@@ -130,19 +130,21 @@ class ServiceAgent(Agent):
         self.contacts_made += 1
         intervention_rand = self.random.uniform(0, 1)
         ## for checking outputs
-        #st.write(f'chance intervention {intervention_rand}\n\n' +
-        #         f' mecc_effect {self.mecc_effect}\n\n'
-        #         f' base_make_intervention_prob {self.base_make_intervention_prob}\n\n'
-        #         f' make_intervention_prob {self.make_intervention_prob}\n\n-----')
+        #st.write(f'chance intervention: {intervention_rand}\n\n' 
+        #         f' mecc_trained: {self.mecc_trained}\n\n'
+        #         f' mecc_effect: {self.mecc_effect}\n\n'
+        #         f' base_make_intervention_prob: {self.base_make_intervention_prob}\n\n'
+        #         f' make_intervention_prob: {self.make_intervention_prob}\n\n'
+        #         '-----')
         if intervention_rand < self.make_intervention_prob:
             PersonAgent.interventions_received += 1
             self.perform_intervention(PersonAgent)
-            ## adds 1 to the intervention count
-            self.interventions_made += 1
+            
     
     # Placeholder for performing an intervention; can be overridden by subclasses
     def perform_intervention(self, PersonAgent):
-        pass
+        ## adds 1 to the intervention count
+        self.interventions_made += 1
     
     ## doesn't do anything at each step
     def step(self):
@@ -167,6 +169,8 @@ class SmokeModel_ServiceAgent(ServiceAgent):
 
     # Override to perform smoking-specific interventions
     def perform_intervention(self, PersonAgent):
+        ## adds 1 to the intervention count
+        self.interventions_made += 1
         PersonAgent.quit_attempt_prob *= self.intervention_effect
     
     ## doesn't do anything at each step
@@ -182,11 +186,11 @@ class SmokeModel_ServiceAgent(ServiceAgent):
 ## creates a class of model
 class MECC_Model(Model): 
     def __init__(self
-                , N_people
-                , N_service
-                , mecc_effect
-                , base_make_intervention_prob 
-                , visit_prob
+                , N_people = 0
+                , N_service = 0
+                , mecc_effect = 0
+                , base_make_intervention_prob  = 0
+                , visit_prob = 0
                 , mecc_trained = False
                 , seed = None):
         super().__init__()  # Properly initialize the Model class
@@ -196,20 +200,17 @@ class MECC_Model(Model):
         #    random.seed(seed_value)  
 
         ## numbers of agents
-        ## Convert dictionary values if they're dictionaries
-        self.N_people = N_people['value'] if isinstance(N_people, dict) else N_people
-        self.N_service = N_service['value'] if isinstance(N_service, dict) else N_service
+        self.N_people = N_people
+        self.N_service = N_service
 
         ## other features for person agents
-        ## Convert dictionary values if they're dictionaries
-        self.visit_prob = visit_prob['value'] if isinstance(visit_prob, dict) else visit_prob
+        self.visit_prob = visit_prob
         
         ## intervention features for service agents
-        ## Convert dictionary values if they're dictionaries
-        self.base_make_intervention_prob = base_make_intervention_prob['value'] if isinstance(base_make_intervention_prob, dict) else base_make_intervention_prob
-        self.mecc_effect = mecc_effect['value'] if isinstance(mecc_effect, dict) else mecc_effect
+        self.base_make_intervention_prob = base_make_intervention_prob
+        self.mecc_effect = mecc_effect
         
-        ## Flag for whether model uncludes MECC training
+        ## Flag for whether model includes MECC training
         self.mecc_trained = mecc_trained
         
         ## Schedule

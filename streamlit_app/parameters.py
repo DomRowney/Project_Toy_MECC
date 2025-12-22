@@ -5,14 +5,14 @@ import streamlit as st
 #import plotly.graph_objects as go
 #from plotly.subplots import make_subplots
 import time
-from logic_diagram import create_logic_diagram, create_logic_diagram_SmokeModel
-#from model_two_types_mecc import MECC_Model 
+from logic_diagram import create_logic_diagram, create_logic_diagram_SmokeModel, create_logic_diagram_Alcohol
+#from model_two_types_mecc import MECC_Model
 #from streamlit_model_functions import run_simulation_step, create_comparison_figure, create_MECC_model #, create_figure
 #import random
 
 st.title("Parameters")
 
-tab1, tab2, tab3 = st.tabs(['Generic','Smoking Cessation','Generic Monte Carlo'])
+tab1, tab2, tab3, tab4  = st.tabs(['Generic','Alcohol Advice','Smoking Cessation','Generic Monte Carlo'])
 
 with tab1:
     st.markdown("### Generic Parameters")
@@ -69,6 +69,276 @@ with tab1:
             , use_column_width=False)
 
 with tab2:
+    st.markdown("### Alcohol Advice Parameters")
+
+    colA, colB = st.columns(2)
+    with colA:
+        st.markdown("#### Population")
+        @st.fragment()
+        def population_parameters_alcohol():
+            st.write(f"Number of People: :blue-background[{st.session_state.N_people}]")
+            st.markdown("**Base Positive Change Chance**")
+            
+            ##################
+            # alcohol_prob_receptive
+            #################
+           
+            if 'alcohol_prob_receptive' not in st.session_state:
+                st.session_state.alcohol_prob_receptive = 0.75
+
+            alcohol_prob_receptive =  st.slider(
+                "Chance that a pre-Contemplation person not in a golden window is receptive to an intervention"
+                , 0.0, 1.0
+                , st.session_state.alcohol_prob_receptive
+                , on_change=lambda: setattr(st.session_state,
+                            'alcohol_prob_receptive',
+                            st.session_state['alcohol probability receptive'])
+                ,key='alcohol probability receptive')
+
+            ##################
+            # alcohol_change_prob_contemplation
+            #################
+            if 'alcohol_change_prob_contemplation' not in st.session_state:
+                st.session_state.alcohol_change_prob_contemplation = 0.01
+
+            alcohol_change_prob_contemplation =  st.slider(
+                "Base Pre-Contemplation to Contemplation chance"
+                , 0.0, 1.0
+                , st.session_state.alcohol_change_prob_contemplation
+                , on_change=lambda: setattr(st.session_state,
+                                            'alcohol_change_prob_contemplation',
+                                            st.session_state['alcohol Contemplation'])
+                ,key='alcohol Contemplation')
+
+            ##################
+            # alcohol_change_prob_preparation
+            #################
+
+            if 'alcohol_change_prob_preparation' not in st.session_state:
+                st.session_state.alcohol_change_prob_preparation = 0.01
+
+            alcohol_change_prob_preparation =  st.slider(
+                "Base Contemplation to Preparation chance"
+                , 0.0, 1.0
+                , st.session_state.alcohol_change_prob_preparation
+                , on_change=lambda: setattr(st.session_state,
+                                            'alcohol_change_prob_preparation',
+                                            st.session_state['alcohol Preparation'])
+                ,key='alcohol Preparation')
+
+            ##################
+            # alcohol_change_prob_action
+            #################
+
+            if 'alcohol_change_prob_action' not in st.session_state:
+                st.session_state.alcohol_change_prob_action = 0.01
+
+            alcohol_change_prob_action =  st.slider(
+                "Base Preparation to Action chance"
+                , 0.0, 1.0
+                , st.session_state.alcohol_change_prob_action
+                , on_change=lambda: setattr(st.session_state,
+                                            'alcohol_change_prob_action',
+                                            st.session_state['alcohol Action'])
+                ,key='alcohol Action')
+
+            ##################
+            # alcohol_lapse_prob_precontemplation
+            #################
+
+            st.markdown("**Lapse Chance**")
+
+            if 'alcohol_lapse_prob_precontemplation' not in st.session_state:
+                st.session_state.alcohol_lapse_prob_precontemplation = 0.01
+
+            alcohol_lapse_prob_precontemplation =  st.slider(
+                "Base Contemplation to Pre-Contemplation lapse chance"
+                , 0.0, 1.0
+                , st.session_state.alcohol_lapse_prob_precontemplation
+                , on_change=lambda: setattr(st.session_state,
+                                            'alcohol_lapse_prob_precontemplation',
+                                            st.session_state['alcohol lapse Pre-Contemplation'])
+                ,key='alcohol lapse Pre-Contemplation')
+
+            ##################
+            # alcohol_lapse_prob_contemplation
+            #################
+
+            if 'alcohol_lapse_prob_contemplation' not in st.session_state:
+                st.session_state.alcohol_lapse_prob_contemplation = 0.01
+
+            alcohol_lapse_prob_contemplation =  st.slider(
+                "Base Preparation to Contemplation lapse chance"
+                , 0.0, 1.0
+                , st.session_state.alcohol_lapse_prob_contemplation
+                , on_change=lambda: setattr(st.session_state,
+                            'alcohol_lapse_prob_contemplation',
+                            st.session_state['alcohol lapse Contemplation'])
+                ,key='alcohol lapse Contemplation')
+
+            ##################
+            # alcohol_lapse_prob_preparation
+            #################
+
+            if 'alcohol_lapse_prob_preparation' not in st.session_state:
+                st.session_state.alcohol_lapse_prob_preparation = 0.01
+
+            alcohol_lapse_prob_preparation =  st.slider(
+                "Base Action to Preparation lapse chance"
+                , 0.0, 1.0
+                , st.session_state.alcohol_lapse_prob_preparation
+                , on_change=lambda: setattr(st.session_state,
+                            'alcohol_lapse_prob_preparation',
+                            st.session_state['alcohol lapse Preparation'])
+                ,key='alcohol lapse Preparation')
+
+            ##################
+            # alcohol_golden_window
+            #################
+           
+            if 'alcohol_golden_window' not in st.session_state:
+                st.session_state.alcohol_golden_window = 3
+
+            alcohol_golden_window =  st.slider(
+                "Periods before chances reset to base (the golden window)"
+                , 0, 24
+                , st.session_state.alcohol_golden_window
+                , on_change=lambda: setattr(st.session_state,
+                            'alcohol_golden_window',
+                            st.session_state['alcohol golden window'])
+                ,key='alcohol golden window')
+
+
+
+        population_parameters_alcohol()
+
+    with colB:
+        st.markdown("#### Simulation")
+
+        st.write(f"Random Seed: :blue-background[{st.session_state.model_seed}]")
+
+        st.write(f"Number of Months to Simulate: :blue-background[{st.session_state.num_steps}]")
+
+        st.write(f"Animation Speed (seconds): :blue-background[{st.session_state.animation_speed}]")
+
+    ## sets a dataframe up one row for each service type
+    alcohol_services = pd.DataFrame(
+                {'Service': ['Job Centre'
+                             #,'Benefits Office',
+                             ,'Housing Officer','Community Hub','Pharmacy','GP Practice']
+                ,'Person Visit Probability': [0.20
+                                              #,0.20
+                                              ,0.20,0.20,0.1,0.1]
+                ,'Chance a Brief Intervention Made Without MECC Training': [0.01
+                                                                            #,0.01
+                                                                            ,0.01,0.01,0.10,0.10]
+                ,'MECC Trained': [True
+                                  #,True
+                                  ,True,True,False,False]
+                ,'Chance Making a Brief Intervention After MECC Training': [0.90
+                                                                            #,0.90
+                                                                            ,0.90,0.90,0.90,0.90]
+                ,'Post Intervention Pre-Contemplation to Contemplation chance': [0.50
+                                                                                 #,0.50
+                                                                                 ,0.50,0.50,0.50,0.50]
+                ,'Post Intervention Contemplation to Preparation chance': [0.50
+                                                                           #,0.50
+                                                                           ,0.50,0.50,0.50,0.50]
+                ,'Post Intervention Preparation to Action chance': [0.50
+                                                                    #,0.50
+                                                                    ,0.50,0.50,0.50,0.50]
+                ,'MECC Training Decay Half Life in Months': [4
+                                                             #,4
+                                                             ,4,4,4,4]}
+    )
+
+    ## Sets service as index
+    alcohol_services = alcohol_services.set_index('Service')
+
+    ## adds to session state if does not exist
+    if 'alcohol_services_table' not in st.session_state:
+        st.session_state.alcohol_services_table = alcohol_services.copy()
+
+    @st.fragment
+    def alcohol_service_input(alcohol_services):
+        st.markdown("#### Service")
+
+    ## creates a data editor of the variables
+        alcohol_services_edit = st.data_editor(
+            alcohol_services,
+            disabled=["Service"],
+            key='alcohol_services_editor',
+            # on_change = lambda: setattr(st.session_state
+            #                             ,'alcohol_services_table'
+            #                             , alcohol_services_edit.copy()),
+            column_config={
+                "Service": "Service",
+                "Person Visit Probability": st.column_config.NumberColumn(
+                    "Person Visit Probability",
+                    width='medium',
+                    help="How likely is someone to visit in a month (0.0-1.0)?",
+                    min_value=0.0,
+                    max_value=1.0,
+                    step=0.01,),
+                "Chance a Brief Intervention Made Without MECC Training": st.column_config.NumberColumn(
+                    "Chance a Brief Intervention Made Without MECC Training",
+                    width='medium',
+                    help="How likely is an intervention before MECC training (0.0-1.0)?",
+                    min_value=0.0,
+                    max_value=1.0,
+                    step=0.01,),
+                "MECC Trained":"MECC Trained",
+                "Chance Making a Brief Intervention After MECC Training": st.column_config.NumberColumn(
+                    "Chance Making a Brief Intervention After MECC Training",
+                    width='medium',
+                    help="How likely is an intervention after MECC training (0.0-1.0)?",
+                    min_value=0.0,
+                    max_value=1.0,
+                    step=0.01,),
+                "Post Intervention Pre-Contemplation to Contemplation chance": st.column_config.NumberColumn(
+                    "Post Intervention Pre-Contemplation to Contemplation chance",
+                    width='medium',
+                    help="What does a person's chance of changing from" +
+                            "Pre-Contemplation to Contemplation become" +
+                            "post-intervention (0.0-1.0)?",
+                    min_value=0.0,
+                    max_value=1.0,
+                    step=0.01,),
+                "Post Intervention Contemplation to Preparation chance": st.column_config.NumberColumn(
+                    "Post Intervention Contemplation to Preparation chance",
+                    width='medium',
+                    help="What does a person's chance of changing from" +
+                            "Contemplation to Preparation become" +
+                            "post-intervention (0.0-1.0)?",
+                    min_value=0.0,
+                    max_value=1.0,
+                    step=0.01,),
+                "Post Intervention Preparation to Action chance": st.column_config.NumberColumn(
+                    "Post Intervention Preparation to Action chance",
+                    width='medium',
+                    help="What does a person's chance of changing from" +
+                            "Preparation to Action become" +
+                            "post-intervention (0.0-1.0)?",
+                    min_value=0.0,
+                    max_value=1.0,
+                    step=0.01,),
+                    },
+            )
+
+        st.session_state['alcohol_services_table'] = alcohol_services_edit.copy()
+
+    alcohol_service_input(st.session_state.alcohol_services_table)
+    
+    ## Logic Diagram
+    with st.expander("Click here to view the logic diagram"):
+        #col1a, col2a, col3a = st.columns(3)
+        #with col2a:
+        st.image(create_logic_diagram_Alcohol(number_labels = True)
+            , caption="Diagram of Agent Model Logic"
+            , use_column_width=False)
+
+
+with tab3:
     st.markdown("### Smoking Cessation Parameters")
 
     col4, col5, col6 = st.columns(3)
@@ -76,7 +346,7 @@ with tab2:
     with col4:
         st.markdown("#### Population")
 
-        st.write(f"Number of People: :blue-background[{st.session_state.N_people}]") 
+        st.write(f"Number of People: :blue-background[{st.session_state.N_people}]")
 
         st.write(f"Chance of Visiting a Service per Month: :blue-background[{st.session_state.visit_prob}]")
 
@@ -125,7 +395,7 @@ with tab2:
             , caption="Diagram of Agent Model Logic"
             , use_column_width=False)
 
-with tab3:
+with tab4:
     st.markdown("### Monte Carlo Parameters")
 
     col4, col5, col6 = st.columns(3)
@@ -133,7 +403,7 @@ with tab3:
     with col4:
         st.markdown("#### Population")
 
-        st.write(f"Number of People: :blue-background[{st.session_state.N_people}]") 
+        st.write(f"Number of People: :blue-background[{st.session_state.N_people}]")
 
         st.write(f"Chance of Visiting a Service per Month: :blue-background[{st.session_state.visit_prob}]")
 

@@ -56,23 +56,47 @@ st.set_page_config(layout="wide")
 if platform.processor() == '':
     get_quarto("project_toy_mecc")
 
+# pg = st.navigation(
+
+#     [st.Page("homepage.py",
+#              title="Toy MECC Details",
+#              icon=":material/cottage:"),
+#     st.Page("parameters.py",
+#              title="Parameters for Simulation",
+#              icon=":material/settings:"),
+#     st.Page("generic_mecc_model.py",
+#              title="Simple MECC",
+#              icon=":material/people:"),
+#     st.Page("alcohol_mecc_model.py",
+#              title="Alcohol Advice",
+#              icon=":material/add_notes:"),                   
+#     st.Page("mesa_abs_two_types_mecc.py",
+#              title="Smoking cessation with MECC",
+#              icon=":material/smoke_free:"),
+#     st.Page("generic_mecc_monte.py",
+#              title="Simple Monte Carlo",
+#              icon=":material/casino:"),             
+#      ]
+#      )
+
+
 pg = st.navigation(
 
-    [st.Page("homepage.py",
+    [st.Page("alcohol_homepage.py",
              title="Toy MECC Details",
              icon=":material/cottage:"),
-    st.Page("parameters.py",
+    st.Page("alcohol_parameters.py",
              title="Parameters for Simulation",
              icon=":material/settings:"),
-    st.Page("generic_mecc_model.py",
-             title="Simple MECC",
-             icon=":material/people:"),
-    st.Page("mesa_abs_two_types_mecc.py",
-             title="Smoking cessation with MECC",
-             icon=":material/smoke_free:"),
-    st.Page("generic_mecc_monte.py",
-             title="Simple Monte Carlo",
-             icon=":material/casino:")             
+    st.Page("alcohol_logic_page.py",
+             title="Logic Diagram",
+             icon=":material/account_tree:"),             
+    st.Page("alcohol_mecc_model.py",
+             title="Model",
+             icon=":material/add_notes:"),                   
+    st.Page("alcohol_sim_report_page.py",
+             title="Download Report",
+             icon=":material/download:"),        
      ]
      )
 

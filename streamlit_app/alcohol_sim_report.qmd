@@ -1,0 +1,179 @@
+---
+title: "Toy MECC - Alcohol Simulation Report"
+# execute:
+#   echo: false
+format:
+    html:
+        toc: false
+        code-fold: false
+        embed-resources: true
+        # URL options
+        link-external-icon: true
+        link-external-newwindow: true
+        # Reference options
+        citations-hover: true
+        footnotes-hover: true
+        #####################
+        # NHS Theme options #
+        #####################
+        css: "NHS_report_theme.css"
+        callout-appearance: simple
+        callout-collapse: true
+        # Caption options
+        cap-location: bottom
+        # Title options
+        title-block-banner: '#005EB8'
+        backgroundcolor: '#f0f4f5'
+        # Set font
+        mainfont: 'Open Sans'
+execute: 
+    echo: true
+    warning: false
+    message: false
+    # include: false 
+---
+
+<!-- ![](resources\MECC.jpg){height=100} -->
+
+```{python}
+#| echo: false
+#| label: get_data
+import pandas as pd
+import json
+import plotly.graph_objects as go
+# import great_tables as GT
+import itables
+
+# Load session data from JSON
+with open("./outputs/session_data.json", "r") as f:
+    session_data = json.load(f)
+
+data_no_mecc = pd.read_csv("./outputs/data_no_mecc.csv")
+data_mecc = pd.read_csv("./outputs/data_mecc.csv")
+
+## iniate itables
+itables.init_notebook_mode(all_interactive=True)
+
+```
+
+# Alcohol Advice Model with MECC Training
+
+## Simulation Results
+
+```{python}
+#| echo: false
+#| label: plots
+from alcohol_outputs import create_population_figure
+from alcohol_outputs import create_intervention_figure
+from alcohol_outputs import create_intervention_decay_figure
+
+step = len(data_no_mecc) - 1
+fig1 = create_population_figure(data_no_mecc, data_mecc, step)
+fig1.show()
+
+fig2 = create_intervention_figure(data_no_mecc, data_mecc, step,'Contacts')
+fig2.show()
+
+fig3 = create_intervention_figure(data_no_mecc, data_mecc, step,'Interventions')
+fig3.show()
+
+fig4 = create_intervention_decay_figure(data_no_mecc, data_mecc, step)
+fig4.show()
+```
+
+## Final Statistics
+
+### Total
+
+```{python}
+#| echo: false
+#| label: Total_section
+#from itables import show
+
+result_total = pd.read_csv("./outputs/result_total.csv",index_col=0)
+
+itables.show(result_total, html=False)
+
+```
+
+### Contacts by Services
+
+```{python}
+#| echo: false
+#| label: Contacts_by_Services_section
+
+result_contact = pd.read_csv("./outputs/result_contact.csv",index_col=0)
+
+itables.show(result_contact)
+
+```
+
+### Sucessful Interventions by Services
+
+```{python}
+#| echo: false
+#| label: Sucessful_Interventions_by_Services_section
+
+result_successful = pd.read_csv("./outputs/result_successful.csv"
+                                ,index_col=0)
+
+itables.show(result_successful)
+
+```
+
+### All Interventions by Services
+
+```{python}
+#| echo: false
+#| label: All_Interventions_by_Services_section
+
+result_intervention = pd.read_csv("./outputs/result_intervention.csv"
+                                    ,index_col=0)
+
+itables.show(result_intervention)
+
+```
+
+## Toy MECC Parameters
+
+### Population Parameters
+ - Number of People: **`{python} session_data["N_people"]`** 
+
+### Stages of Change
+ - Chance that a pre-Contemplation person not in a golden window is receptive to an intervention: **`{python} session_data["prob_receptive"]`**
+ - Periods before chances reset to base (the golden window): **`{python} session_data["golden_window"]`**
+
+### Stages of Change - Base Positive Change Chance
+ - Base Pre-Contemplation to Contemplation chance: **`{python} session_data["change_prob_contemplation"]`**
+ - Base Contemplation to Preparation chance: **`{python} session_data["change_prob_preparation"]`**
+ - Base Preparation to Action chance: **`{python} session_data["change_prob_action"]`**
+
+### Stages of Change - Lapse Chance
+ - Base Contemplation to Pre-Contemplation lapse chance: **`{python} session_data["lapse_prob_precontemplation"]`**
+ - Base Preparation to Contemplation lapse chance: **`{python} session_data["lapse_prob_contemplation"]`**
+ - Base Action to Preparation lapse chance: **`{python} session_data["lapse_prob_preparation"]`**
+
+### Services
+```{python}
+#| echo: false
+#| label: service_parameters
+
+alcohol_services_edit = pd.read_csv("./outputs/alcohol_services_edit.csv"
+                                    ,index_col=0)
+
+itables.show(alcohol_services_edit)
+
+```
+
+### Simulation Parameters
+ - Random Seed: **`{python} session_data["model_seed"]`**
+ - Number of Months to Simulate: **`{python} session_data["num_steps"]`**
+ - Animation Speed (seconds): **`{python} session_data["animation_speed"]`**
+
+
+## Logic Diagram
+
+![](../alcohol_logic_diagram.png){.r-stretch  fig-align="center"}
+
+
+<!-- {'model_seed': 42, 'N_people': 50, 'N_service': 1, 'initial_smoking_prob': 0.5, 'visit_prob': 0.1, 'quit_attempt_prob': 0.01, 'base_smoke_relapse_prob': 0.01, 'base_make_intervention_prob': 0.1, 'mecc_effect': 0.9, 'intervention_effect': 1.1, 'num_steps': 24, 'animation_speed': 0, 'iterations': 100, 'prob_receptive': 0.75, 'change_prob_contemplation': 0.01, 'change_prob_preparation': 0.01, 'change_prob_action': 0.01, 'lapse_prob_precontemplation': 0.01, 'lapse_prob_contemplation': 0.01, 'lapse_prob_preparation': 0.01, 'golden_window': 3, 'contemplation_intervention': {'Job Centre': 0.5, 'Benefits Office': 0.5, 'Housing Officer': 0.5, 'Community Hub': 0.5, 'Pharmacy': 0.5, 'GP Practice': 0.5}, 'preparation_intervention': {'Job Centre': 0.5, 'Benefits Office': 0.5, 'Housing Officer': 0.5, 'Community Hub': 0.5, 'Pharmacy': 0.5, 'GP Practice': 0.5}, 'action_intervention': {'Job Centre': 0.5, 'Benefits Office': 0.5, 'Housing Officer': 0.5, 'Community Hub': 0.5, 'Pharmacy': 0.5, 'GP Practice': 0.5}} -->

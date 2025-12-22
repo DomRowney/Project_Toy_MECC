@@ -1,8 +1,9 @@
 ## streamlit_model_functions.py
 import pandas as pd
 #import numpy as np
-#import streamlit as st
+import streamlit as st
 from model_two_types_mecc import MECC_Model,SmokeModel_MECC_Model
+from alcohol_agents import Alcohol_MECC_Model
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 #import time
@@ -15,6 +16,7 @@ from plotly.subplots import make_subplots
 def create_MECC_model(model_parameters
                       ,model_type = 'Generic'
                       ,mecc_trained = False):
+    ## for checking
     if model_type == 'Generic':
         model = MECC_Model(
             seed=model_parameters["model_seed"],
@@ -24,7 +26,57 @@ def create_MECC_model(model_parameters
             visit_prob=model_parameters["visit_prob"],
             mecc_effect=model_parameters["mecc_effect"],            
             mecc_trained=mecc_trained)
-        
+
+    if model_type == 'Alcohol':
+        ## for checking
+        #st.write(f'mecc_trained: {mecc_trained}')
+        ## For the trained version only those with ticks are mecc trained
+        if mecc_trained:
+            model_parameters["mecc_trained"] = model_parameters["mecc_trained"]
+            ## for checking
+            #st.write(f'MECC PARAMETERS\n\n{model_parameters}\n\n'
+            #         '-----')
+        ## For the untrained version no service is mecc trained
+        else:
+            for service in model_parameters["mecc_trained"]:
+                model_parameters["mecc_trained"][service] = False
+            ## for checking                
+            #st.write(f'NO MECC PARAMETERS\n\n{model_parameters}\n\n'
+            #         '-----')
+
+        model = Alcohol_MECC_Model(
+            N_people = model_parameters["N_people"]
+            #, N_service
+            , seed = model_parameters["model_seed"]
+
+            ## dictionaries of intervention chance
+            , contemplation_intervention = model_parameters["contemplation_intervention"]
+            , preparation_intervention = model_parameters["preparation_intervention"]
+            , action_intervention = model_parameters["action_intervention"]
+
+            ## change state probability
+            , prob_receptive = model_parameters["prob_receptive"]
+
+            , change_prob_contemplation = model_parameters[ "change_prob_contemplation"]
+            , change_prob_preparation = model_parameters["change_prob_preparation"]
+            , change_prob_action = model_parameters["change_prob_action"]
+
+            , lapse_prob_precontemplation = model_parameters["lapse_prob_precontemplation"]
+            , lapse_prob_contemplation = model_parameters["lapse_prob_contemplation"]
+            , lapse_prob_preparation = model_parameters["lapse_prob_preparation"]
+
+            , golden_window = model_parameters["golden_window"]
+            
+            ## visit probability
+            , visit_prob = model_parameters["visit_prob"]
+
+            ## site properties
+            , mecc_effect = model_parameters["mecc_effect"]
+            , base_make_intervention_prob = model_parameters["base_make_intervention_prob"]
+            , mecc_trained = model_parameters["mecc_trained"]   
+            , mecc_training_decay_half_life = model_parameters["mecc_training_decay_half_life"]
+            )
+
     elif model_type == 'Smoke':
         model = SmokeModel_MECC_Model(
             seed=model_parameters["model_seed"],

@@ -1,3 +1,4 @@
+## alcohol_homepage.py
 import streamlit as st
 import pandas as pd
 from alcohol_parameters import init_parameters
@@ -12,43 +13,55 @@ st.write("## _Making Every Contact Count_")
 
 st.write("""
 A (toy) model for showing the benefit of Making Every Contact Count (MECC) Training.
+For the case of using a brief intervention in alcohol harm reduction
         
 This app was built as part of the [HSMA](https://hsma-programme.github.io/hsma_site/) 6 Hackday 2024 and 
-the source code is available on [GitHub](https://github.com/DomRowney/Project_Toy_MECC.git)
+the source code is available on [GitHub](https://github.com/DomRowney/Project_Toy_MECC.git).
+         
+It is part of an evaluation of [MECC](https://www.meccgateway.co.uk/nenc).
 """)
 
 st.write("#### Explanation")
 st.write("""
 The model is an Agent based simulation:
 + There is an initial group of people (agents) and an initial group of services.
-+ People have contact with government services at random with a certain probability
++ The model is run for a number of repeating periods
++ Each period people can, with a certain probability, have contact with each of the services 
 + People in contact with services have a chance of having a Very Brief Intervention.        
 + Services can have MECC training, which increases the a probability that
           any contact will lead to a Very Brief Intervention.
 + The model compares results for the same simultion with and without MECC training.
+""")
 
-_A specific smoking cessation model has additional rules:_
-+ A certain proportion of people have lifestyle factors: smoking.
-        People cannot start smoking if they never had to start with.
-+ People may have a probability of making a smoking quit attempt each month
-+ People have a chance of restarting smoking,
-          this chance decreases the longer a person is smoke free.         
-+ A Very Brief Intervention increases the probability that a person will make a quit attempt.
-         It does not effect the chance that a person will stay smoke free.
+st.write("""
+The effect of MECC training reduces over time:
++ The chance of making an intervention reduces
++ Chance of intervention reduces via a half-life calculation (exponential decay)
++ The half-life is the time it takes for the intervention chance to be halved
++ The minimum effect is the same as the service having no MECC training
+""") 
+         
+st.write("""        
+People are modelled using the Stages of Change Model, also known as the [Transtheoretical Model](https://doi.org/10.4278/0890-1171-12.1.38):
++ There are four stages modelled: Pre-Contemplation, Contemplation, Preparation, and Action.
++ People have one chance each period of moving between these stages or lapsing back.
++ All people start at Pre-Contemplation.
++ There is a probabilty that people in the Pre-Contemplation stage will be amenable to an Intervention
++ Sucessful Interventions increase the chance that people will improve their stage of change.
+""")         
 
-There is a [Monte Carlo method](https://en.wikipedia.org/wiki/Monte_Carlo_method) version of the simple model.
-The simulations contain randomness so this method reruns the simulation multiple times to get average results.
+st.write("""
+A Golden Window is a period of time after a sucessful intervention:
++ In a Golden Window each subsequent Intervention always succeeds
++ The effect of each Intervention adds to the previous
++ Subsequent interventions do not change the duration of the Golden Window
++ After the Golden Window ends the chances of improvement revert to the original values
+""") 
 
-**You can change all these probabilites on the:**""") 
-st.page_link('./parameters.py',label='Parameters for Simulation')
+st.write("""**You can change all these probabilites on the:**""") 
+st.page_link('./alcohol_parameters.py',label='Parameters for Simulation')
 
-st.write("----") # divider
-st.write("#### Diagram of Agent Model Logic")
-st.write("This diagram shows how a a person agent moves through the system")
 
-st.image(create_logic_diagram()
-         , caption="Diagram of Agent Model Logic"
-         , use_column_width=False)
 
 ################################################################################
 
